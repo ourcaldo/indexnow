@@ -1,0 +1,93 @@
+:52:50 PM [express] GET /api/indexing-jobs 200 in 1153ms :: [{"id":"b629b6f4-e70f-469d-b38c-49a342e…
+Failed to index URL https://nexjob.tech/: GaxiosError: invalid_grant: Invalid JWT Signature.
+    at Gaxios._request (/home/runner/workspace/node_modules/gaxios/src/gaxios.ts:211:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  config: {
+    method: 'POST',
+    url: URL {
+      href: 'https://oauth2.googleapis.com/token',
+      origin: 'https://oauth2.googleapis.com',
+      protocol: 'https:',
+      username: '',
+      password: '',
+      host: 'oauth2.googleapis.com',
+      hostname: 'oauth2.googleapis.com',
+      port: '',
+      pathname: '/token',
+      search: '',
+      searchParams: URLSearchParams {},
+      hash: ''
+    },
+    data: URLSearchParams {
+      'grant_type' => '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
+      'assertion' => '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.' },
+    responseType: 'json',
+    retryConfig: {
+      httpMethodsToRetry: [Array],
+      currentRetryAttempt: 0,
+      retry: 3,
+      noResponseRetries: 2,
+      retryDelayMultiplier: 2,
+      timeOfFirstRequest: 1752774770491,
+      totalTimeout: 9007199254740991,
+      maxRetryDelay: 9007199254740991,
+      statusCodesToRetry: [Array]
+    },
+    body: URLSearchParams {
+      'grant_type' => '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
+      'assertion' => '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.' },
+    validateStatus: [Function: validateStatus],
+    errorRedactor: [Function: defaultErrorRedactor],
+    duplex: 'half',
+    headers: Headers {
+      accept: 'application/json',
+      'x-goog-api-client': 'gl-node/20.18.1',
+      'User-Agent': 'google-api-nodejs-client/10.1.0'
+    }
+  },
+  response: Response {
+    size: 0,
+    data: {
+      error: 'invalid_grant',
+      error_description: 'Invalid JWT Signature.'
+    },
+    config: {
+      method: 'POST',
+      url: URL {},
+      data: [Object],
+      responseType: 'json',
+      retryConfig: [Object],
+      body: [Object],
+      validateStatus: [Function: validateStatus],
+      errorRedactor: [Function: defaultErrorRedactor],
+      duplex: 'half',
+      headers: Headers {
+        accept: 'application/json',
+        'x-goog-api-client': 'gl-node/20.18.1',
+        'User-Agent': 'google-api-nodejs-client/10.1.0'
+      }
+    },
+    [Symbol(Body internals)]: {
+      body: [Gunzip],
+      stream: [Gunzip],
+      boundary: null,
+      disturbed: true,
+      error: null
+    },
+    [Symbol(Response internals)]: {
+      type: 'default',
+      url: 'https://oauth2.googleapis.com/token',
+      status: 400,
+      statusText: 'Bad Request',
+      headers: [Object],
+      counter: 0,
+      highWaterMark: 16384
+    }
+  },
+  code: 400,
+  status: 400,
+  error: undefined,
+  [Symbol(gaxios-gaxios-error)]: '7.1.1',
+  [cause]: { message: 'invalid_grant', code: 400, status: 'Bad Request' }
+}
+Job b629b6f4-e70f-469d-b38c-49a342ecdc4f completed: 0 successful, 1 failed
