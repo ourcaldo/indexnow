@@ -66,6 +66,15 @@ export const quotaUsage = pgTable("quota_usage", {
   requestsCount: integer("requests_count").default(0),
 });
 
+export const accessTokens = pgTable("access_tokens", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  serviceAccountId: uuid("service_account_id").notNull(),
+  encryptedToken: text("encrypted_token").notNull(),
+  expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Insert schemas
 export const insertUserProfileSchema = createInsertSchema(userProfiles).omit({
   id: true,
@@ -104,6 +113,12 @@ export const insertQuotaUsageSchema = createInsertSchema(quotaUsage).omit({
   id: true,
 });
 
+export const insertAccessTokenSchema = createInsertSchema(accessTokens).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 // Types
 export type UserProfile = typeof userProfiles.$inferSelect;
 export type InsertUserProfile = z.infer<typeof insertUserProfileSchema>;
@@ -119,6 +134,9 @@ export type InsertUrlSubmission = z.infer<typeof insertUrlSubmissionSchema>;
 
 export type QuotaUsage = typeof quotaUsage.$inferSelect;
 export type InsertQuotaUsage = z.infer<typeof insertQuotaUsageSchema>;
+
+export type AccessToken = typeof accessTokens.$inferSelect;
+export type InsertAccessToken = z.infer<typeof insertAccessTokenSchema>;
 
 // Additional schemas for API
 export const createJobFromSitemapSchema = z.object({

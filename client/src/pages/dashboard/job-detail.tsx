@@ -38,19 +38,19 @@ export default function JobDetail() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  // Set document title for better SEO
-  useEffect(() => {
-    document.title = `Job Details - ${job?.name || 'Loading...'} | Google Indexing Dashboard`;
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', `View detailed information and progress for indexing job ${job?.name || ''}. Monitor URL submission status and job performance.`);
-    }
-  }, [job?.name]);
-
   const { data: job, isLoading: jobLoading } = useQuery<IndexingJob>({
     queryKey: ["/api/indexing-jobs", jobId],
     enabled: !!jobId,
   });
+
+  // Set document title for better SEO
+  useEffect(() => {
+    document.title = `Job Details - IndexNow`;
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', `View detailed information and progress for indexing job. Monitor URL submission status and job performance.`);
+    }
+  }, []);
 
   const { data: submissions, isLoading: submissionsLoading } = useQuery<UrlSubmission[]>({
     queryKey: ["/api/indexing-jobs", jobId, "submissions"],

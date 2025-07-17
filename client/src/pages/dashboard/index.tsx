@@ -28,10 +28,10 @@ interface DashboardStats {
 export default function Dashboard() {
   // Set document title for better SEO
   useEffect(() => {
-    document.title = "Dashboard - Overview & Analytics | Google Indexing Dashboard";
+    document.title = "Dashboard - IndexNow";
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
-      metaDescription.setAttribute('content', 'Monitor your Google indexing performance with real-time analytics. Track URL submissions, job status, and API quota usage from your centralized dashboard.');
+      metaDescription.setAttribute('content', 'Monitor your Google indexing performance with real-time analytics. Track URL submissions, job status, and API quota usage.');
     }
   }, []);
   const { data: stats, isLoading } = useQuery<DashboardStats>({
