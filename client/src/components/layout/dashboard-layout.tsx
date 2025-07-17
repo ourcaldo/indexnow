@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Sidebar from "./sidebar";
 
 interface DashboardLayoutProps {
@@ -5,10 +6,17 @@ interface DashboardLayoutProps {
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
   return (
     <div className="min-h-screen bg-warm-100">
-      <Sidebar />
-      <div className="lg:pl-64">
+      <Sidebar 
+        collapsed={sidebarCollapsed} 
+        onCollapsedChange={setSidebarCollapsed} 
+      />
+      <div className={`transition-all duration-300 ${
+        sidebarCollapsed ? "lg:pl-20" : "lg:pl-64"
+      }`}>
         {children}
       </div>
     </div>

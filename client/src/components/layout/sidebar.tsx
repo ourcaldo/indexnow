@@ -21,8 +21,12 @@ const navigation = [
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
-export default function Sidebar() {
-  const [collapsed, setCollapsed] = useState(false);
+interface SidebarProps {
+  collapsed: boolean;
+  onCollapsedChange: (collapsed: boolean) => void;
+}
+
+export default function Sidebar({ collapsed, onCollapsedChange }: SidebarProps) {
   const [location] = useLocation();
   const { user, signOut } = useAuth();
 
@@ -58,7 +62,7 @@ export default function Sidebar() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setCollapsed(!collapsed)}
+              onClick={() => onCollapsedChange(!collapsed)}
               className="p-2"
             >
               <Menu className="h-4 w-4" />

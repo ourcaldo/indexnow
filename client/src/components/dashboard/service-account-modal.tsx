@@ -50,9 +50,24 @@ export default function ServiceAccountModal({
       onOpenChange(false);
     },
     onError: (error) => {
+      console.error('Service account error:', error);
+      let errorMessage = error.message;
+      
+      // Try to parse error message if it's a JSON string
+      if (errorMessage.includes('400:')) {
+        try {
+          const errorData = JSON.parse(errorMessage.split('400: ')[1]);
+          if (errorData.error && Array.isArray(errorData.error)) {
+            errorMessage = errorData.error.map((e: any) => `${e.path.join('.')}: ${e.message}`).join(', ');
+          }
+        } catch {
+          // Use original error message if parsing fails
+        }
+      }
+      
       toast({
         title: "Error",
-        description: error.message,
+        description: errorMessage,
         variant: "destructive",
       });
     },

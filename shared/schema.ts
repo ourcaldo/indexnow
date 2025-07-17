@@ -79,8 +79,15 @@ export const insertServiceAccountSchema = createInsertSchema(serviceAccounts).om
   id: true,
   createdAt: true,
   updatedAt: true,
+  userId: true,
+  clientEmail: true,
+  projectId: true,
+  privateKey: true,
+  privateKeyId: true,
+  clientId: true,
 }).extend({
   serviceAccountJson: z.string().min(1, "Service account JSON is required"),
+  name: z.string().optional(),
 });
 
 export const insertIndexingJobSchema = createInsertSchema(indexingJobs).omit({
