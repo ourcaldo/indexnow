@@ -1,5 +1,5 @@
 import { google } from 'googleapis';
-import { JWT } from 'google-auth-library';
+import { GoogleAuth } from 'google-auth-library';
 import { ServiceAccount } from '@shared/schema';
 
 interface IndexingResult {
@@ -10,22 +10,56 @@ interface IndexingResult {
 
 export class GoogleIndexingService {
   private async createAuthClient(serviceAccount: ServiceAccount) {
-    // Parse the complete service account JSON
-    const serviceAccountCredentials = JSON.parse(serviceAccount.serviceAccountJson);
-    
-    // Use JWT library directly with the complete service account credentials
-    const client = new JWT({
-      email: serviceAccountCredentials.client_email,
-      key: serviceAccountCredentials.private_key,
-      scopes: ['https://www.googleapis.com/auth/indexing'],
-    });
+    try {
+      let serviceAccountCredentials;
+      
+      // Handle both old and new database formats
+      if (serviceAccount.serviceAccountJson) {
+        // New format: complete JSON stored in serviceAccountJson field
+        serviceAccountCredentials = JSON.parse(serviceAccount.serviceAccountJson);
+        console.log('Using new format - complete service account JSON');
+      } else {
+        // Old format: individual fields in database - reconstruct the service account object
+        console.log('Using old format - reconstructing service account from individual fields');
+        serviceAccountCredentials = {
+          type: 'service_account',
+          project_id: serviceAccount.projectId,
+          private_key_id: (serviceAccount as any).privateKeyId,
+          private_key: (serviceAccount as any).privateKey,
+          client_email: serviceAccount.clientEmail,
+          client_id: (serviceAccount as any).clientId,
+          auth_uri: 'https://accounts.google.com/o/oauth2/auth',
+          token_uri: 'https://oauth2.googleapis.com/token',
+          auth_provider_x509_cert_url: 'https://www.googleapis.com/oauth2/v1/certs',
+          client_x509_cert_url: `https://www.googleapis.com/robot/v1/metadata/x509/${encodeURIComponent(serviceAccount.clientEmail)}`,
+          universe_domain: 'googleapis.com'
+        };
+      }
+      
+      console.log('Creating auth client for:', serviceAccountCredentials.client_email);
+      console.log('Private key format check:', serviceAccountCredentials.private_key?.includes('\\n') ? 'Has escaped newlines' : 'Proper newlines');
+      
+      // Ensure private key has proper newlines (not escaped)
+      if (serviceAccountCredentials.private_key?.includes('\\n')) {
+        serviceAccountCredentials.private_key = serviceAccountCredentials.private_key.replace(/\\n/g, '\n');
+        console.log('Fixed escaped newlines in private key');
+      }
+      
+      // Use GoogleAuth with complete credentials - this is the most reliable approach
+      const auth = new GoogleAuth({
+        credentials: serviceAccountCredentials,
+        scopes: ['https://www.googleapis.com/auth/indexing'],
+      });
 
-    // Authorize to get the access token
-    await client.authorize();
-    
-    console.log('JWT authentication successful for:', serviceAccountCredentials.client_email);
-    
-    return client;
+      const authClient = await auth.getClient();
+      console.log('Google Auth client created successfully for:', serviceAccountCredentials.client_email);
+      
+      return authClient;
+    } catch (error) {
+      console.error('Failed to create auth client:', error);
+      console.error('Service account keys:', Object.keys(serviceAccount));
+      throw error;
+    }
   }
 
   async submitUrlForIndexing(url: string, serviceAccount: ServiceAccount): Promise<IndexingResult> {
