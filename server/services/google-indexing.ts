@@ -76,7 +76,7 @@ export class GoogleIndexingService {
         auth.setCredentials({
           access_token: serviceAccount.accessToken
         });
-        return { auth, tokenUpdated: false };
+        return { auth, tokenUpdated: false, newToken: undefined, newExpiry: undefined };
       }
     }
 
@@ -102,6 +102,13 @@ export class GoogleIndexingService {
   async submitUrlForIndexing(url: string, serviceAccount: ServiceAccount, updateTokenCallback?: (token: string, expiry: Date) => Promise<void>): Promise<IndexingResult> {
     try {
       const authResult = await this.createAuthClient(serviceAccount);
+      
+      console.log('\n=== Auth Result Debug ===');
+      console.log('tokenUpdated:', authResult.tokenUpdated);
+      console.log('hasNewToken:', !!authResult.newToken);
+      console.log('hasNewExpiry:', !!authResult.newExpiry);
+      console.log('hasCallback:', !!updateTokenCallback);
+      
       const indexing = google.indexing({ version: 'v3', auth: authResult.auth });
 
       // If token was updated and we have a callback to save it
@@ -109,6 +116,9 @@ export class GoogleIndexingService {
         console.log('\n=== Calling Token Update Callback ===');
         await updateTokenCallback(authResult.newToken, authResult.newExpiry);
         console.log('Token update callback completed');
+      } else {
+        console.log('\n=== Token Update Skipped ===');
+        console.log('Conditions not met for token update');
       }
 
       const response = await indexing.urlNotifications.publish({
