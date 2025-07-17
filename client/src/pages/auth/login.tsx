@@ -31,11 +31,13 @@ export default function Login() {
         description: error.message,
         variant: "destructive",
       });
+      setIsLoading(false);
     } else {
-      setLocation("/dashboard");
+      // Let the auth state change handle the redirect
+      setTimeout(() => {
+        setLocation("/dashboard");
+      }, 100);
     }
-
-    setIsLoading(false);
   };
 
   const handleMagicLink = async (e: React.FormEvent<HTMLFormElement>) => {

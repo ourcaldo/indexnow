@@ -33,11 +33,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
-        
-        // Redirect to dashboard on successful sign in
-        if (event === 'SIGNED_IN' && session) {
-          window.location.href = '/dashboard';
-        }
       }
     );
 
