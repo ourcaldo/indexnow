@@ -1,4 +1,5 @@
 import { google } from 'googleapis';
+import { JWT } from 'google-auth-library';
 import { ServiceAccount } from '@shared/schema';
 
 interface IndexingResult {
@@ -9,38 +10,19 @@ interface IndexingResult {
 
 export class GoogleIndexingService {
   private async createAuthClient(serviceAccount: ServiceAccount) {
-    // The private key from database should already be properly formatted
-    // Just ensure it's clean and properly formatted for JWT signing
-    const privateKey = serviceAccount.privateKey.trim();
-
-    const credentials = {
-      type: 'service_account',
-      project_id: serviceAccount.projectId,
-      private_key_id: serviceAccount.privateKeyId,
-      private_key: privateKey,
-      client_email: serviceAccount.clientEmail,
-      client_id: serviceAccount.clientId,
-      auth_uri: 'https://accounts.google.com/o/oauth2/auth',
-      token_uri: 'https://oauth2.googleapis.com/token',
-      auth_provider_x509_cert_url: 'https://www.googleapis.com/oauth2/v1/certs',
-      client_x509_cert_url: `https://www.googleapis.com/robot/v1/metadata/x509/${encodeURIComponent(serviceAccount.clientEmail)}`,
-      universe_domain: 'googleapis.com'
-    };
-
-    // Debug: Log the first and last few characters to verify format
-    console.log('Private key format check:', {
-      starts_with: privateKey.substring(0, 27),
-      ends_with: privateKey.substring(privateKey.length - 25),
-      has_newlines: privateKey.includes('\n'),
-      length: privateKey.length
-    });
-
-    const auth = new google.auth.GoogleAuth({
-      credentials,
+    // Use JWT library directly for better control over the authentication process
+    const client = new JWT({
+      email: serviceAccount.clientEmail,
+      key: serviceAccount.privateKey,
       scopes: ['https://www.googleapis.com/auth/indexing'],
     });
 
-    return auth.getClient();
+    // Authorize to get the access token
+    await client.authorize();
+    
+    console.log('JWT authentication successful for:', serviceAccount.clientEmail);
+    
+    return client;
   }
 
   async submitUrlForIndexing(url: string, serviceAccount: ServiceAccount): Promise<IndexingResult> {
