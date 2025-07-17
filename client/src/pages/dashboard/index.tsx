@@ -31,7 +31,7 @@ export default function Dashboard() {
     document.title = "Dashboard - IndexNow";
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
-      metaDescription.setAttribute('content', 'Monitor your Google indexing performance with real-time analytics. Track URL submissions, job status, and API quota usage.');
+      metaDescription.setAttribute('content', 'Monitor your Google indexing performance with real-time analytics. Track URL submissions, job status, and API quota usage from your centralized dashboard.');
     }
   }, []);
   const { data: stats, isLoading } = useQuery<DashboardStats>({
