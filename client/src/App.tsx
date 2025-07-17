@@ -44,13 +44,17 @@ function Router() {
           </DashboardLayout>
         )}
       </Route>
-      <Route path="/dashboard/jobs" nest>
+      <Route path="/dashboard/jobs">
         {!user ? <Redirect to="/login" /> : (
           <DashboardLayout>
-            <Switch>
-              <Route path="/" component={Jobs} />
-              <Route path="/:id" component={JobDetail} />
-            </Switch>
+            <Jobs />
+          </DashboardLayout>
+        )}
+      </Route>
+      <Route path="/dashboard/jobs/:id">
+        {!user ? <Redirect to="/login" /> : (
+          <DashboardLayout>
+            <JobDetail />
           </DashboardLayout>
         )}
       </Route>

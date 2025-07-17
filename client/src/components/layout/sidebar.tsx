@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { 
   Search, 
   Home, 
@@ -11,7 +12,8 @@ import {
   Settings, 
   Menu,
   LogOut,
-  User
+  User,
+  X
 } from "lucide-react";
 
 const navigation = [
@@ -29,29 +31,134 @@ interface SidebarProps {
 export default function Sidebar({ collapsed, onCollapsedChange }: SidebarProps) {
   const [location] = useLocation();
   const { user, signOut } = useAuth();
+  const isMobile = useIsMobile();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleSignOut = async () => {
     await signOut();
   };
 
+  if (isMobile) {
+    return (
+      <>
+        {/* Mobile Menu Button */}
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="fixed top-4 left-4 z-50 md:hidden p-2"
+        >
+          {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </Button>
+
+        {/* Mobile Overlay */}
+        {mobileMenuOpen && (
+          <div 
+            className="fixed inset-0 bg-black/50 z-40 md:hidden"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+        )}
+
+        {/* Mobile Sidebar */}
+        <div
+          className={cn(
+            "fixed left-0 top-0 h-full bg-white shadow-lg sidebar-transition z-50 md:hidden",
+            mobileMenuOpen ? "w-64 translate-x-0" : "w-64 -translate-x-full"
+          )}
+        >
+          {/* Header */}
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-gradient-to-r from-primary to-orange-500 rounded-lg flex items-center justify-center">
+                  <Search className="h-4 w-4 text-white" />
+                </div>
+                <h1 className="text-xl font-bold text-slate-800">IndexNow Pro</h1>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+
+          {/* Navigation */}
+          <nav className="p-4 space-y-2">
+            {navigation.map((item) => {
+              const isActive = location === item.href || 
+                (item.href !== "/dashboard" && location.startsWith(item.href));
+              
+              return (
+                <Link key={item.name} href={item.href}>
+                  <a
+                    className={cn(
+                      "flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors",
+                      isActive
+                        ? "bg-primary/10 text-primary border-l-4 border-primary"
+                        : "text-slate-600 hover:bg-gray-50"
+                    )}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <item.icon className="h-5 w-5" />
+                    <span className="font-medium">{item.name}</span>
+                  </a>
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* User section */}
+          <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
+            <div className="flex items-center space-x-3 px-4 py-3">
+              <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                <User className="h-4 w-4 text-primary" />
+              </div>
+              <div className="flex-1">
+                <div className="text-sm font-medium text-slate-800">
+                  {user?.user_metadata?.full_name || user?.email}
+                </div>
+                <div className="text-xs text-slate-500">
+                  {user?.email}
+                </div>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleSignOut}
+                className="p-2"
+              >
+                <LogOut className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
-      {/* Mobile overlay */}
-      {!collapsed && (
-        <div className="fixed inset-0 bg-black/50 lg:hidden z-40" />
-      )}
-
-      {/* Sidebar */}
+      {/* Desktop Sidebar */}
       <div
         className={cn(
-          "fixed left-0 top-0 h-full bg-white shadow-lg sidebar-transition z-50",
+          "fixed left-0 top-0 h-full bg-white shadow-lg sidebar-transition z-50 hidden md:block",
           collapsed ? "w-20" : "w-64"
         )}
       >
         {/* Header */}
         <div className="p-6 border-b border-gray-200">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
+          <div className={cn(
+            "flex items-center",
+            collapsed ? "justify-center" : "justify-between"
+          )}>
+            <div className={cn(
+              "flex items-center",
+              collapsed ? "justify-center" : "space-x-3"
+            )}>
               <div className="w-8 h-8 bg-gradient-to-r from-primary to-orange-500 rounded-lg flex items-center justify-center">
                 <Search className="h-4 w-4 text-white" />
               </div>
@@ -59,15 +166,29 @@ export default function Sidebar({ collapsed, onCollapsedChange }: SidebarProps) 
                 <h1 className="text-xl font-bold text-slate-800">IndexNow Pro</h1>
               )}
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => onCollapsedChange(!collapsed)}
-              className="p-2"
-            >
-              <Menu className="h-4 w-4" />
-            </Button>
+            {!collapsed && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onCollapsedChange(!collapsed)}
+                className="p-2"
+              >
+                <Menu className="h-4 w-4" />
+              </Button>
+            )}
           </div>
+          {collapsed && (
+            <div className="flex justify-center mt-4">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onCollapsedChange(!collapsed)}
+                className="p-2"
+              >
+                <Menu className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
         </div>
 
         {/* Navigation */}

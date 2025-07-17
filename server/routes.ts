@@ -175,8 +175,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         status: 'pending'
       });
 
-      // Schedule the job if it's recurring
-      if (schedule !== 'one-time' && cron) {
+      // Schedule the job if it's recurring, or execute immediately if one-time
+      if (schedule === 'one-time') {
+        // Execute immediately in the background
+        setImmediate(() => {
+          jobScheduler.executeJob(job.id);
+        });
+      } else if (cron) {
         jobScheduler.scheduleJob(job.id, cron);
       }
 
@@ -212,8 +217,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         status: 'pending'
       });
 
-      // Schedule the job if it's recurring
-      if (schedule !== 'one-time' && cron) {
+      // Schedule the job if it's recurring, or execute immediately if one-time
+      if (schedule === 'one-time') {
+        // Execute immediately in the background
+        setImmediate(() => {
+          jobScheduler.executeJob(job.id);
+        });
+      } else if (cron) {
         jobScheduler.scheduleJob(job.id, cron);
       }
 
