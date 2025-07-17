@@ -181,8 +181,18 @@ export class JobScheduler {
           continue; // Try next account
         }
 
-        // Submit URL for indexing
-        const result = await googleIndexingService.submitUrlForIndexing(url, account);
+        // Submit URL for indexing with token caching
+        const result = await googleIndexingService.submitUrlForIndexing(url, account, async (token: string, expiry: Date) => {
+          // Update the service account with the new token
+          await db
+            .update(serviceAccounts)
+            .set({ 
+              accessToken: token,
+              tokenExpiresAt: expiry,
+              updatedAt: new Date()
+            })
+            .where(eq(serviceAccounts.id, account.id));
+        });
 
         // Create URL submission record
         await db.insert(urlSubmissions).values({

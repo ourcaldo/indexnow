@@ -7,6 +7,18 @@ This is a full-stack web application that provides an instant indexing solution 
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+Database: Use Supabase for database operations, never use local PostgreSQL.
+Authentication: Use JWT-based authentication approach for Google API integration.
+
+## Recent Changes
+
+### July 17, 2025 - Migration from Replit Agent to Replit Environment
+- Updated database schema to match actual Supabase structure with `service_account_json`, `access_token`, and `token_expires_at` columns
+- Implemented JWT-based authentication approach for Google Indexing API using google-auth-library
+- Added token caching system to reuse access tokens until expiry (with 5-minute buffer)
+- Updated storage layer and routes to work with new schema structure
+- Successfully tested URL indexing with proper token generation and caching
+- Migration completed successfully with all components working
 
 ## System Architecture
 

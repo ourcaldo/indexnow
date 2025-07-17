@@ -68,14 +68,21 @@ export class GoogleIndexingService {
       
       // If token is still valid (with 5-minute buffer), use it
       if (expiryTime.getTime() > now.getTime() + 5 * 60 * 1000) {
+        console.log('\n=== Using Cached Token ===');
+        console.log('Token expires at:', expiryTime.toISOString());
+        console.log('Time remaining:', Math.round((expiryTime.getTime() - now.getTime()) / 1000 / 60), 'minutes');
+        
         const auth = new google.auth.OAuth2();
         auth.setCredentials({
           access_token: serviceAccount.accessToken
         });
-        return auth;
+        return { auth, tokenUpdated: false };
       }
     }
 
+    console.log('\n=== Generating New Token ===');
+    console.log('Reason:', !serviceAccount.accessToken ? 'No cached token' : 'Token expired or expiring soon');
+    
     // Generate new token
     const tokenInfo = await this.getAccessToken(serviceAccount);
     
@@ -84,13 +91,26 @@ export class GoogleIndexingService {
       access_token: tokenInfo.accessToken
     });
     
-    return auth;
+    return { 
+      auth, 
+      tokenUpdated: true, 
+      newToken: tokenInfo.accessToken,
+      newExpiry: tokenInfo.expiryDate
+    };
   }
 
-  async submitUrlForIndexing(url: string, serviceAccount: ServiceAccount): Promise<IndexingResult> {
+  async submitUrlForIndexing(url: string, serviceAccount: ServiceAccount, updateTokenCallback?: (token: string, expiry: Date) => Promise<void>): Promise<IndexingResult> {
     try {
-      const authClient = await this.createAuthClient(serviceAccount);
-      const indexing = google.indexing({ version: 'v3', auth: authClient });
+      const authResult = await this.createAuthClient(serviceAccount);
+      const indexing = google.indexing({ version: 'v3', auth: authResult.auth });
+
+      // If token was updated and we have a callback to save it
+      if (authResult.tokenUpdated && authResult.newToken && authResult.newExpiry && updateTokenCallback) {
+        await updateTokenCallback(authResult.newToken, authResult.newExpiry);
+        console.log('\n=== Token Cached ===');
+        console.log('New token saved to database');
+        console.log('Expires at:', authResult.newExpiry.toISOString());
+      }
 
       const response = await indexing.urlNotifications.publish({
         requestBody: {
@@ -127,12 +147,12 @@ export class GoogleIndexingService {
     }
   }
 
-  async submitMultipleUrls(urls: string[], serviceAccount: ServiceAccount): Promise<IndexingResult[]> {
+  async submitMultipleUrls(urls: string[], serviceAccount: ServiceAccount, updateTokenCallback?: (token: string, expiry: Date) => Promise<void>): Promise<IndexingResult[]> {
     const results: IndexingResult[] = [];
     
     // Process URLs with rate limiting
     for (const url of urls) {
-      const result = await this.submitUrlForIndexing(url, serviceAccount);
+      const result = await this.submitUrlForIndexing(url, serviceAccount, updateTokenCallback);
       results.push(result);
       
       // Add delay to respect rate limits (60 requests per minute = 1 per second)
