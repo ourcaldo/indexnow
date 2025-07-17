@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -36,6 +37,7 @@ interface JobTableProps {
 
 export default function JobTable({ limit }: JobTableProps) {
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [selectedJobs, setSelectedJobs] = useState<string[]>([]);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -72,6 +74,27 @@ export default function JobTable({ limit }: JobTableProps) {
       toast({
         title: "Success",
         description: "Job deleted successfully",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  const bulkDeleteMutation = useMutation({
+    mutationFn: async (jobIds: string[]) => {
+      return apiRequest("POST", "/api/indexing-jobs/bulk-delete", { jobIds });
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/indexing-jobs"] });
+      setSelectedJobs([]);
+      toast({
+        title: "Success",
+        description: `${data.deleted} jobs deleted successfully`,
       });
     },
     onError: (error) => {
@@ -137,7 +160,7 @@ export default function JobTable({ limit }: JobTableProps) {
   return (
     <div className="space-y-4">
       {!limit && (
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center space-x-4">
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-48">
@@ -157,6 +180,23 @@ export default function JobTable({ limit }: JobTableProps) {
               Filter
             </Button>
           </div>
+          
+          {selectedJobs.length > 0 && (
+            <div className="flex items-center space-x-2">
+              <span className="text-sm text-slate-600">
+                {selectedJobs.length} selected
+              </span>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => bulkDeleteMutation.mutate(selectedJobs)}
+                disabled={bulkDeleteMutation.isPending}
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Delete Selected
+              </Button>
+            </div>
+          )}
         </div>
       )}
 
@@ -164,6 +204,20 @@ export default function JobTable({ limit }: JobTableProps) {
         <Table>
           <TableHeader>
             <TableRow>
+              {!limit && (
+                <TableHead className="w-12">
+                  <Checkbox
+                    checked={selectedJobs.length === displayJobs.length && displayJobs.length > 0}
+                    onCheckedChange={(checked) => {
+                      if (checked) {
+                        setSelectedJobs(displayJobs.map(job => job.id));
+                      } else {
+                        setSelectedJobs([]);
+                      }
+                    }}
+                  />
+                </TableHead>
+              )}
               <TableHead>Name</TableHead>
               <TableHead>Created</TableHead>
               <TableHead>Type</TableHead>
@@ -181,7 +235,25 @@ export default function JobTable({ limit }: JobTableProps) {
 
               return (
                 <TableRow key={job.id}>
-                  <TableCell className="font-medium">{job.name}</TableCell>
+                  {!limit && (
+                    <TableCell>
+                      <Checkbox
+                        checked={selectedJobs.includes(job.id)}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            setSelectedJobs([...selectedJobs, job.id]);
+                          } else {
+                            setSelectedJobs(selectedJobs.filter(id => id !== job.id));
+                          }
+                        }}
+                      />
+                    </TableCell>
+                  )}
+                  <TableCell className="font-medium">
+                    <Link href={`/dashboard/jobs/${job.id}`} className="hover:underline cursor-pointer">
+                      {job.name}
+                    </Link>
+                  </TableCell>
                   <TableCell>
                     {new Date(job.createdAt!).toLocaleDateString()}
                   </TableCell>

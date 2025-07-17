@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
+import { useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import StatsCard from "@/components/dashboard/stats-card";
@@ -16,9 +17,6 @@ import {
   Bell
 } from "lucide-react";
 
-// Set document title for better SEO
-document.title = "Dashboard - IndexNow Pro";
-
 interface DashboardStats {
   totalUrlsIndexed: number;
   activeJobs: number;
@@ -28,6 +26,14 @@ interface DashboardStats {
 }
 
 export default function Dashboard() {
+  // Set document title for better SEO
+  useEffect(() => {
+    document.title = "Dashboard - Overview & Analytics | Google Indexing Dashboard";
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Monitor your Google indexing performance with real-time analytics. Track URL submissions, job status, and API quota usage from your centralized dashboard.');
+    }
+  }, []);
   const { data: stats, isLoading } = useQuery<DashboardStats>({
     queryKey: ["/api/dashboard/stats"],
   });

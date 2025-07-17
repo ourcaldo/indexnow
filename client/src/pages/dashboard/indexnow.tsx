@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useLocation } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -25,10 +26,15 @@ import {
   Globe
 } from "lucide-react";
 
-// Set document title for better SEO
-document.title = "IndexNow - Submit URLs for Indexing | IndexNow Pro";
-
 export default function IndexNow() {
+  // Set document title for better SEO
+  useEffect(() => {
+    document.title = "IndexNow - Submit URLs for Indexing | Google Indexing Dashboard";
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Submit URLs for instant indexing via Google Search Console API. Support both manual URLs and sitemap parsing with flexible scheduling options.');
+    }
+  }, []);
   const [activeTab, setActiveTab] = useState("manual");
   const [manualUrls, setManualUrls] = useState("");
   const [sitemapUrl, setSitemapUrl] = useState("");
@@ -39,6 +45,7 @@ export default function IndexNow() {
   
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [, setLocation] = useLocation();
 
   // Fetch existing jobs to generate automatic job names
   const { data: existingJobs } = useQuery({
@@ -70,13 +77,15 @@ export default function IndexNow() {
     }) => {
       return apiRequest("POST", "/api/indexing-jobs/from-urls", data);
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["/api/indexing-jobs"] });
       toast({
         title: "Success",
         description: "Indexing job created successfully",
       });
       resetForm();
+      // Redirect to job detail page
+      setLocation(`/dashboard/jobs/${data.id}`);
     },
     onError: (error) => {
       toast({
@@ -96,13 +105,15 @@ export default function IndexNow() {
     }) => {
       return apiRequest("POST", "/api/indexing-jobs/from-sitemap", data);
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["/api/indexing-jobs"] });
       toast({
         title: "Success",
         description: "Indexing job created successfully",
       });
       resetForm();
+      // Redirect to job detail page
+      setLocation(`/dashboard/jobs/${data.id}`);
     },
     onError: (error) => {
       toast({
@@ -364,7 +375,7 @@ export default function IndexNow() {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex space-x-4">
+                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
                   <Button 
                     type="submit" 
                     className="flex-1"
@@ -383,6 +394,7 @@ export default function IndexNow() {
                     type="button" 
                     variant="outline"
                     onClick={resetForm}
+                    className="w-full sm:w-auto"
                   >
                     <Save className="h-4 w-4 mr-2" />
                     Clear Form

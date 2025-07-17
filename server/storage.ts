@@ -148,6 +148,10 @@ export class SupabaseStorage implements IStorage {
     return result[0];
   }
 
+  async clearUrlSubmissions(jobId: string): Promise<void> {
+    await db.delete(urlSubmissions).where(eq(urlSubmissions.jobId, jobId));
+  }
+
   async getQuotaUsage(serviceAccountId: string, date: string): Promise<QuotaUsage | undefined> {
     const result = await db
       .select()

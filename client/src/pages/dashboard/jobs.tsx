@@ -1,10 +1,20 @@
+import { useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import JobTable from "@/components/dashboard/job-table";
 import { Briefcase } from "lucide-react";
 
 export default function Jobs() {
+  // Set document title for better SEO
+  useEffect(() => {
+    document.title = "Jobs - Manage Indexing Jobs | Google Indexing Dashboard";
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Manage and monitor your Google indexing jobs. View job status, progress, and performance metrics with bulk operations support.');
+    }
+  }, []);
+
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 sm:p-6 space-y-6">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-slate-800">Jobs</h1>
@@ -21,7 +31,7 @@ export default function Jobs() {
             Indexing Jobs
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0 sm:p-6">
           <JobTable />
         </CardContent>
       </Card>

@@ -261,6 +261,59 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post('/api/indexing-jobs/:id/rerun', requireAuth, async (req: any, res) => {
+    try {
+      const job = await storage.getIndexingJob(req.params.id);
+      if (!job) {
+        return res.status(404).json({ error: 'Job not found' });
+      }
+
+      // Reset job status and counters
+      const updatedJob = await storage.updateIndexingJob(req.params.id, {
+        status: 'pending',
+        processedUrls: 0,
+        successfulUrls: 0,
+        failedUrls: 0,
+        lastRun: null,
+        nextRun: job.cronExpression ? new Date() : null,
+      });
+
+      // Clear existing URL submissions
+      await storage.clearUrlSubmissions(req.params.id);
+
+      // Schedule the job if it has a cron expression
+      if (job.cronExpression) {
+        jobScheduler.scheduleJob(req.params.id, job.cronExpression);
+      }
+
+      res.json(updatedJob);
+    } catch (error) {
+      console.error('Error rerunning indexing job:', error);
+      res.status(500).json({ error: 'Failed to rerun indexing job' });
+    }
+  });
+
+  app.post('/api/indexing-jobs/bulk-delete', requireAuth, async (req: any, res) => {
+    try {
+      const { jobIds } = req.body;
+      
+      if (!Array.isArray(jobIds) || jobIds.length === 0) {
+        return res.status(400).json({ error: 'Job IDs array is required' });
+      }
+
+      // Unschedule and delete each job
+      for (const jobId of jobIds) {
+        jobScheduler.unscheduleJob(jobId);
+        await storage.deleteIndexingJob(jobId);
+      }
+
+      res.json({ deleted: jobIds.length });
+    } catch (error) {
+      console.error('Error bulk deleting jobs:', error);
+      res.status(500).json({ error: 'Failed to bulk delete jobs' });
+    }
+  });
+
   // URL submissions routes
   app.get('/api/indexing-jobs/:id/submissions', requireAuth, async (req: any, res) => {
     try {

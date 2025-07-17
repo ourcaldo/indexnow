@@ -1,5 +1,6 @@
 import { useParams, useLocation } from "wouter";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +14,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 import { IndexingJob, UrlSubmission } from "@shared/schema";
 import { 
   ArrowLeft, 
@@ -21,13 +24,28 @@ import {
   CheckCircle, 
   XCircle, 
   Clock,
-  AlertTriangle
+  AlertTriangle,
+  Play,
+  Pause,
+  RotateCcw,
+  Trash2
 } from "lucide-react";
 
 export default function JobDetail() {
   const params = useParams();
   const [, setLocation] = useLocation();
   const jobId = params.id;
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  // Set document title for better SEO
+  useEffect(() => {
+    document.title = `Job Details - ${job?.name || 'Loading...'} | Google Indexing Dashboard`;
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', `View detailed information and progress for indexing job ${job?.name || ''}. Monitor URL submission status and job performance.`);
+    }
+  }, [job?.name]);
 
   const { data: job, isLoading: jobLoading } = useQuery<IndexingJob>({
     queryKey: ["/api/indexing-jobs", jobId],
@@ -37,6 +55,67 @@ export default function JobDetail() {
   const { data: submissions, isLoading: submissionsLoading } = useQuery<UrlSubmission[]>({
     queryKey: ["/api/indexing-jobs", jobId, "submissions"],
     enabled: !!jobId,
+  });
+
+  const updateJobMutation = useMutation({
+    mutationFn: async ({ id, status }: { id: string; status: string }) => {
+      return apiRequest("PATCH", `/api/indexing-jobs/${id}`, { status });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/indexing-jobs", jobId] });
+      toast({
+        title: "Success",
+        description: "Job updated successfully",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  const deleteJobMutation = useMutation({
+    mutationFn: async (id: string) => {
+      return apiRequest("DELETE", `/api/indexing-jobs/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/indexing-jobs"] });
+      toast({
+        title: "Success",
+        description: "Job deleted successfully",
+      });
+      setLocation("/dashboard/jobs");
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  const rerunJobMutation = useMutation({
+    mutationFn: async (id: string) => {
+      return apiRequest("POST", `/api/indexing-jobs/${id}/rerun`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/indexing-jobs", jobId] });
+      toast({
+        title: "Success",
+        description: "Job restarted successfully",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
   });
 
   if (jobLoading) {
@@ -119,18 +198,68 @@ export default function JobDetail() {
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
-      <div className="flex items-center space-x-4">
-        <Button 
-          variant="outline" 
-          size="sm"
-          onClick={() => setLocation("/dashboard/jobs")}
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Jobs
-        </Button>
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800">{job.name}</h1>
-          <p className="text-slate-600">Job details and progress</p>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-4 sm:space-y-0 sm:space-x-4">
+        <div className="flex items-center space-x-4">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setLocation("/dashboard/jobs")}
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Jobs
+          </Button>
+          <div>
+            <h1 className="text-2xl font-bold text-slate-800">{job.name}</h1>
+            <p className="text-slate-600">Job details and progress</p>
+          </div>
+        </div>
+        
+        {/* Action Buttons */}
+        <div className="flex flex-wrap items-center gap-2">
+          {job.status === "paused" && (
+            <Button 
+              size="sm" 
+              onClick={() => updateJobMutation.mutate({ id: job.id, status: "pending" })}
+              disabled={updateJobMutation.isPending}
+            >
+              <Play className="h-4 w-4 mr-2" />
+              Start
+            </Button>
+          )}
+          
+          {job.status === "running" && (
+            <Button 
+              size="sm" 
+              variant="outline"
+              onClick={() => updateJobMutation.mutate({ id: job.id, status: "paused" })}
+              disabled={updateJobMutation.isPending}
+            >
+              <Pause className="h-4 w-4 mr-2" />
+              Pause
+            </Button>
+          )}
+          
+          {(job.status === "completed" || job.status === "failed") && (
+            <Button 
+              size="sm" 
+              variant="outline"
+              onClick={() => rerunJobMutation.mutate(job.id)}
+              disabled={rerunJobMutation.isPending}
+            >
+              <RotateCcw className="h-4 w-4 mr-2" />
+              Re-run
+            </Button>
+          )}
+          
+          <Button 
+            size="sm" 
+            variant="destructive"
+            onClick={() => deleteJobMutation.mutate(job.id)}
+            disabled={deleteJobMutation.isPending}
+          >
+            <Trash2 className="h-4 w-4 mr-2" />
+            Delete
+          </Button>
         </div>
       </div>
 
