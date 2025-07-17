@@ -1,0 +1,154 @@
+Indexing.js
+const { google } = require('googleapis');
+
+class IndexingService {
+  constructor(accessToken) {
+    this.indexing = google.indexing('v3');
+    this.auth = new google.auth.OAuth2();
+    this.auth.setCredentials({
+      access_token: accessToken
+    });
+  }
+
+  async submitUrl(url, type = 'URL_UPDATED') {
+    try {
+      const res = await this.indexing.urlNotifications.publish({
+        auth: this.auth,
+        requestBody: {
+          url: url,
+          type: type
+        }
+      });
+      
+      return {
+        success: true,
+        data: res.data,
+        status: res.status,
+        headers: res.headers,
+        config: res.config,
+        request: res.request
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data || error.message,
+        status: error.response?.status || 500,
+        headers: error.response?.headers || {},
+        config: error.config
+      };
+    }
+  }
+}
+
+module.exports = IndexingService;
+
+index.js
+const { getAccessToken } = require('./utils/auth');
+const IndexingService = require('./services/indexing');
+
+async function submitForIndexing() {
+  try {
+    // 1. Get access token
+    const { accessToken } = await getAccessToken();
+    
+    // 2. Initialize indexing service
+    const indexingService = new IndexingService(accessToken);
+    
+    // 3. Submit URL
+    const url = 'https://nexjob0.tech';
+    const result = await indexingService.submitUrl(url);
+    
+    console.log('\n=== Complete API Response ===');
+    console.log('Status Code:', result.status);
+    console.log('Headers:', JSON.stringify(result.headers, null, 2));
+    console.log('Raw Body:', JSON.stringify(result.data, null, 2));
+    
+    if (result.success) {
+      console.log('\n=== Indexing Successful ===');
+      console.log('URL submitted:', url);
+    } else {
+      console.log('\n=== Indexing Failed ===');
+      console.log('Error:', JSON.stringify(result.error, null, 2));
+    }
+  } catch (error) {
+    console.error('\n=== Unhandled Error ===');
+    console.error('Message:', error.message);
+    if (error.response) {
+      console.error('Status:', error.response.status);
+      console.error('Headers:', JSON.stringify(error.response.headers, null, 2));
+      console.error('Body:', JSON.stringify(error.response.data, null, 2));
+    }
+  }
+}
+
+submitForIndexing();
+
+Response 200 (success) and failed
+C:\Users\Aldo\Desktop\jwt>node index.js
+[dotenv@17.2.0] injecting env (2) from .env (tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit)
+
+=== JWT Details ===
+Client Email: indexnow@nexpocket.iam.gserviceaccount.com
+Private Key ID: 5629dc111f3d6ac8dd5198b8db32716d62f8c8ce
+Scope: https://www.googleapis.com/auth/indexing
+
+=== Raw Token Response ===
+{
+  access_token: 'ya29.c.c0ASRK0Gb1xzvjtWNx_-1JOGtxS-8kywnIs-71wf0JufYQP3S9ulujiJeP4q91gsqg77rogChclwPlbVm94uWGPBq43S5D8lrpWrs5EigUopRHorvQWb9JWSID0E-7KN7_o5a9vroicsgNSPiUyTW6O8ghr6bOIQkVVIp_uijOHLKVg1U65cl6mWvxbIwiTlBADptQv8EATOl1WUObSsn_BrhGIJ2qWw0qf0KW_fHpyf-PtMNhaoUE4i4xAMI_6vlIRN-CjKsHjymdbaOh49ZoP9WMckpSR7H-HvQMtGG8BzCCvMDtzuDeH9pFQ5ENE61mWmTHSDvjQxAM-kL90ztwTxPhQmF5obF-98xf7MRiOsmMLSggEGSkshK2G385Pst3uqmhns6kbYmFS8Zc52lf4tU3ildsztSaVaBWnnp149xmqYVUYlQR9JYm6BQiY1l3Ugm-qrg-jIBUYRsh0WsjYwy7p9rpIsJfx0kb61-FlYWbxBu-brW94mflgR2QgybzldIsqhbupztyjfRu7QXocIVU-k_yOs9b8ovv3w-1prZfyXf9o8dM7khRg_RgQfqcxVtYWoJOMOgulWRpvFQBmtUMu_8130_7FjQRi1V9IXIv9eMbtgZvY7W4vSm1hx4zMkXzqx3e6J5Ue2a4lhmXhxadx2inQ6YdMkkOj6lvf4-JymSqdQ1X0S7kb8wkJgFdze96zIv_Wvk4de6hsVOyJjfIvr7v-0mmbVFj3Og38R7qtlSnsyyUed2lny-pFwc4Y6YfBa-ehl3j-rSjFYc24kqVM5kZxeS_U8J0tyirphzpQi4j2q7UQa7j3-tpcS66Mon09x-mnXce-Sq_U3ixVWX3jOcX33d7Xo7Oqm0yW5eOZsUX5IwBeOFIbQFwdoYp6_RYXBn2m-O6dZ5-tzWn6Sw0_fwY_bXS790gb0OtfpckVu3t74er0my-p7bc1tUkMJam68i1c-38ceckV2iOQYpmjpWhqzI28lfayB60c0908w5uZ2SfkIU',
+  token_type: 'Bearer',
+  expiry_date: 1752784212000,
+  id_token: undefined,
+  refresh_token: 'jwt-placeholder'
+}
+
+=== Complete API Response ===
+Status Code: 200
+Headers: {}
+Raw Body: {
+  "urlNotificationMetadata": {
+    "url": "https://nexjob.tech"
+  }
+}
+
+=== Indexing Successful ===
+URL submitted: https://nexjob.tech
+
+C:\Users\Aldo\Desktop\jwt>node index.js
+[dotenv@17.2.0] injecting env (2) from .env (tip: 🔐 encrypt with dotenvx: https://dotenvx.com)
+
+=== JWT Details ===
+Client Email: indexnow@nexpocket.iam.gserviceaccount.com
+Private Key ID: 5629dc111f3d6ac8dd5198b8db32716d62f8c8ce
+Scope: https://www.googleapis.com/auth/indexing
+
+=== Raw Token Response ===
+{
+  access_token: 'ya29.c.c0ASRK0Gafbnqsz3Kk83ZMseON_DScWcM8rvnyeFpLJAPor5OKGvHoKrG9UV_RcJmP65qh-tz5NdRpYaNQLV8GVyOJY5GjhS1UlEyXC8OVNspGZIz_rV8MFVelFbcoOQ8BRkgHDaC-7WWhavQEMbTQZkVhpkOSYuEp7NLGtnY0YV9fuu-YWWSYb8x3ZBgIVP4MPOvRnuyliJKvxsP8WmmOm-L0hMlxOjMDBzlJiDQOfqEC_Kw3_xvYFs1MOwA4e5zE2l7qEskxIc69p-7NPl_VcJqqtD8PgmwTwqCAZ4bAvA9PIGzhf8rqh5ubfasKJ4VtcNHJnpKPqR15UMsu4wV6FaHAxlkykRbelm9Onvbl7O7zPkQuCRJ9YKXpOwN387PUkdwQt4qa4MkMO48ujvhU6QQYs6zWYap9qffsYh8h6vz-UdhYMJoxQdQhIj7oQ5Z35U356v6xvh66Sghm94tkZkk0mUY9_y5p4_cZcJ7uFXo_bIkF7s7UfWmztbVlovphnM1pXik_F8WB7m8s53mcwxUm8bgyY_k855d_2R-QgSoS3fQsnMZUc_VuIMv9433fcs4WQJU1JZJ483fjiMp4-1FM5b7Yxf4XaSOIZUhOBwRcnJ9pu9vYS9OtRIb1sj7xldi0i_Bw9uXj54woWchl_qk1FZFsWX6VMhfc-hqJlanh4oRZz80I8ybv66YtiWl6FRXYr4JfB8cegp6fe-j5xYjI1Xph_MsRMpMwddS7ibrp0Sb3w1Oa_yMt5-d_Ifp_zWZ9W9Vj_9VWzkUp0WSQigSzRflu8Yfuzf4wiUFgbvczj0gorgRceOyW30fgkiaM21IpuvbJmf-VZddd37WMpQhvdn-a_tmBBu8aMVgmF8yzYpn84fwei9FF6wh8V2eqv6vthnXsqMFxlIuz9BuQekd55JjBIFf-3hqSasjXaFOpxpm2hit2gsg7b_fYbb99S-VUFJdQWn2Z5ep5dOp784asIefhWXbv9eXd3WmFqjmUa-9BYSkw58X',
+  token_type: 'Bearer',
+  expiry_date: 1752784232000,
+  id_token: undefined,
+  refresh_token: 'jwt-placeholder'
+}
+
+=== Complete API Response ===
+Status Code: 403
+Headers: {}
+Raw Body: undefined
+
+=== Indexing Failed ===
+Error: {
+  "error": {
+    "code": 403,
+    "message": "Permission denied. Failed to verify the URL ownership.",
+    "errors": [
+      {
+        "message": "Permission denied. Failed to verify the URL ownership.",
+        "domain": "global",
+        "reason": "forbidden"
+      }
+    ],
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+C:\Users\Aldo\Desktop\jwt>

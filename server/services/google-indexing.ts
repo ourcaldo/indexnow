@@ -1,5 +1,5 @@
 import { google } from 'googleapis';
-import { GoogleAuth } from 'google-auth-library';
+import { JWT } from 'google-auth-library';
 import { ServiceAccount } from '@shared/schema';
 
 interface IndexingResult {
@@ -14,6 +14,13 @@ export class GoogleIndexingService {
       let serviceAccountCredentials;
       
       // Handle both old and new database formats
+      console.log('=== Service Account Debug ===');
+      console.log('Service Account Object Keys:', Object.keys(serviceAccount));
+      console.log('Has serviceAccountJson:', !!serviceAccount.serviceAccountJson);
+      console.log('Has privateKey:', !!(serviceAccount as any).privateKey);
+      console.log('Has privateKeyId:', !!(serviceAccount as any).privateKeyId);
+      console.log('Has clientId:', !!(serviceAccount as any).clientId);
+      
       if (serviceAccount.serviceAccountJson) {
         // New format: complete JSON stored in serviceAccountJson field
         serviceAccountCredentials = JSON.parse(serviceAccount.serviceAccountJson);
@@ -36,8 +43,14 @@ export class GoogleIndexingService {
         };
       }
       
-      console.log('Creating auth client for:', serviceAccountCredentials.client_email);
-      console.log('Private key format check:', serviceAccountCredentials.private_key?.includes('\\n') ? 'Has escaped newlines' : 'Proper newlines');
+      console.log('\n=== JWT Details ===');
+      console.log('Client Email:', serviceAccountCredentials.client_email);
+      console.log('Private Key ID:', serviceAccountCredentials.private_key_id);
+      console.log('Project ID:', serviceAccountCredentials.project_id);
+      console.log('Private key starts with:', serviceAccountCredentials.private_key?.substring(0, 50) + '...');
+      console.log('Private key ends with:', serviceAccountCredentials.private_key?.substring(serviceAccountCredentials.private_key.length - 50) + '...');
+      console.log('Has proper line breaks:', serviceAccountCredentials.private_key?.includes('\n'));
+      console.log('Service account structure:', JSON.stringify(serviceAccountCredentials, null, 2).substring(0, 200) + '...');
       
       // Ensure private key has proper newlines (not escaped)
       if (serviceAccountCredentials.private_key?.includes('\\n')) {
@@ -45,18 +58,35 @@ export class GoogleIndexingService {
         console.log('Fixed escaped newlines in private key');
       }
       
-      // Use GoogleAuth with complete credentials - this is the most reliable approach
-      const auth = new GoogleAuth({
-        credentials: serviceAccountCredentials,
+      // Use the exact same approach as your working local example
+      const jwtClient = new JWT({
+        email: serviceAccountCredentials.client_email,
+        key: serviceAccountCredentials.private_key,
         scopes: ['https://www.googleapis.com/auth/indexing'],
       });
-
-      const authClient = await auth.getClient();
-      console.log('Google Auth client created successfully for:', serviceAccountCredentials.client_email);
       
-      return authClient;
+      // Exchange JWT for access token (same as your working example)
+      const tokenResponse = await jwtClient.authorize();
+      
+      console.log('\n=== Raw Token Response ===');
+      console.log('Access token starts with:', tokenResponse.access_token?.substring(0, 50) + '...');
+      console.log('Token type:', tokenResponse.token_type);
+      console.log('Expiry date:', new Date(tokenResponse.expiry_date));
+      
+      if (!tokenResponse || !tokenResponse.access_token) {
+        throw new Error('Invalid token response - missing access_token');
+      }
+      
+      console.log('JWT authentication successful for:', serviceAccountCredentials.client_email);
+      
+      return jwtClient;
     } catch (error) {
-      console.error('Failed to create auth client:', error);
+      console.error('\n=== Error Details ===');
+      console.error('Error:', error.message);
+      if (error.response) {
+        console.error('Status:', error.response.status);
+        console.error('Response Data:', error.response.data);
+      }
       console.error('Service account keys:', Object.keys(serviceAccount));
       throw error;
     }
