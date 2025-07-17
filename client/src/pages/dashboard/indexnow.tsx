@@ -29,10 +29,10 @@ import {
 export default function IndexNow() {
   // Set document title for better SEO
   useEffect(() => {
-    document.title = "Submit URLs - IndexNow";
+    document.title = "IndexNow - Submit URLs for Indexing | Google Indexing Dashboard";
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
-      metaDescription.setAttribute('content', 'Submit URLs for instant indexing via Google Search Console API. Support both manual URLs and sitemap parsing.');
+      metaDescription.setAttribute('content', 'Submit URLs for instant indexing via Google Search Console API. Support both manual URLs and sitemap parsing with flexible scheduling options.');
     }
   }, []);
   const [activeTab, setActiveTab] = useState("manual");

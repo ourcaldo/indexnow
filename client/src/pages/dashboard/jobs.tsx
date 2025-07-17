@@ -6,10 +6,10 @@ import { Briefcase } from "lucide-react";
 export default function Jobs() {
   // Set document title for better SEO
   useEffect(() => {
-    document.title = "Manage Jobs - IndexNow";
+    document.title = "Jobs - Manage Indexing Jobs | Google Indexing Dashboard";
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
-      metaDescription.setAttribute('content', 'Manage and monitor your Google indexing jobs. View job status, progress, and performance metrics.');
+      metaDescription.setAttribute('content', 'Manage and monitor your Google indexing jobs. View job status, progress, and performance metrics with bulk operations support.');
     }
   }, []);
 

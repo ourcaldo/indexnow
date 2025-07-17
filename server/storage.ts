@@ -5,21 +5,18 @@ import {
   indexingJobs, 
   urlSubmissions, 
   quotaUsage,
-  accessTokens,
   type UserProfile,
   type ServiceAccount,
   type IndexingJob,
   type UrlSubmission,
   type QuotaUsage,
-  type AccessToken,
   type InsertUserProfile,
   type InsertServiceAccount,
   type InsertIndexingJob,
   type InsertUrlSubmission,
-  type InsertQuotaUsage,
-  type InsertAccessToken
+  type InsertQuotaUsage
 } from '@shared/schema';
-import { eq, and, desc, gt } from 'drizzle-orm';
+import { eq, and, desc } from 'drizzle-orm';
 
 export interface IStorage {
   // User profiles
@@ -58,12 +55,6 @@ export interface IStorage {
     apiQuotaUsed: number;
     apiQuotaLimit: number;
   }>;
-
-  // Access tokens
-  getCachedAccessToken(serviceAccountId: string): Promise<AccessToken | undefined>;
-  storeAccessToken(token: InsertAccessToken): Promise<AccessToken>;
-  invalidateAccessToken(serviceAccountId: string): Promise<void>;
-  cleanupExpiredTokens(): Promise<void>;
 }
 
 export class SupabaseStorage implements IStorage {
@@ -242,49 +233,6 @@ export class SupabaseStorage implements IStorage {
       apiQuotaUsed,
       apiQuotaLimit
     };
-  }
-
-  // Access token management
-  async getCachedAccessToken(serviceAccountId: string): Promise<AccessToken | undefined> {
-    const result = await db
-      .select()
-      .from(accessTokens)
-      .where(
-        and(
-          eq(accessTokens.serviceAccountId, serviceAccountId),
-          gt(accessTokens.expiresAt, new Date())
-        )
-      )
-      .limit(1);
-    
-    return result[0];
-  }
-
-  async storeAccessToken(token: InsertAccessToken): Promise<AccessToken> {
-    // Delete existing token for this service account
-    await db
-      .delete(accessTokens)
-      .where(eq(accessTokens.serviceAccountId, token.serviceAccountId));
-
-    // Insert new token
-    const result = await db.insert(accessTokens).values(token).returning();
-    return result[0];
-  }
-
-  async invalidateAccessToken(serviceAccountId: string): Promise<void> {
-    await db
-      .delete(accessTokens)
-      .where(eq(accessTokens.serviceAccountId, serviceAccountId));
-  }
-
-  async cleanupExpiredTokens(): Promise<void> {
-    await db
-      .delete(accessTokens)
-      .where(
-        and(
-          gt(new Date(), accessTokens.expiresAt)
-        )
-      );
   }
 }
 

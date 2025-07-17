@@ -1,7 +1,6 @@
 import { google } from 'googleapis';
 import { JWT } from 'google-auth-library';
 import { ServiceAccount } from '@shared/schema';
-import { accessTokenService } from './access-token-service';
 
 interface IndexingResult {
   url: string;
@@ -10,55 +9,77 @@ interface IndexingResult {
 }
 
 export class GoogleIndexingService {
-  private async getAccessToken(serviceAccount: ServiceAccount): Promise<string> {
-    // Check if we have a cached token first
-    const cachedToken = await accessTokenService.getCachedToken(serviceAccount.id);
-    if (cachedToken) {
-      console.log('Using cached access token for service account:', serviceAccount.clientEmail);
-      return cachedToken;
-    }
-
-    console.log('No cached token found, creating new JWT token for:', serviceAccount.clientEmail);
-    
-    // Create new JWT and get access token
-    const serviceAccountCredentials = JSON.parse(serviceAccount.serviceAccountJson);
-    
-    // Ensure private key has proper newlines (not escaped)
-    if (serviceAccountCredentials.private_key?.includes('\\n')) {
-      serviceAccountCredentials.private_key = serviceAccountCredentials.private_key.replace(/\\n/g, '\n');
-    }
-    
-    const jwtClient = new JWT({
-      email: serviceAccountCredentials.client_email,
-      key: serviceAccountCredentials.private_key,
-      scopes: ['https://www.googleapis.com/auth/indexing'],
-    });
-    
-    // Exchange JWT for access token
-    const tokenResponse = await jwtClient.authorize();
-    
-    if (!tokenResponse.access_token) {
-      throw new Error('Failed to get access token from JWT');
-    }
-
-    // Cache the token for future use
-    await accessTokenService.storeToken(serviceAccount.id, tokenResponse.access_token);
-    
-    console.log('New access token created and cached for:', serviceAccount.clientEmail);
-    return tokenResponse.access_token;
-  }
-
   private async createAuthClient(serviceAccount: ServiceAccount) {
     try {
-      const accessToken = await this.getAccessToken(serviceAccount);
+      let serviceAccountCredentials;
       
-      // Create auth client with the access token
-      const auth = new google.auth.OAuth2();
-      auth.setCredentials({ access_token: accessToken });
+      // Handle both old and new database formats
+      console.log('=== Service Account Debug ===');
+      console.log('Service Account Object Keys:', Object.keys(serviceAccount));
+      console.log('Has serviceAccountJson:', !!serviceAccount.serviceAccountJson);
+      console.log('Has privateKey:', !!(serviceAccount as any).privateKey);
+      console.log('Has privateKeyId:', !!(serviceAccount as any).privateKeyId);
+      console.log('Has clientId:', !!(serviceAccount as any).clientId);
       
-      console.log('Authentication successful for:', serviceAccount.clientEmail);
+      if (serviceAccount.serviceAccountJson) {
+        // New format: complete JSON stored in serviceAccountJson field
+        serviceAccountCredentials = JSON.parse(serviceAccount.serviceAccountJson);
+        console.log('Using new format - complete service account JSON');
+      } else {
+        // Old format: individual fields in database - reconstruct the service account object
+        console.log('Using old format - reconstructing service account from individual fields');
+        serviceAccountCredentials = {
+          type: 'service_account',
+          project_id: serviceAccount.projectId,
+          private_key_id: (serviceAccount as any).privateKeyId,
+          private_key: (serviceAccount as any).privateKey,
+          client_email: serviceAccount.clientEmail,
+          client_id: (serviceAccount as any).clientId,
+          auth_uri: 'https://accounts.google.com/o/oauth2/auth',
+          token_uri: 'https://oauth2.googleapis.com/token',
+          auth_provider_x509_cert_url: 'https://www.googleapis.com/oauth2/v1/certs',
+          client_x509_cert_url: `https://www.googleapis.com/robot/v1/metadata/x509/${encodeURIComponent(serviceAccount.clientEmail)}`,
+          universe_domain: 'googleapis.com'
+        };
+      }
       
-      return auth;
+      console.log('\n=== JWT Details ===');
+      console.log('Client Email:', serviceAccountCredentials.client_email);
+      console.log('Private Key ID:', serviceAccountCredentials.private_key_id);
+      console.log('Project ID:', serviceAccountCredentials.project_id);
+      console.log('Private key starts with:', serviceAccountCredentials.private_key?.substring(0, 50) + '...');
+      console.log('Private key ends with:', serviceAccountCredentials.private_key?.substring(serviceAccountCredentials.private_key.length - 50) + '...');
+      console.log('Has proper line breaks:', serviceAccountCredentials.private_key?.includes('\n'));
+      console.log('Service account structure:', JSON.stringify(serviceAccountCredentials, null, 2).substring(0, 200) + '...');
+      
+      // Ensure private key has proper newlines (not escaped)
+      if (serviceAccountCredentials.private_key?.includes('\\n')) {
+        serviceAccountCredentials.private_key = serviceAccountCredentials.private_key.replace(/\\n/g, '\n');
+        console.log('Fixed escaped newlines in private key');
+      }
+      
+      // Use the exact same approach as your working local example
+      const jwtClient = new JWT({
+        email: serviceAccountCredentials.client_email,
+        key: serviceAccountCredentials.private_key,
+        scopes: ['https://www.googleapis.com/auth/indexing'],
+      });
+      
+      // Exchange JWT for access token (same as your working example)
+      const tokenResponse = await jwtClient.authorize();
+      
+      console.log('\n=== Raw Token Response ===');
+      console.log('Access token starts with:', tokenResponse.access_token?.substring(0, 50) + '...');
+      console.log('Token type:', tokenResponse.token_type);
+      console.log('Expiry date:', new Date(tokenResponse.expiry_date));
+      
+      if (!tokenResponse || !tokenResponse.access_token) {
+        throw new Error('Invalid token response - missing access_token');
+      }
+      
+      console.log('JWT authentication successful for:', serviceAccountCredentials.client_email);
+      
+      return jwtClient;
     } catch (error) {
       console.error('\n=== Error Details ===');
       console.error('Error:', error.message);

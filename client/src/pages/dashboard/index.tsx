@@ -28,7 +28,7 @@ interface DashboardStats {
 export default function Dashboard() {
   // Set document title for better SEO
   useEffect(() => {
-    document.title = "Dashboard - IndexNow";
+    document.title = "Dashboard - Overview & Analytics | Google Indexing Dashboard";
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
       metaDescription.setAttribute('content', 'Monitor your Google indexing performance with real-time analytics. Track URL submissions, job status, and API quota usage from your centralized dashboard.');
