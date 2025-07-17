@@ -8,21 +8,83 @@ interface IndexingResult {
   error?: string;
 }
 
-export class GoogleIndexingService {
-  private async createAuthClient(serviceAccount: ServiceAccount) {
-    // Use JWT library directly for better control over the authentication process
-    const client = new JWT({
-      email: serviceAccount.clientEmail,
-      key: serviceAccount.privateKey,
-      scopes: ['https://www.googleapis.com/auth/indexing'],
-    });
+interface TokenResponse {
+  accessToken: string;
+  expiryDate: Date;
+  tokenType: string;
+  refreshToken?: string;
+}
 
-    // Authorize to get the access token
-    await client.authorize();
+export class GoogleIndexingService {
+  private async getAccessToken(serviceAccount: ServiceAccount): Promise<TokenResponse> {
+    try {
+      // Parse the service account JSON
+      const serviceAccountData = JSON.parse(serviceAccount.serviceAccountJson);
+      
+      // Create JWT client
+      const jwtClient = new JWT({
+        email: serviceAccountData.client_email,
+        key: serviceAccountData.private_key,
+        scopes: ['https://www.googleapis.com/auth/indexing'],
+      });
+
+      console.log('\n=== JWT Details ===');
+      console.log('Client Email:', serviceAccountData.client_email);
+      console.log('Private Key ID:', serviceAccountData.private_key_id);
+      console.log('Scope:', 'https://www.googleapis.com/auth/indexing');
+      
+      // Exchange JWT for access token
+      const tokenResponse = await jwtClient.authorize();
+      
+      console.log('\n=== Raw Token Response ===');
+      console.log(tokenResponse);
+
+      if (!tokenResponse || !tokenResponse.access_token) {
+        throw new Error('Invalid token response - missing access_token');
+      }
+
+      return {
+        accessToken: tokenResponse.access_token,
+        expiryDate: new Date(tokenResponse.expiry_date),
+        tokenType: tokenResponse.token_type,
+        refreshToken: tokenResponse.refresh_token,
+      };
+    } catch (error: any) {
+      console.error('\n=== Error Details ===');
+      console.error('Error:', error.message);
+      if (error.response) {
+        console.error('Status:', error.response.status);
+        console.error('Response Data:', error.response.data);
+      }
+      throw error;
+    }
+  }
+
+  private async createAuthClient(serviceAccount: ServiceAccount) {
+    // Check if we have a valid cached token
+    if (serviceAccount.accessToken && serviceAccount.tokenExpiresAt) {
+      const expiryTime = new Date(serviceAccount.tokenExpiresAt);
+      const now = new Date();
+      
+      // If token is still valid (with 5-minute buffer), use it
+      if (expiryTime.getTime() > now.getTime() + 5 * 60 * 1000) {
+        const auth = new google.auth.OAuth2();
+        auth.setCredentials({
+          access_token: serviceAccount.accessToken
+        });
+        return auth;
+      }
+    }
+
+    // Generate new token
+    const tokenInfo = await this.getAccessToken(serviceAccount);
     
-    console.log('JWT authentication successful for:', serviceAccount.clientEmail);
+    const auth = new google.auth.OAuth2();
+    auth.setCredentials({
+      access_token: tokenInfo.accessToken
+    });
     
-    return client;
+    return auth;
   }
 
   async submitUrlForIndexing(url: string, serviceAccount: ServiceAccount): Promise<IndexingResult> {
@@ -37,16 +99,30 @@ export class GoogleIndexingService {
         },
       });
 
+      console.log('\n=== Complete API Response ===');
+      console.log('Status Code:', response.status);
+      console.log('Headers:', JSON.stringify(response.headers, null, 2));
+      console.log('Raw Body:', JSON.stringify(response.data, null, 2));
+
       return {
         url,
         success: true,
       };
     } catch (error: any) {
-      console.error(`Failed to index URL ${url}:`, error);
+      console.error(`\n=== Indexing Failed ===`);
+      console.error('URL:', url);
+      console.error('Error:', error.message);
+      
+      if (error.response) {
+        console.error('Status:', error.response.status);
+        console.error('Headers:', JSON.stringify(error.response.headers, null, 2));
+        console.error('Body:', JSON.stringify(error.response.data, null, 2));
+      }
+      
       return {
         url,
         success: false,
-        error: error.message || 'Unknown error occurred',
+        error: error.response?.data?.error?.message || error.message || 'Unknown error occurred',
       };
     }
   }
@@ -104,20 +180,10 @@ export class GoogleIndexingService {
   parseServiceAccount(serviceAccountJson: string) {
     const parsed = JSON.parse(serviceAccountJson);
     
-    // Ensure the private key is properly formatted
-    let privateKey = parsed.private_key;
-    
-    // Clean up the private key if it has escape sequences
-    if (privateKey.includes('\\n')) {
-      privateKey = privateKey.replace(/\\n/g, '\n');
-    }
-    
     return {
       projectId: parsed.project_id,
-      privateKeyId: parsed.private_key_id,
-      privateKey: privateKey,
       clientEmail: parsed.client_email,
-      clientId: parsed.client_id,
+      serviceAccountJson: serviceAccountJson,
     };
   }
 }

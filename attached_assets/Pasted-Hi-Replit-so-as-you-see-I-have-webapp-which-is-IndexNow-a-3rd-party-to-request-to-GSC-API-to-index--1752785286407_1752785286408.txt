@@ -1,0 +1,231 @@
+Hi Replit, so as you see I have webapp which is IndexNow a 3rd party to request to GSC API to index a link. This webapp is same and inspirated by Instant Indexing wordpress plugin by RankMath.
+
+So, as this webapp is on development stage and for personal use only. I need you to focus to enhance and fix some problem in dashboard and panel.
+
+Before you do make the changes, I need you to do a deep dive into the codebase, so you do have better understanding about this webapp, the current stage and feature and the obstacles.
+
+Also please fucking keep in mind that this project is use Supabase as the database, not fucking local postgress, before you fucking changes the database into local db and fucking making mess to it.
+
+For the enhancement, I need you to fucking:
+1. Change the format when saving service accoun into these SQL format.
+INSERT INTO "public"."service_accounts" ("id", "user_id", "name", "client_email", "project_id", "is_active", "daily_quota_limit", "per_minute_quota_limit", "created_at", "updated_at", "service_account_json", "access_token", "token_expires_at") VALUES ('294de5a0-fe5b-48d6-a33b-9f8dc672e262', '979b7aa5-f56d-4e07-98dc-daa2c8c946f5', 'indexnow@nexpocket.iam.gserviceaccount.com', 'indexnow@nexpocket.iam.gserviceaccount.com', 'nexpocket', 'true', '200', '60', '2025-07-17 20:40:11.396696', '2025-07-17 20:40:11.396696', '{
+  "type": "service_account",
+  "project_id": "nexpocket",
+  "private_key_id": "5629dc111f3d6ac8dd5198b8db32716d62f8c8ce",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCtiCAu8cQTkeSI\n8+66FGhBxsPCFpA3e3yvbF4lqxWheLI8XPR7ff2WFikUzwLmj054hGe59vioY623\n6gdWk8S/rp5cB9jzJ8KY34RTXgZxz32MhxOO/Xv19nJaF5JqYUSl64WBooQX2I4D\n5QLDwaN9/8MEbNTn9YOLTDogNYxqH/UA64RQnJ6niCziDUFVVkNAhNt8xzLf2ssI\n79o4xWvBYelDrIq3KEKRaphEttQMbCqVkVgPtaC+EcZ528VJYYPSvNA9ZLGswTLp\n0o1kdJQs9eBPaU6b3agxtEc7ewtWT+pEfv0ii4jI251gqHScBp0OxoRyISw2hqFK\n8vFcvgOrAgMBAAECggEAIZyaTz148ylxEK3e8Z/+Sa9MP43LRVPf5MKiwb0PpYUR\nUOvYVwsiUS3dqzAlqa7cTi+nP7f8lfEottTXswdQNqiF9+F1PjPXV3ED2nn92ZGN\nCekn+qxSlGO15olmTMCmYVTrOR7XYx8I8uwqyuv41PDzPyotWviNEDAlmhOFLRDN\n4yk9n3dbzFMQVkcWyDiCszHT/k1bK1ZLP8ucWV2fi6S93yJw6+YZ9Dfduu4KCPIa\ntnB/cGk3Dcvg7aHOIiiJQPhSbmjRtAKDTP5ygUN3H4XFRWBwOKnoZULjoPDA+Fy6\nyo/hp4htUT4XzMa9b4BdHTqz1mQwkwT87h0kDpdvAQKBgQDXFD357+whOfjvtt+2\nCFQyVL1HKWn9pymk6N7evI6ivo22rvwNKVZDtYo0AHcTnn41bcYw/zf/8rW+bH7V\nt8fxM7bm6UGCEO0pyG4g7tgB55e/wrlWMcJbmCUqUxenDja55Tnk3UiGT9uuvzWx\nR9Xr7VhMcUjjL4iMN28GZqzG6wKBgQDOjEHAkoXAL+lplvZD4hjLwQ4j1Nlyg+Kq\n0obqhnWbcspTVaQbVXP63ABMAoJdMBg8DTq4DAAek2W8wipm6vdxHRNQfQLLpPB8\nLEmclW+NAfOWySdoUbOzOfEGpZZgL3Xab0TZMzDC9AfGuQhl3r3ZOxYwPLMy5l8B\niEfluSIGQQKBgGpkff/8Of95sPXLrcBbQGMhXfwstVyfa09DTrQ57Aj/YBTFXLOa\nBi06SWJN9JmE5oPBiK/GIEqBInxPKTLJVaOwZEK3kgsoGll351ptK/dNO9jFF29W\n8ADlM0VLk0C1HEc66DeZav3d1RsNRR8sHNs3Ll2qEFcptU8/QLGW6tL/AoGAIYFA\n/UMHbUiYXWd+pT5c9VhouclCSMA6Gamy9wI+u6ugRGplB4YSHURoy+uwR/uQQtWG\ni+pubodMfpUkmbNN1kx4IJtWw8AKvqnUexEGmmIRqIkS2mo+czlX7tMXlJy+SmO4\nUF9sboN1a3gCc7vxIfbiv4ppKz2Rdccsmogwi8ECgYEAsLdKFvIAQo+guldKg/Xc\nAFMLZaX1e7GPnq5mN17OL2KKWS4GSGQ7ARDrpc8CgaiChnUlxjB+deut4sFe5GZu\nXMUre64PxWmUmz8dRyV2hhfBIkPxj7p6eCS7yZTTK/EXoLfPspARHkD12XoFkSz3\nExaPjyn0Yc9NEUQ6nAKzmX4=\n-----END PRIVATE KEY-----\n",
+  "client_email": "indexnow@nexpocket.iam.gserviceaccount.com",
+  "client_id": "114543269887752944028",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/indexnow%40nexpocket.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}', null, null);
+
+2. Bcs the process of made JWT and trade it for access token always error, I need you to use this reference that I build local. This is work, so you just need to implement this approach in this codebase (but still fcuking made it relevant with the codebase, not fucking 100% paste the code).
+auth.js
+const { JWT } = require('google-auth-library');
+const path = require('path');
+require('dotenv').config();
+
+async function getAccessToken() {
+  try {
+    // 1. Load service account credentials
+    const serviceAccount = require(path.resolve(process.env.GOOGLE_SERVICE_ACCOUNT_PATH));
+    
+    // 2. Create JWT client
+    const jwtClient = new JWT({
+      email: serviceAccount.client_email,
+      key: serviceAccount.private_key,
+      scopes: [process.env.GOOGLE_SCOPE],
+    });
+
+    console.log('\n=== JWT Details ===');
+    console.log('Client Email:', serviceAccount.client_email);
+    console.log('Private Key ID:', serviceAccount.private_key_id);
+    console.log('Scope:', process.env.GOOGLE_SCOPE);
+    
+    // 3. Exchange JWT for access token
+    const tokenResponse = await jwtClient.authorize();
+    
+    console.log('\n=== Raw Token Response ===');
+    console.log(tokenResponse);
+
+    if (!tokenResponse || !tokenResponse.access_token) {
+      throw new Error('Invalid token response - missing access_token');
+    }
+
+    return {
+      accessToken: tokenResponse.access_token,
+      expiryDate: new Date(tokenResponse.expiry_date),
+      tokenType: tokenResponse.token_type,
+      refreshToken: tokenResponse.refresh_token,
+      rawResponse: tokenResponse // For debugging
+    };
+  } catch (error) {
+    console.error('\n=== Error Details ===');
+    console.error('Error:', error.message);
+    if (error.response) {
+      console.error('Status:', error.response.status);
+      console.error('Response Data:', error.response.data);
+    }
+    throw error;
+  }
+}
+
+module.exports = { getAccessToken };
+
+Indexing.js
+const { google } = require('googleapis');
+
+class IndexingService {
+  constructor(accessToken) {
+    this.indexing = google.indexing('v3');
+    this.auth = new google.auth.OAuth2();
+    this.auth.setCredentials({
+      access_token: accessToken
+    });
+  }
+
+  async submitUrl(url, type = 'URL_UPDATED') {
+    try {
+      const res = await this.indexing.urlNotifications.publish({
+        auth: this.auth,
+        requestBody: {
+          url: url,
+          type: type
+        }
+      });
+      
+      return {
+        success: true,
+        data: res.data,
+        status: res.status,
+        headers: res.headers,
+        config: res.config,
+        request: res.request
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data || error.message,
+        status: error.response?.status || 500,
+        headers: error.response?.headers || {},
+        config: error.config
+      };
+    }
+  }
+}
+
+module.exports = IndexingService;
+
+index.js
+const { getAccessToken } = require('./utils/auth');
+const IndexingService = require('./services/indexing');
+
+async function submitForIndexing() {
+  try {
+    // 1. Get access token
+    const { accessToken } = await getAccessToken();
+    
+    // 2. Initialize indexing service
+    const indexingService = new IndexingService(accessToken);
+    
+    // 3. Submit URL
+    const url = 'https://nexjob0.tech';
+    const result = await indexingService.submitUrl(url);
+    
+    console.log('\n=== Complete API Response ===');
+    console.log('Status Code:', result.status);
+    console.log('Headers:', JSON.stringify(result.headers, null, 2));
+    console.log('Raw Body:', JSON.stringify(result.data, null, 2));
+    
+    if (result.success) {
+      console.log('\n=== Indexing Successful ===');
+      console.log('URL submitted:', url);
+    } else {
+      console.log('\n=== Indexing Failed ===');
+      console.log('Error:', JSON.stringify(result.error, null, 2));
+    }
+  } catch (error) {
+    console.error('\n=== Unhandled Error ===');
+    console.error('Message:', error.message);
+    if (error.response) {
+      console.error('Status:', error.response.status);
+      console.error('Headers:', JSON.stringify(error.response.headers, null, 2));
+      console.error('Body:', JSON.stringify(error.response.data, null, 2));
+    }
+  }
+}
+
+submitForIndexing();
+
+Response 200 (success) and failed
+C:\Users\Aldo\Desktop\jwt>node index.js
+[dotenv@17.2.0] injecting env (2) from .env (tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit)
+
+=== JWT Details ===
+Client Email: indexnow@nexpocket.iam.gserviceaccount.com
+Private Key ID: 5629dc111f3d6ac8dd5198b8db32716d62f8c8ce
+Scope: https://www.googleapis.com/auth/indexing
+
+=== Raw Token Response ===
+{
+  access_token: 'ya29.c.c0ASRK0Gb1xzvjtWNx_-1JOGtxS-8kywnIs-71wf0JufYQP3S9ulujiJeP4q91gsqg77rogChclwPlbVm94uWGPBq43S5D8lrpWrs5EigUopRHorvQWb9JWSID0E-7KN7_o5a9vroicsgNSPiUyTW6O8ghr6bOIQkVVIp_uijOHLKVg1U65cl6mWvxbIwiTlBADptQv8EATOl1WUObSsn_BrhGIJ2qWw0qf0KW_fHpyf-PtMNhaoUE4i4xAMI_6vlIRN-CjKsHjymdbaOh49ZoP9WMckpSR7H-HvQMtGG8BzCCvMDtzuDeH9pFQ5ENE61mWmTHSDvjQxAM-kL90ztwTxPhQmF5obF-98xf7MRiOsmMLSggEGSkshK2G385Pst3uqmhns6kbYmFS8Zc52lf4tU3ildsztSaVaBWnnp149xmqYVUYlQR9JYm6BQiY1l3Ugm-qrg-jIBUYRsh0WsjYwy7p9rpIsJfx0kb61-FlYWbxBu-brW94mflgR2QgybzldIsqhbupztyjfRu7QXocIVU-k_yOs9b8ovv3w-1prZfyXf9o8dM7khRg_RgQfqcxVtYWoJOMOgulWRpvFQBmtUMu_8130_7FjQRi1V9IXIv9eMbtgZvY7W4vSm1hx4zMkXzqx3e6J5Ue2a4lhmXhxadx2inQ6YdMkkOj6lvf4-JymSqdQ1X0S7kb8wkJgFdze96zIv_Wvk4de6hsVOyJjfIvr7v-0mmbVFj3Og38R7qtlSnsyyUed2lny-pFwc4Y6YfBa-ehl3j-rSjFYc24kqVM5kZxeS_U8J0tyirphzpQi4j2q7UQa7j3-tpcS66Mon09x-mnXce-Sq_U3ixVWX3jOcX33d7Xo7Oqm0yW5eOZsUX5IwBeOFIbQFwdoYp6_RYXBn2m-O6dZ5-tzWn6Sw0_fwY_bXS790gb0OtfpckVu3t74er0my-p7bc1tUkMJam68i1c-38ceckV2iOQYpmjpWhqzI28lfayB60c0908w5uZ2SfkIU',
+  token_type: 'Bearer',
+  expiry_date: 1752784212000,
+  id_token: undefined,
+  refresh_token: 'jwt-placeholder'
+}
+
+=== Complete API Response ===
+Status Code: 200
+Headers: {}
+Raw Body: {
+  "urlNotificationMetadata": {
+    "url": "https://nexjob.tech"
+  }
+}
+
+=== Indexing Successful ===
+URL submitted: https://nexjob.tech
+
+C:\Users\Aldo\Desktop\jwt>node index.js
+[dotenv@17.2.0] injecting env (2) from .env (tip: 🔐 encrypt with dotenvx: https://dotenvx.com)
+
+=== JWT Details ===
+Client Email: indexnow@nexpocket.iam.gserviceaccount.com
+Private Key ID: 5629dc111f3d6ac8dd5198b8db32716d62f8c8ce
+Scope: https://www.googleapis.com/auth/indexing
+
+=== Raw Token Response ===
+{
+  access_token: 'ya29.c.c0ASRK0Gafbnqsz3Kk83ZMseON_DScWcM8rvnyeFpLJAPor5OKGvHoKrG9UV_RcJmP65qh-tz5NdRpYaNQLV8GVyOJY5GjhS1UlEyXC8OVNspGZIz_rV8MFVelFbcoOQ8BRkgHDaC-7WWhavQEMbTQZkVhpkOSYuEp7NLGtnY0YV9fuu-YWWSYb8x3ZBgIVP4MPOvRnuyliJKvxsP8WmmOm-L0hMlxOjMDBzlJiDQOfqEC_Kw3_xvYFs1MOwA4e5zE2l7qEskxIc69p-7NPl_VcJqqtD8PgmwTwqCAZ4bAvA9PIGzhf8rqh5ubfasKJ4VtcNHJnpKPqR15UMsu4wV6FaHAxlkykRbelm9Onvbl7O7zPkQuCRJ9YKXpOwN387PUkdwQt4qa4MkMO48ujvhU6QQYs6zWYap9qffsYh8h6vz-UdhYMJoxQdQhIj7oQ5Z35U356v6xvh66Sghm94tkZkk0mUY9_y5p4_cZcJ7uFXo_bIkF7s7UfWmztbVlovphnM1pXik_F8WB7m8s53mcwxUm8bgyY_k855d_2R-QgSoS3fQsnMZUc_VuIMv9433fcs4WQJU1JZJ483fjiMp4-1FM5b7Yxf4XaSOIZUhOBwRcnJ9pu9vYS9OtRIb1sj7xldi0i_Bw9uXj54woWchl_qk1FZFsWX6VMhfc-hqJlanh4oRZz80I8ybv66YtiWl6FRXYr4JfB8cegp6fe-j5xYjI1Xph_MsRMpMwddS7ibrp0Sb3w1Oa_yMt5-d_Ifp_zWZ9W9Vj_9VWzkUp0WSQigSzRflu8Yfuzf4wiUFgbvczj0gorgRceOyW30fgkiaM21IpuvbJmf-VZddd37WMpQhvdn-a_tmBBu8aMVgmF8yzYpn84fwei9FF6wh8V2eqv6vthnXsqMFxlIuz9BuQekd55JjBIFf-3hqSasjXaFOpxpm2hit2gsg7b_fYbb99S-VUFJdQWn2Z5ep5dOp784asIefhWXbv9eXd3WmFqjmUa-9BYSkw58X',
+  token_type: 'Bearer',
+  expiry_date: 1752784232000,
+  id_token: undefined,
+  refresh_token: 'jwt-placeholder'
+}
+
+=== Complete API Response ===
+Status Code: 403
+Headers: {}
+Raw Body: undefined
+
+=== Indexing Failed ===
+Error: {
+  "error": {
+    "code": 403,
+    "message": "Permission denied. Failed to verify the URL ownership.",
+    "errors": [
+      {
+        "message": "Permission denied. Failed to verify the URL ownership.",
+        "domain": "global",
+        "reason": "forbidden"
+      }
+    ],
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+C:\Users\Aldo\Desktop\jwt>

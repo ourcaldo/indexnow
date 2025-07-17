@@ -20,14 +20,14 @@ export const serviceAccounts = pgTable("service_accounts", {
   name: text("name").notNull(),
   clientEmail: text("client_email").notNull(),
   projectId: text("project_id").notNull(),
-  privateKey: text("private_key").notNull(),
-  privateKeyId: text("private_key_id").notNull(),
-  clientId: text("client_id").notNull(),
   isActive: boolean("is_active").default(true),
   dailyQuotaLimit: integer("daily_quota_limit").default(200),
   perMinuteQuotaLimit: integer("per_minute_quota_limit").default(60),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
+  serviceAccountJson: text("service_account_json").notNull(),
+  accessToken: text("access_token"),
+  tokenExpiresAt: timestamp("token_expires_at"),
 });
 
 export const indexingJobs = pgTable("indexing_jobs", {
@@ -82,9 +82,8 @@ export const insertServiceAccountSchema = createInsertSchema(serviceAccounts).om
   userId: true,
   clientEmail: true,
   projectId: true,
-  privateKey: true,
-  privateKeyId: true,
-  clientId: true,
+  accessToken: true,
+  tokenExpiresAt: true,
 }).extend({
   serviceAccountJson: z.string().min(1, "Service account JSON is required"),
   name: z.string().optional(),

@@ -48,8 +48,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Remove sensitive data
       const safeAccounts = accounts.map(acc => ({
         ...acc,
-        privateKey: undefined,
-        privateKeyId: undefined
+        serviceAccountJson: undefined,
+        accessToken: undefined
       }));
       res.json(safeAccounts);
     } catch (error) {
@@ -80,9 +80,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         name: name || parsed.clientEmail,
         clientEmail: parsed.clientEmail,
         projectId: parsed.projectId,
-        privateKey: parsed.privateKey,
-        privateKeyId: parsed.privateKeyId,
-        clientId: parsed.clientId,
+        serviceAccountJson: parsed.serviceAccountJson,
         isActive: true,
         dailyQuotaLimit: 200,
         perMinuteQuotaLimit: 60
@@ -91,8 +89,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Remove sensitive data
       const safeAccount = {
         ...account,
-        privateKey: undefined,
-        privateKeyId: undefined
+        serviceAccountJson: undefined,
+        accessToken: undefined
       };
 
       res.status(201).json(safeAccount);
