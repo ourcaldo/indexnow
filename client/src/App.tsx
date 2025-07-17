@@ -30,17 +30,34 @@ function Router() {
       <Route path="/signup">
         {user ? <Redirect to="/dashboard" /> : <Signup />}
       </Route>
-      <Route path="/dashboard" nest>
+      <Route path="/dashboard">
+        {!user ? <Redirect to="/login" /> : (
+          <DashboardLayout>
+            <Dashboard />
+          </DashboardLayout>
+        )}
+      </Route>
+      <Route path="/dashboard/indexnow">
+        {!user ? <Redirect to="/login" /> : (
+          <DashboardLayout>
+            <IndexNow />
+          </DashboardLayout>
+        )}
+      </Route>
+      <Route path="/dashboard/jobs" nest>
         {!user ? <Redirect to="/login" /> : (
           <DashboardLayout>
             <Switch>
-              <Route path="/" component={Dashboard} />
-              <Route path="/indexnow" component={IndexNow} />
-              <Route path="/jobs" component={Jobs} />
-              <Route path="/jobs/:id" component={JobDetail} />
-              <Route path="/settings" component={Settings} />
-              <Route component={NotFound} />
+              <Route path="/" component={Jobs} />
+              <Route path="/:id" component={JobDetail} />
             </Switch>
+          </DashboardLayout>
+        )}
+      </Route>
+      <Route path="/dashboard/settings">
+        {!user ? <Redirect to="/login" /> : (
+          <DashboardLayout>
+            <Settings />
           </DashboardLayout>
         )}
       </Route>
