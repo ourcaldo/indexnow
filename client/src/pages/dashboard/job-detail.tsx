@@ -169,7 +169,7 @@ export default function JobDetail() {
               </div>
             )}
 
-            {job.nextRun && (
+            {job.nextRun && job.schedule !== 'one-time' && (
               <div className="flex items-center justify-between">
                 <span className="text-sm text-slate-600">Next Run</span>
                 <span className="text-sm">

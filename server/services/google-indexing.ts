@@ -9,11 +9,35 @@ interface IndexingResult {
 
 export class GoogleIndexingService {
   private async createAuthClient(serviceAccount: ServiceAccount) {
+    // Properly format the private key by ensuring it has proper line breaks
+    let privateKey = serviceAccount.privateKey;
+    
+    // Handle various formats of private keys
+    if (privateKey.includes('\\n')) {
+      privateKey = privateKey.replace(/\\n/g, '\n');
+    }
+    
+    // Ensure proper BEGIN/END formatting
+    if (!privateKey.startsWith('-----BEGIN PRIVATE KEY-----')) {
+      privateKey = `-----BEGIN PRIVATE KEY-----\n${privateKey}\n-----END PRIVATE KEY-----`;
+    }
+
+    // Clean up extra whitespace and ensure consistent formatting
+    privateKey = privateKey.trim();
+    
+    // Ensure proper line breaks
+    if (!privateKey.includes('\n')) {
+      // If still no line breaks, it's likely base64 encoded - split it
+      const base64Part = privateKey.replace('-----BEGIN PRIVATE KEY-----', '').replace('-----END PRIVATE KEY-----', '');
+      const chunks = base64Part.match(/.{1,64}/g) || [];
+      privateKey = `-----BEGIN PRIVATE KEY-----\n${chunks.join('\n')}\n-----END PRIVATE KEY-----`;
+    }
+
     const credentials = {
       type: 'service_account',
       project_id: serviceAccount.projectId,
       private_key_id: serviceAccount.privateKeyId,
-      private_key: serviceAccount.privateKey.replace(/\\n/g, '\n'),
+      private_key: privateKey,
       client_email: serviceAccount.clientEmail,
       client_id: serviceAccount.clientId,
       auth_uri: 'https://accounts.google.com/o/oauth2/auth',
@@ -21,6 +45,11 @@ export class GoogleIndexingService {
       auth_provider_x509_cert_url: 'https://www.googleapis.com/oauth2/v1/certs',
       client_x509_cert_url: `https://www.googleapis.com/robot/v1/metadata/x509/${encodeURIComponent(serviceAccount.clientEmail)}`,
     };
+
+    console.log('Creating auth client with credentials:', {
+      ...credentials,
+      private_key: '[REDACTED]' // Don't log the private key
+    });
 
     const auth = new google.auth.GoogleAuth({
       credentials,
@@ -108,10 +137,19 @@ export class GoogleIndexingService {
 
   parseServiceAccount(serviceAccountJson: string) {
     const parsed = JSON.parse(serviceAccountJson);
+    
+    // Ensure the private key is properly formatted
+    let privateKey = parsed.private_key;
+    
+    // Clean up the private key if it has escape sequences
+    if (privateKey.includes('\\n')) {
+      privateKey = privateKey.replace(/\\n/g, '\n');
+    }
+    
     return {
       projectId: parsed.project_id,
       privateKeyId: parsed.private_key_id,
-      privateKey: parsed.private_key,
+      privateKey: privateKey,
       clientEmail: parsed.client_email,
       clientId: parsed.client_id,
     };

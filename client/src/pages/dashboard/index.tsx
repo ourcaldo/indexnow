@@ -16,6 +16,9 @@ import {
   Bell
 } from "lucide-react";
 
+// Set document title for better SEO
+document.title = "Dashboard - IndexNow Pro";
+
 interface DashboardStats {
   totalUrlsIndexed: number;
   activeJobs: number;

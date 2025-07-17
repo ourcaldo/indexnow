@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -25,6 +25,9 @@ import {
   Globe
 } from "lucide-react";
 
+// Set document title for better SEO
+document.title = "IndexNow - Submit URLs for Indexing | IndexNow Pro";
+
 export default function IndexNow() {
   const [activeTab, setActiveTab] = useState("manual");
   const [manualUrls, setManualUrls] = useState("");
@@ -36,6 +39,27 @@ export default function IndexNow() {
   
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  // Fetch existing jobs to generate automatic job names
+  const { data: existingJobs } = useQuery({
+    queryKey: ["/api/indexing-jobs"],
+  });
+
+  // Generate automatic job name if none is provided
+  useEffect(() => {
+    if (!jobName && existingJobs) {
+      const jobNumbers = existingJobs
+        .filter((job: any) => job.name.startsWith('#Job-'))
+        .map((job: any) => {
+          const match = job.name.match(/^#Job-(\d+)$/);
+          return match ? parseInt(match[1], 10) : 0;
+        })
+        .sort((a: number, b: number) => b - a);
+      
+      const nextNumber = jobNumbers.length > 0 ? jobNumbers[0] + 1 : 1;
+      setJobName(`#Job-${nextNumber}`);
+    }
+  }, [existingJobs, jobName]);
 
   const createJobFromUrlsMutation = useMutation({
     mutationFn: async (data: {
@@ -194,9 +218,9 @@ export default function IndexNow() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         {/* URL Input Form */}
-        <div className="lg:col-span-2">
+        <div className="xl:col-span-2">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">

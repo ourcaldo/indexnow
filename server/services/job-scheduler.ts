@@ -18,13 +18,17 @@ export class JobScheduler {
     const jobs = await db
       .select()
       .from(indexingJobs)
-      .where(and(
-        eq(indexingJobs.status, 'pending'),
-        eq(indexingJobs.schedule, 'daily')
-      ));
+      .where(eq(indexingJobs.status, 'pending'));
 
     for (const job of jobs) {
-      if (job.cronExpression) {
+      if (job.schedule === 'one-time') {
+        // Execute one-time jobs immediately
+        console.log(`Executing pending one-time job: ${job.id}`);
+        setImmediate(() => {
+          this.executeJob(job.id);
+        });
+      } else if (job.cronExpression) {
+        // Schedule recurring jobs
         this.scheduleJob(job.id, job.cronExpression);
       }
     }
@@ -190,18 +194,20 @@ export class JobScheduler {
           submittedAt: new Date()
         });
 
-        // Update quota usage
-        if (usage.length) {
-          await db
-            .update(quotaUsage)
-            .set({ requestsCount: currentUsage + 1 })
-            .where(eq(quotaUsage.id, usage[0].id));
-        } else {
-          await db.insert(quotaUsage).values({
-            serviceAccountId: account.id,
-            date: today,
-            requestsCount: 1
-          });
+        // Update quota usage only if the request was successful
+        if (result.success) {
+          if (usage.length) {
+            await db
+              .update(quotaUsage)
+              .set({ requestsCount: currentUsage + 1 })
+              .where(eq(quotaUsage.id, usage[0].id));
+          } else {
+            await db.insert(quotaUsage).values({
+              serviceAccountId: account.id,
+              date: today,
+              requestsCount: 1
+            });
+          }
         }
 
         processed = true;
