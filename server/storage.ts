@@ -25,7 +25,7 @@ export interface IStorage {
   updateUserProfile(id: string, profile: Partial<UserProfile>): Promise<UserProfile>;
 
   // Service accounts
-  createServiceAccount(account: Omit<InsertServiceAccount, 'serviceAccountJson'>): Promise<ServiceAccount>;
+  createServiceAccount(account: InsertServiceAccount): Promise<ServiceAccount>;
   getServiceAccounts(userId: string): Promise<ServiceAccount[]>;
   updateServiceAccount(id: string, account: Partial<ServiceAccount>): Promise<ServiceAccount>;
   deleteServiceAccount(id: string): Promise<void>;
@@ -77,7 +77,7 @@ export class SupabaseStorage implements IStorage {
     return result[0];
   }
 
-  async createServiceAccount(account: Omit<InsertServiceAccount, 'serviceAccountJson'>): Promise<ServiceAccount> {
+  async createServiceAccount(account: InsertServiceAccount): Promise<ServiceAccount> {
     const result = await db.insert(serviceAccounts).values(account).returning();
     return result[0];
   }

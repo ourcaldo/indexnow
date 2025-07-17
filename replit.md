@@ -7,6 +7,7 @@ This is a full-stack web application that provides an instant indexing solution 
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+Fix JWT authentication issues by storing complete service account JSON instead of fragmented fields.
 
 ## System Architecture
 
@@ -44,7 +45,7 @@ The application follows a modern full-stack architecture with clear separation o
 
 ### Service Account Management
 - Google Service Account JSON upload and validation
-- Secure storage of private keys and credentials
+- Complete service account JSON storage for proper JWT authentication
 - Quota tracking (daily and per-minute limits)
 - Active/inactive status management
 
@@ -126,3 +127,14 @@ The application follows a modern full-stack architecture with clear separation o
 - CORS and security headers
 
 The application is designed to be scalable and maintainable, with clear separation between client and server code, type safety throughout, and robust error handling for external API integrations.
+
+## Recent Changes
+
+### 2025-07-17 - Fixed JWT Authentication Issue
+- **Problem**: JWT authentication was failing with "Invalid JWT Signature" error because service account credentials were stored in separate database columns, corrupting the private key format.
+- **Solution**: Updated database schema to store complete service account JSON instead of fragmented fields.
+- **Database Changes**: 
+  - Added `service_account_json` column to `service_accounts` table
+  - Updated Google Indexing Service to use complete service account JSON for JWT authentication
+  - Created migration scripts for existing data
+- **Impact**: This fixes the core indexing functionality by ensuring proper JWT token generation for Google Indexing API calls.

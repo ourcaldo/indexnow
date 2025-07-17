@@ -10,17 +10,20 @@ interface IndexingResult {
 
 export class GoogleIndexingService {
   private async createAuthClient(serviceAccount: ServiceAccount) {
-    // Use JWT library directly for better control over the authentication process
+    // Parse the complete service account JSON
+    const serviceAccountCredentials = JSON.parse(serviceAccount.serviceAccountJson);
+    
+    // Use JWT library directly with the complete service account credentials
     const client = new JWT({
-      email: serviceAccount.clientEmail,
-      key: serviceAccount.privateKey,
+      email: serviceAccountCredentials.client_email,
+      key: serviceAccountCredentials.private_key,
       scopes: ['https://www.googleapis.com/auth/indexing'],
     });
 
     // Authorize to get the access token
     await client.authorize();
     
-    console.log('JWT authentication successful for:', serviceAccount.clientEmail);
+    console.log('JWT authentication successful for:', serviceAccountCredentials.client_email);
     
     return client;
   }
@@ -104,20 +107,10 @@ export class GoogleIndexingService {
   parseServiceAccount(serviceAccountJson: string) {
     const parsed = JSON.parse(serviceAccountJson);
     
-    // Ensure the private key is properly formatted
-    let privateKey = parsed.private_key;
-    
-    // Clean up the private key if it has escape sequences
-    if (privateKey.includes('\\n')) {
-      privateKey = privateKey.replace(/\\n/g, '\n');
-    }
-    
     return {
       projectId: parsed.project_id,
-      privateKeyId: parsed.private_key_id,
-      privateKey: privateKey,
       clientEmail: parsed.client_email,
-      clientId: parsed.client_id,
+      serviceAccountJson: serviceAccountJson, // Store the complete JSON
     };
   }
 }

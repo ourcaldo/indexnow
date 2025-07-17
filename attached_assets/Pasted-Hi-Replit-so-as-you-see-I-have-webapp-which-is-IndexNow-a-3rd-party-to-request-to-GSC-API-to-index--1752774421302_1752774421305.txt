@@ -1,0 +1,184 @@
+Hi Replit, so as you see I have webapp which is IndexNow a 3rd party to request to GSC API to index a link. This webapp is same and inspirated by Instant Indexing wordpress plugin by RankMath.
+
+So, as this webapp is on development stage and for personal use only. I need you to focus to enhance and fix some problem in dashboard and panel.
+
+Before you do make the changes, I need you to do a deep dive into the codebase, so you do have better understanding about this webapp, the current stage and feature and the obstacles.
+
+For the current error, we have a error in main feature which is the capability to make the auto indexing. As for the nature, we can't use the service account directly to request the instant indexing to Google API. But, we use that service account to make the JWT token then trade it with the access token, this is on my POV. But, let me know the correct way and how the current code function to handle the flow of IndexNow.
+
+But, we've error when creating the JWT token, which come like this:
+Failed to index URL https://nexjob.tech/: GaxiosError: invalid_grant: Invalid JWT Signature.
+    at Gaxios._request (/home/runner/workspace/node_modules/gaxios/src/gaxios.ts:211:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  config: {
+    method: 'POST',
+    url: URL {
+      href: 'https://oauth2.googleapis.com/token',
+      origin: 'https://oauth2.googleapis.com',
+      protocol: 'https:',
+      username: '',
+      password: '',
+      host: 'oauth2.googleapis.com',
+      hostname: 'oauth2.googleapis.com',
+      port: '',
+      pathname: '/token',
+      search: '',
+      searchParams: URLSearchParams {},
+      hash: ''
+    },
+    data: URLSearchParams {
+      'grant_type' => '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
+      'assertion' => '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.' },
+    responseType: 'json',
+    retryConfig: {
+      httpMethodsToRetry: [Array],
+      currentRetryAttempt: 0,
+      retry: 3,
+      noResponseRetries: 2,
+      retryDelayMultiplier: 2,
+      timeOfFirstRequest: 1752771563004,
+      totalTimeout: 9007199254740991,
+      maxRetryDelay: 9007199254740991,
+      statusCodesToRetry: [Array]
+    },
+    body: URLSearchParams {
+      'grant_type' => '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
+      'assertion' => '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.' },
+    validateStatus: [Function: validateStatus],
+    errorRedactor: [Function: defaultErrorRedactor],
+    duplex: 'half',
+    headers: Headers {
+      accept: 'application/json',
+      'x-goog-api-client': 'gl-node/20.18.1',
+      'User-Agent': 'google-api-nodejs-client/10.1.0'
+    }
+  },
+  response: Response {
+    size: 0,
+    data: {
+      error: 'invalid_grant',
+      error_description: 'Invalid JWT Signature.'
+    },
+    config: {
+      method: 'POST',
+      url: URL {},
+      data: [Object],
+      responseType: 'json',
+      retryConfig: [Object],
+      body: [Object],
+      validateStatus: [Function: validateStatus],
+      errorRedactor: [Function: defaultErrorRedactor],
+      duplex: 'half',
+      headers: Headers {
+        accept: 'application/json',
+        'x-goog-api-client': 'gl-node/20.18.1',
+        'User-Agent': 'google-api-nodejs-client/10.1.0'
+      }
+    },
+    [Symbol(Body internals)]: {
+      body: [Gunzip],
+      stream: [Gunzip],
+      boundary: null,
+      disturbed: true,
+      error: null
+    },
+    [Symbol(Response internals)]: {
+      type: 'default',
+      url: 'https://oauth2.googleapis.com/token',
+      status: 400,
+      statusText: 'Bad Request',
+      headers: [Object],
+      counter: 0,
+      highWaterMark: 16384
+    }
+  },
+  code: 400,
+  status: 400,
+  error: undefined,
+  [Symbol(gaxios-gaxios-error)]: '7.1.1',
+  [cause]: { message: 'invalid_grant', code: 400, status: 'Bad Request' }
+}
+
+When I ask the ChatGPT about this error, they say the error may related to the private key that may just in oneline, which the private key must be multiline same as for on the service-account json that user provide.
+
+As I see, you saved the service account data which is the private key in the multiline, but not using the \n. This is the way you saved the data:
+-----BEGIN PRIVATE KEY-----
+MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCRX/pTmUia3vly
+7FUvtG5Cld2swxrBwWxqFl6S4kYdmmpWluwNx2x125bfCYD2tg8NqZ5AT+4kn2A0
+/J+CtU2ce/reZ5C6FPCav10QllKvkwDrcF7DAAegmw7zniyyo/jdjsWjqZ+s/yol
+YbPGFmB1M8fIgLaFM7OgNw2YPlqle8HwJ28R+Pn+5kJOCW+r4QB5wQvPX7kdTJdn
+c3zzobAZi5Z1IEEw3cO/NO7wlCEsyFXFrHTDy5vfYOlS3WjNyI7juJEt2w5Zt/j3
+ALVVsaGHIGCLqRl7HCCRlRcVGkeZ0VOAJHeiQohAOLuQyemWZnFf38aW01hetLyX
+XLucDplLAgMBAAECggEAAtUv2rOmzkAMhsuGnpD5OHvkEdTkM+rpcgFKuhrzaqDU
+VaKphSuYyoB40TEhK3CWqMpaZFDnXaLxmFCh+3YliOteHznP4fZ5u61EdSx6Ozx4
+2SnSWAl0ln+KbyPkq6baUV3FzLdK4AG7ilIsxxjNq/4JEw2CE0Y1NZBmNZuiNI2P
+SQG2UimAPTi+wvKNw40UGUGQaY+zfr/DpYrynJ3LxeuevX7/qXzgK9W86dLRokzE
+C5KxlI0FIw1gnsD+7kWKYNDBS+rlw8otUjCK5Qo+KNnzreX4BElxyLGSTLFSJlr7
+ovbLa0YO2TMKKdHGaZVAJ0T2rQnJOFxEpVkkC+W9QQKBgQDHZIgDj6EqHAixO+Ta
+2P7QfSDAz1QtJxU1B3Qh6N3lx6vApGmKojFKJ68O+exfzz3b+OaeawY+j6//2WV1
+A5jpTYVFW5ceOGpj1ZNchR67pv4yJIuawi369T9/b3SAR5KKhsGAWk2/grd8ftEv
+EW2G8fr4iOXtiu91pwCe7z7OWwKBgQC6pYpJYR79wJILIM8Ud/jX1LJc5H3/2nPr
+w4lqIq5n68d+nCZDOPphR4ctAobV5M0wcGl4QwUPQAc72QXd1Bh99Rte+BXRp9qG
+CC1YJ2J4W0CaOWxNpM0Vxm1QqyouokKpinQ5cGbVEdEjmM8oYw6F5yZqL4MyYczw
+7nlsq8Qz0QKBgQDFfPYWiNj4y0F0wbzfYdOojna1YeSewDoKBvLobyvw3b5olK+Q
+RysIppuF+tY64xoC2NkaiShrKIgKobkSl9iJI2Xfl2Lq5LfDYBOPrK4O8MyOv5Gi
+W7eM/AHDZ5H9SGaFXAkl5stg5shzv2vS8bEI2n1YUsdhap3Yaut7f702RwKBgQCB
+oiQv3wK1X6CPlhP9tW3iCdpv5ksU/tbwcvjn/HqBtyLx7uYsXlCYbCOYwV6BBM72
+y7yVSIclFmVvzcXjUkJIiYqfJVOSMDD4Uomb5o7f5REzjJqKOuIuM4kNNDSx+wSt
+2HnswwLJDfzh6mpHNLWLjwYBTkqjHYZH+HnhXlOBYQKBgAfU5XmBZ+DVmYg+Aum0
+RqFpmpCSo7fdVI2cNCcv8Zj+BiKqVNn1zKYeYGQcK8BWnxxeXcDRR7iX4IPKomz4
+dPrT9SJnBfjjMxxaqUHmz1Hu79shlX9YLSF86TDpMHKIHqw1SQIHXBAZGedtb6lA
+0lKZPrKH8hq72daMP2Uze9AS
+-----END PRIVATE KEY-----
+
+I don't know what you doing this, but the very easy way to save the service account is by saved completely the json format. So, for example if user add service account json like this:
+{
+  "type": "service_account",
+  "project_id": "nexpocket",
+  "private_key_id": "518d889eb2232125fa654b23171f43247b5315cf",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCRX/pTmUia3vly\n7FUvtG5Cld2swxrBwWxqFl6S4kYdmmpWluwNx2x125bfCYD2tg8NqZ5AT+4kn2A0\n/J+CtU2ce/reZ5C6FPCav10QllKvkwDrcF7DAAegmw7zniyyo/jdjsWjqZ+s/yol\nYbPGFmB1M8fIgLaFM7OgNw2YPlqle8HwJ28R+Pn+5kJOCW+r4QB5wQvPX7kdTJdn\nc3zzobAZi5Z1IEEw3cO/NO7wlCEsyFXFrHTDy5vfYOlS3WjNyI7juJEt2w5Zt/j3\nALVVsaGHIGCLqRl7HCCRlRcVGkeZ0VOAJHeiQohAOLuQyemWZnFf38aW01hetLyX\nXLucDplLAgMBAAECggEAAtUv2rOmzkAMhsuGnpD5OHvkEdTkM+rpcgFKuhrzaqDU\nVaKphSuYyoB40TEhK3CWqMpaZFDnXaLxmFCh+3YliOteHznP4fZ5u61EdSx6Ozx4\n2SnSWAl0ln+KbyPkq6baUV3FzLdK4AG7ilIsxxjNq/4JEw2CE0Y1NZBmNZuiNI2P\nSQG2UimAPTi+wvKNw40UGUGQaY+zfr/DpYrynJ3LxeuevX7/qXzgK9W86dLRokzE\nC5KxlI0FIw1gnsD+7kWKYNDBS+rlw8otUjCK5Qo+KNnzreX4BElxyLGSTLFSJlr7\novbLa0YO2TMKKdHGaZVAJ0T2rQnJOFxEpVkkC+W9QQKBgQDHZIgDj6EqHAixO+Ta\n2P7QfSDAz1QtJxU1B3Qh6N3lx6vApGmKojFKJ68O+exfzz3b+OaeawY+j6//2WV1\nA5jpTYVFW5ceOGpj1ZNchR67pv4yJIuawi369T9/b3SAR5KKhsGAWk2/grd8ftEv\nEW2G8fr4iOXtiu91pwCe7z7OWwKBgQC6pYpJYR79wJILIM8Ud/jX1LJc5H3/2nPr\nw4lqIq5n68d+nCZDOPphR4ctAobV5M0wcGl4QwUPQAc72QXd1Bh99Rte+BXRp9qG\nCC1YJ2J4W0CaOWxNpM0Vxm1QqyouokKpinQ5cGbVEdEjmM8oYw6F5yZqL4MyYczw\n7nlsq8Qz0QKBgQDFfPYWiNj4y0F0wbzfYdOojna1YeSewDoKBvLobyvw3b5olK+Q\nRysIppuF+tY64xoC2NkaiShrKIgKobkSl9iJI2Xfl2Lq5LfDYBOPrK4O8MyOv5Gi\nW7eM/AHDZ5H9SGaFXAkl5stg5shzv2vS8bEI2n1YUsdhap3Yaut7f702RwKBgQCB\noiQv3wK1X6CPlhP9tW3iCdpv5ksU/tbwcvjn/HqBtyLx7uYsXlCYbCOYwV6BBM72\ny7yVSIclFmVvzcXjUkJIiYqfJVOSMDD4Uomb5o7f5REzjJqKOuIuM4kNNDSx+wSt\n2HnswwLJDfzh6mpHNLWLjwYBTkqjHYZH+HnhXlOBYQKBgAfU5XmBZ+DVmYg+Aum0\nRqFpmpCSo7fdVI2cNCcv8Zj+BiKqVNn1zKYeYGQcK8BWnxxeXcDRR7iX4IPKomz4\ndPrT9SJnBfjjMxxaqUHmz1Hu79shlX9YLSF86TDpMHKIHqw1SQIHXBAZGedtb6lA\n0lKZPrKH8hq72daMP2Uze9AS\n-----END PRIVATE KEY-----\n",
+  "client_email": "rm-instant-indexing@nexpocket.iam.gserviceaccount.com",
+  "client_id": "116555367844383019015",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/rm-instant-indexing%40nexpocket.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
+
+Then we save the service account exactly like that, not seperate each data and throw other data. 
+
+So, I need you to fix this, the current format that you've use for service_accounts is like this:
+INSERT INTO "public"."service_accounts" ("id", "user_id", "name", "client_email", "project_id", "private_key", "private_key_id", "client_id", "is_active", "daily_quota_limit", "per_minute_quota_limit", "created_at", "updated_at") VALUES ('a2d326bf-a050-460e-8bd2-0640693a15ec', '979b7aa5-f56d-4e07-98dc-daa2c8c946f5', 'rm-instant-indexing@nexpocket.iam.gserviceaccount.com', 'rm-instant-indexing@nexpocket.iam.gserviceaccount.com', 'nexpocket', '-----BEGIN PRIVATE KEY-----
+MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCRX/pTmUia3vly
+7FUvtG5Cld2swxrBwWxqFl6S4kYdmmpWluwNx2x125bfCYD2tg8NqZ5AT+4kn2A0
+/J+CtU2ce/reZ5C6FPCav10QllKvkwDrcF7DAAegmw7zniyyo/jdjsWjqZ+s/yol
+YbPGFmB1M8fIgLaFM7OgNw2YPlqle8HwJ28R+Pn+5kJOCW+r4QB5wQvPX7kdTJdn
+c3zzobAZi5Z1IEEw3cO/NO7wlCEsyFXFrHTDy5vfYOlS3WjNyI7juJEt2w5Zt/j3
+ALVVsaGHIGCLqRl7HCCRlRcVGkeZ0VOAJHeiQohAOLuQyemWZnFf38aW01hetLyX
+XLucDplLAgMBAAECggEAAtUv2rOmzkAMhsuGnpD5OHvkEdTkM+rpcgFKuhrzaqDU
+VaKphSuYyoB40TEhK3CWqMpaZFDnXaLxmFCh+3YliOteHznP4fZ5u61EdSx6Ozx4
+2SnSWAl0ln+KbyPkq6baUV3FzLdK4AG7ilIsxxjNq/4JEw2CE0Y1NZBmNZuiNI2P
+SQG2UimAPTi+wvKNw40UGUGQaY+zfr/DpYrynJ3LxeuevX7/qXzgK9W86dLRokzE
+C5KxlI0FIw1gnsD+7kWKYNDBS+rlw8otUjCK5Qo+KNnzreX4BElxyLGSTLFSJlr7
+ovbLa0YO2TMKKdHGaZVAJ0T2rQnJOFxEpVkkC+W9QQKBgQDHZIgDj6EqHAixO+Ta
+2P7QfSDAz1QtJxU1B3Qh6N3lx6vApGmKojFKJ68O+exfzz3b+OaeawY+j6//2WV1
+A5jpTYVFW5ceOGpj1ZNchR67pv4yJIuawi369T9/b3SAR5KKhsGAWk2/grd8ftEv
+EW2G8fr4iOXtiu91pwCe7z7OWwKBgQC6pYpJYR79wJILIM8Ud/jX1LJc5H3/2nPr
+w4lqIq5n68d+nCZDOPphR4ctAobV5M0wcGl4QwUPQAc72QXd1Bh99Rte+BXRp9qG
+CC1YJ2J4W0CaOWxNpM0Vxm1QqyouokKpinQ5cGbVEdEjmM8oYw6F5yZqL4MyYczw
+7nlsq8Qz0QKBgQDFfPYWiNj4y0F0wbzfYdOojna1YeSewDoKBvLobyvw3b5olK+Q
+RysIppuF+tY64xoC2NkaiShrKIgKobkSl9iJI2Xfl2Lq5LfDYBOPrK4O8MyOv5Gi
+W7eM/AHDZ5H9SGaFXAkl5stg5shzv2vS8bEI2n1YUsdhap3Yaut7f702RwKBgQCB
+oiQv3wK1X6CPlhP9tW3iCdpv5ksU/tbwcvjn/HqBtyLx7uYsXlCYbCOYwV6BBM72
+y7yVSIclFmVvzcXjUkJIiYqfJVOSMDD4Uomb5o7f5REzjJqKOuIuM4kNNDSx+wSt
+2HnswwLJDfzh6mpHNLWLjwYBTkqjHYZH+HnhXlOBYQKBgAfU5XmBZ+DVmYg+Aum0
+RqFpmpCSo7fdVI2cNCcv8Zj+BiKqVNn1zKYeYGQcK8BWnxxeXcDRR7iX4IPKomz4
+dPrT9SJnBfjjMxxaqUHmz1Hu79shlX9YLSF86TDpMHKIHqw1SQIHXBAZGedtb6lA
+0lKZPrKH8hq72daMP2Uze9AS
+-----END PRIVATE KEY-----
+', '518d889eb2232125fa654b23171f43247b5315cf', '116555367844383019015', 'true', '200', '60', '2025-07-17 15:48:51.032252', '2025-07-17 15:48:51.032252');
+
+We need to save completely the json service account, if you want to make another fields data, it's okay, we can save it. But, when make the JWT account, it's more easy when we use the json data from the database directly.
+So, don't forget to make SQL where I can add it on the Supabase
+
