@@ -183,15 +183,31 @@ export class JobScheduler {
 
         // Submit URL for indexing with token caching
         const result = await googleIndexingService.submitUrlForIndexing(url, account, async (token: string, expiry: Date) => {
-          // Update the service account with the new token
-          await db
-            .update(serviceAccounts)
-            .set({ 
-              accessToken: token,
-              tokenExpiresAt: expiry,
-              updatedAt: new Date()
-            })
-            .where(eq(serviceAccounts.id, account.id));
+          try {
+            console.log('\n=== Saving Token to Database ===');
+            console.log('Service Account ID:', account.id);
+            console.log('Token length:', token.length);
+            console.log('Expiry:', expiry.toISOString());
+            
+            // Update the service account with the new token
+            const updateResult = await db
+              .update(serviceAccounts)
+              .set({ 
+                accessToken: token,
+                tokenExpiresAt: expiry,
+                updatedAt: new Date()
+              })
+              .where(eq(serviceAccounts.id, account.id))
+              .returning();
+            
+            console.log('Database update result:', updateResult.length > 0 ? 'SUCCESS' : 'FAILED');
+            
+            // Update the local account object too so subsequent URLs in the same job can use cached token
+            account.accessToken = token;
+            account.tokenExpiresAt = expiry;
+          } catch (error) {
+            console.error('Error saving token to database:', error);
+          }
         });
 
         // Create URL submission record

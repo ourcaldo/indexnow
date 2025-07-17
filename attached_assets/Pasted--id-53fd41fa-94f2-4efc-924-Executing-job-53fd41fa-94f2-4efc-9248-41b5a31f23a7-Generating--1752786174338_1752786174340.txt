@@ -1,0 +1,61 @@
+"id":"53fd41fa-94f2-4efc-924…
+Executing job 53fd41fa-94f2-4efc-9248-41b5a31f23a7
+
+=== Generating New Token ===
+Reason: No cached token
+
+=== JWT Details ===
+Client Email: indexnow@nexpocket.iam.gserviceaccount.com
+Private Key ID: f176cd36ce2fb0a2b68fbf42b43839ac691a81e1
+Scope: https://www.googleapis.com/auth/indexing
+
+=== Raw Token Response ===
+{
+  access_token: 'ya29.c.c0ASRK0GYKRoacxEsiSTigMWFgZm6tqaVazyjsDZe-eGNRtegHcN8ry9uFrv4jT8H0rchXsOBld5sS74Nt_3FBKGz29xTUkwP0RMEDnd3Tj9MmarM_WkZnSs1Alqb5Zl2debztTukOYUsdT2yn9PU8XrvP6RQxDEl2zXxmaXzLH74-z-nmr9OAXdu1ZG_ZXyNCD4D_BlFcO7w8N3Y8tNZ1UgtuPOmcn-DT_lybewBT5W6ES8VTRCqkvjCfO4g5zkFyrRL1ysEaMH7rFX6gsYuL0y3CPil9e8Q5MPGpT5dancZMSZgk-8b-8FFJd5FZSs6OfS7iixcc88y1LEYpPhNi3TSDts0L96kvrwnyI5XlSllRrjokQqzCbEud7gH387AInzeS4bOqjXqzWZsvr0R0IezYvFWxtMO8yMx2O_lw-1WOmFzs6negowlUhv0QkWpr00s0dSMkkOkOQ9lvvfB3ehYfO7Ynqb4Z2YazUnlXt_mY1kc4MJxbndjJn1wbvb-14kORBn8h4Vz93VxoOity3paZOQeYehikYzxB5uJXuBWedrXaa_JmMvqmBJqaUpgosqarhir26bY1yqYeJ0uX0f5Q1fxMns_0rJl338IIfBci4dtlRvR0ub6hRt9JdVZxSRa3WQiSwu6l4lQmgm8_tsMFz4orJ4IFYRBFmkyvvnu1VQQtBFlJdVn73mkhY45szbaRsyXkmUB01mxbRjM7vFUQJUqnmUhzQJpfr_YRdZ02JRe8sxXOWashOJoYiInShs6kR58rhd4sVJ-YOb6gWh96cr6M0zbR2YyV8g43z08MO35mjkjRvo_nMiZUZXy9SvfpOnyci35FcF03UsMUtRXn2ZJU5yqp__fSIy5863oBZIw5MIcVw4p8ZJMIxOUUzyyXmtYavixxuj62xSFllhaXh_M5sbrS8ml851snhSvvJoWlF6a2BYJ9Y_cBWdiI906354Wy0WcdZnly6wn-yc3t8cmcRuQubz4djfiZ_nd3j2z6O0B8g0X',
+  token_type: 'Bearer',
+  expiry_date: 1752789714000,
+  id_token: undefined,
+  refresh_token: 'jwt-placeholder'
+}
+9:01:55 PM [express] GET /api/indexing-jobs 200 in 624ms :: [{"id":"53fd41fa-94f2-4efc-9248-41b5a31f…
+
+=== Complete API Response ===
+Status Code: 200
+Headers: {}
+Raw Body: {
+  "urlNotificationMetadata": {
+    "url": "https://nexjob.tech"
+  }
+}
+Job 53fd41fa-94f2-4efc-9248-41b5a31f23a7 completed: 1 successful, 0 failed
+9:02:26 PM [express] GET /api/dashboard/stats 200 in 667ms :: {"totalUrlsIndexed":3,"activeJobs":1,"…
+9:02:33 PM [express] POST /api/indexing-jobs/from-urls 201 in 358ms :: {"id":"8af2958e-f2c2-44bb-8fa…
+Executing job 8af2958e-f2c2-44bb-8fad-7204bd277e35
+9:02:33 PM [express] GET /api/indexing-jobs 200 in 332ms :: [{"id":"8af2958e-f2c2-44bb-8fad-7204bd27…
+
+=== Generating New Token ===
+Reason: No cached token
+
+=== JWT Details ===
+Client Email: indexnow@nexpocket.iam.gserviceaccount.com
+Private Key ID: f176cd36ce2fb0a2b68fbf42b43839ac691a81e1
+Scope: https://www.googleapis.com/auth/indexing
+
+=== Raw Token Response ===
+{
+  access_token: 'ya29.c.c0ASRK0Ga_NxrQ5rh_mP_luOXiq1NfBywgiPMCcL321xzHwKnf8wO6YA6kDNfaSvzig0wgu52eA_xDc_Y-ZVvgeWPh8jeL8EISb6kMiC76We2rKqYIAcJy5t9pu9eivwB-XHU8KUWjN8_RGzilxNvA6hj_PAqQwlccAfV6FeVOWmLWJYfLk2g060TIvYIreuR145Q1rsKRoUJ_oy68OkEINBS_s4raBf1Aq7ajbWiXkg88M6XmVPx_g3zpfLh94ECZkcANFBi5_MDimHwQyDU-RoSi2jH9aJA_kLLzQh5T3rMb31cw_lGjrUT9hl77j4vbwDWZnLGI5eSEd0XhYDgPbvpgLAUepTgFYyXbJnbNqFWc2Vn-3m6B3krqKgG387Pzhrhy6R1epkIwY4Y_ohh3ntmM4ZhRxYMbq8OiUyseIRW8irI2g1eayXbOJ-qaSFckUj9izeOF50w5Mo4zc0z0FdyxUz2wY9ZiW8qe0b8rdutwZ_2MOfjFfJ857l6Wol-ekYWvI1lyfBwFjkZIOQ9qOdq1oB8FZlZQVfen9qWcBXdV4YiSeWsiomcOZob7Js1pmBQg_-aYoBUOdppWq2Zqtgco_dUmeSyXUf_FsfvxjQqhevsWBFmz8ya2jbedpeFV7g_kyrakh-7kr750pWwvMoMSe18ISMR_dcu_5BbU_tQ5kwb9fF3tU9R1soYfQcjbgulZoocMJk0Oa3s7adMkBJ9vOwew_MOjwR1th6wm9bfIt-wcFmUa_Wc95bkiJ4rnOzq6QfqYsak26VbuvOWzYI-RZOdB3x35omze9d69zfR0hfMXIRey1skFlMySzrnnaa_5vzv1yaMXeg4cqloxYwu052MS5o9OZaygU_v2zqOUnW2BFxpfxmz3uqc352hgZ5azZsUROnOF8wx2ujsyevvy4yXuXmwsngtpSkY9xUddy1mBOMJ_hlFaceZhsQfwJIeiJwp87WV5Z26h-7hydQesecqbSnjtuhmytYWnXn5caovQ4rVrY0w',
+  token_type: 'Bearer',
+  expiry_date: 1752789752000,
+  id_token: undefined,
+  refresh_token: 'jwt-placeholder'
+}
+
+=== Complete API Response ===
+Status Code: 200
+Headers: {}
+Raw Body: {
+  "urlNotificationMetadata": {
+    "url": "https://nexjob.tech/"
+  }
+}
+Job 8af2958e-f2c2-44bb-8fad-7204bd277e35 completed: 1 successful, 0 failed

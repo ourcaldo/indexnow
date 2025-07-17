@@ -106,10 +106,9 @@ export class GoogleIndexingService {
 
       // If token was updated and we have a callback to save it
       if (authResult.tokenUpdated && authResult.newToken && authResult.newExpiry && updateTokenCallback) {
+        console.log('\n=== Calling Token Update Callback ===');
         await updateTokenCallback(authResult.newToken, authResult.newExpiry);
-        console.log('\n=== Token Cached ===');
-        console.log('New token saved to database');
-        console.log('Expires at:', authResult.newExpiry.toISOString());
+        console.log('Token update callback completed');
       }
 
       const response = await indexing.urlNotifications.publish({
