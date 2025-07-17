@@ -91,15 +91,15 @@ export default function QuotaStatus() {
                 "border-emerald-200 bg-emerald-50"
               }`}
             >
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-slate-700">
+              <div className="flex items-center justify-between mb-2 gap-2">
+                <span className="text-sm font-medium text-slate-700 truncate flex-1 min-w-0">
                   {account.name}
                 </span>
                 <Badge variant={
                   status === "critical" ? "destructive" :
                   status === "warning" ? "secondary" :
                   "default"
-                }>
+                } className="whitespace-nowrap">
                   {status === "critical" ? "Critical" :
                    status === "warning" ? "Limited" :
                    "Active"}

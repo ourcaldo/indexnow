@@ -9,29 +9,9 @@ interface IndexingResult {
 
 export class GoogleIndexingService {
   private async createAuthClient(serviceAccount: ServiceAccount) {
-    // Properly format the private key by ensuring it has proper line breaks
-    let privateKey = serviceAccount.privateKey;
-    
-    // Handle various formats of private keys
-    if (privateKey.includes('\\n')) {
-      privateKey = privateKey.replace(/\\n/g, '\n');
-    }
-    
-    // Ensure proper BEGIN/END formatting
-    if (!privateKey.startsWith('-----BEGIN PRIVATE KEY-----')) {
-      privateKey = `-----BEGIN PRIVATE KEY-----\n${privateKey}\n-----END PRIVATE KEY-----`;
-    }
-
-    // Clean up extra whitespace and ensure consistent formatting
-    privateKey = privateKey.trim();
-    
-    // Ensure proper line breaks
-    if (!privateKey.includes('\n')) {
-      // If still no line breaks, it's likely base64 encoded - split it
-      const base64Part = privateKey.replace('-----BEGIN PRIVATE KEY-----', '').replace('-----END PRIVATE KEY-----', '');
-      const chunks = base64Part.match(/.{1,64}/g) || [];
-      privateKey = `-----BEGIN PRIVATE KEY-----\n${chunks.join('\n')}\n-----END PRIVATE KEY-----`;
-    }
+    // The private key from database should already be properly formatted
+    // Just ensure it's clean and properly formatted for JWT signing
+    const privateKey = serviceAccount.privateKey.trim();
 
     const credentials = {
       type: 'service_account',
@@ -44,11 +24,15 @@ export class GoogleIndexingService {
       token_uri: 'https://oauth2.googleapis.com/token',
       auth_provider_x509_cert_url: 'https://www.googleapis.com/oauth2/v1/certs',
       client_x509_cert_url: `https://www.googleapis.com/robot/v1/metadata/x509/${encodeURIComponent(serviceAccount.clientEmail)}`,
+      universe_domain: 'googleapis.com'
     };
 
-    console.log('Creating auth client with credentials:', {
-      ...credentials,
-      private_key: '[REDACTED]' // Don't log the private key
+    // Debug: Log the first and last few characters to verify format
+    console.log('Private key format check:', {
+      starts_with: privateKey.substring(0, 27),
+      ends_with: privateKey.substring(privateKey.length - 25),
+      has_newlines: privateKey.includes('\n'),
+      length: privateKey.length
     });
 
     const auth = new google.auth.GoogleAuth({
