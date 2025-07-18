@@ -1,0 +1,106 @@
+> rest-express@1.0.0 dev
+[dotenv@17.2.0] injecting env (6) from .env (tip: ⚙️  suppress all logs with { quiet: true })
+[dotenv@17.2.0] injecting env (0) from .env (tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' })
+10:46:03 AM [express] serving on port 5000
+6:10:36 AM [express] Job scheduler initialized successfully
+Job monitor started - checking every minute for pending jobs
+Failed to initialize job scheduler: PostgresError: relation "indb_indexing_jobs" does not exist
+    at ErrorResponse (file:///home/runner/workspace/node_modules/postgres/src/connection.js:794:26)
+    at handle (file:///home/runner/workspace/node_modules/postgres/src/connection.js:480:6)
+    at Socket.data (file:///home/runner/workspace/node_modules/postgres/src/connection.js:315:9)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:191:23) {
+  severity_local: 'ERROR',
+  severity: 'ERROR',
+  code: '42P01',
+  position: '226',
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}
+Browserslist: browsers data (caniuse-lite) is 9 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+Client connected to WebSocket
+Client connected to WebSocket
+Error fetching indexing jobs: PostgresError: relation "indb_indexing_jobs" does not exist
+    at ErrorResponse (file:///home/runner/workspace/node_modules/postgres/src/connection.js:794:26)
+    at handle (file:///home/runner/workspace/node_modules/postgres/src/connection.js:480:6)
+    at Socket.data (file:///home/runner/workspace/node_modules/postgres/src/connection.js:315:9)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:191:23) {
+  severity_local: 'ERROR',
+  severity: 'ERROR',
+  code: '42P01',
+  position: '226',
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}
+10:46:14 AM [express] GET /api/indexing-jobs 500 in 644ms :: {"error":"Failed to fetch indexing jobs"}
+Error fetching dashboard stats: PostgresError: relation "indb_indexing_jobs" does not exist
+    at ErrorResponse (file:///home/runner/workspace/node_modules/postgres/src/connection.js:794:26)
+    at handle (file:///home/runner/workspace/node_modules/postgres/src/connection.js:480:6)
+    at Socket.data (file:///home/runner/workspace/node_modules/postgres/src/connection.js:315:9)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:191:23) {
+  severity_local: 'ERROR',
+  severity: 'ERROR',
+  code: '42P01',
+  position: '226',
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}
+10:46:14 AM [express] GET /api/dashboard/stats 500 in 942ms :: {"error":"Failed to fetch dashboard st…
+Error checking pending jobs: PostgresError: relation "indb_indexing_jobs" does not exist
+    at ErrorResponse (file:///home/runner/workspace/node_modules/postgres/src/connection.js:794:26)
+    at handle (file:///home/runner/workspace/node_modules/postgres/src/connection.js:480:6)
+    at Socket.data (file:///home/runner/workspace/node_modules/postgres/src/connection.js:315:9)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:191:23) {
+  severity_local: 'ERROR',
+  severity: 'ERROR',
+  code: '42P01',
+  position: '226',
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}
+Error recovering stuck jobs: PostgresError: relation "indb_indexing_jobs" does not exist
+    at ErrorResponse (file:///home/runner/workspace/node_modules/postgres/src/connection.js:794:26)
+    at handle (file:///home/runner/workspace/node_modules/postgres/src/connection.js:480:6)
+    at Socket.data (file:///home/runner/workspace/node_modules/postgres/src/connection.js:315:9)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:191:23) {
+  severity_local: 'ERROR',
+  severity: 'ERROR',
+  code: '42P01',
+  position: '226',
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}
+Client disconnected from WebSocket
+Client connected to WebSocket
+10:48:02 AM [express] GET /api/indexing-jobs 200 in 675ms :: [{"id":"016e6e8a-257b-4b0e-9ebd-9c6d4367…
+10:48:02 AM [express] GET /api/dashboard/stats 200 in 810ms :: {"totalUrlsIndexed":80,"activeJobs":0,…
+Client disconnected from WebSocket
+Client connected to WebSocket
+10:48:21 AM [express] GET /api/indexing-jobs 304 in 547ms :: [{"id":"016e6e8a-257b-4b0e-9ebd-9c6d4367…
+10:48:21 AM [express] GET /api/dashboard/stats 304 in 722ms :: {"totalUrlsIndexed":80,"activeJobs":0,…
