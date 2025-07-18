@@ -154,8 +154,9 @@ The application is designed to be scalable and maintainable, with clear separati
 
 ### New Features Added
 ✓ Added automatic redirect after job creation to job detail page
-✓ Enhanced job detail page with action buttons (Start, Pause, Stop, Re-run)
+✓ Enhanced job detail page with action buttons (Start, Pause, Stop, Re-run, Delete)
 ✓ Implemented proper button states based on job status validation
 ✓ Added backend route for job re-run functionality with counter reset
+✓ Added Delete button with confirmation dialog and automatic redirect to jobs list
 ✓ Fixed API response parsing issue causing "undefined" job IDs in redirects
-✓ All job management features now working correctly
+✓ All job management features now working correctly with proper authentication

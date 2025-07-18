@@ -27,7 +27,8 @@ import {
   Play,
   Pause,
   Square,
-  RotateCcw
+  RotateCcw,
+  Trash2
 } from "lucide-react";
 
 export default function JobDetail() {
@@ -92,6 +93,29 @@ export default function JobDetail() {
     },
   });
 
+  const deleteJobMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest("DELETE", `/api/indexing-jobs/${jobId}`);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/indexing-jobs"] });
+      toast({
+        title: "Success",
+        description: "Job deleted successfully",
+      });
+      // Redirect to jobs list after deletion
+      setLocation("/dashboard/jobs");
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
   // Job action handlers
   const handleStartJob = () => {
     updateJobMutation.mutate({ status: 'pending' });
@@ -109,11 +133,18 @@ export default function JobDetail() {
     rerunJobMutation.mutate();
   };
 
+  const handleDeleteJob = () => {
+    if (window.confirm('Are you sure you want to delete this job? This action cannot be undone.')) {
+      deleteJobMutation.mutate();
+    }
+  };
+
   // Determine which buttons should be shown based on job status
   const canStart = job && ['paused', 'failed', 'cancelled'].includes(job.status);
   const canPause = job && job.status === 'running';
   const canStop = job && ['pending', 'running', 'paused'].includes(job.status);
   const canRerun = job && ['completed', 'failed', 'cancelled'].includes(job.status);
+  const canDelete = job && ['completed', 'failed', 'cancelled', 'paused'].includes(job.status);
 
   if (jobLoading) {
     return (
@@ -258,6 +289,18 @@ export default function JobDetail() {
             >
               <RotateCcw className="h-4 w-4 mr-2" />
               Re-run
+            </Button>
+          )}
+          
+          {canDelete && (
+            <Button
+              onClick={handleDeleteJob}
+              disabled={deleteJobMutation.isPending}
+              size="sm"
+              variant="destructive"
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Delete
             </Button>
           )}
         </div>
