@@ -12,6 +12,9 @@ import { verifyAuth } from "./services/supabase";
 import { googleIndexingService } from "./services/google-indexing";
 import { sitemapParser } from "./services/sitemap-parser";
 import { jobScheduler } from "./services/job-scheduler";
+import { requireOwnership, rateLimitPerUser } from "./middleware/authorization";
+import { validateUuid, validateServiceAccountJson } from "./middleware/input-validation";
+import { SecureLogger } from "./middleware/secure-logging";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Authentication middleware
@@ -19,6 +22,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const authHeader = req.headers.authorization;
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        SecureLogger.logSecurityEvent('AUTH_MISSING_HEADER', { ip: req.ip, userAgent: req.get('User-Agent') }, req);
         return res.status(401).json({ error: 'Authorization header required' });
       }
 
@@ -27,6 +31,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       req.user = user;
       next();
     } catch (error) {
+      SecureLogger.logSecurityEvent('AUTH_INVALID_TOKEN', { ip: req.ip, userAgent: req.get('User-Agent'), error: error.message }, req);
       res.status(401).json({ error: 'Invalid token' });
     }
   };
@@ -59,7 +64,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/service-accounts', requireAuth, async (req: any, res) => {
+  app.post('/api/service-accounts', requireAuth, rateLimitPerUser(10, 60 * 60 * 1000), async (req: any, res) => {
     try {
       const validation = insertServiceAccountSchema.safeParse(req.body);
       if (!validation.success) {
@@ -68,9 +73,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const { serviceAccountJson, name } = validation.data;
 
-      // Validate service account JSON
+      // Enhanced validation for service account JSON
+      if (!validateServiceAccountJson(serviceAccountJson)) {
+        SecureLogger.logSecurityEvent('INVALID_SERVICE_ACCOUNT_JSON', { userId: req.user.id }, req);
+        return res.status(400).json({ error: 'Invalid service account JSON format' });
+      }
+
+      // Additional validation using Google service
       if (!googleIndexingService.validateServiceAccount(serviceAccountJson)) {
-        return res.status(400).json({ error: 'Invalid service account JSON' });
+        return res.status(400).json({ error: 'Invalid service account credentials' });
       }
 
       // Parse service account
@@ -101,9 +112,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete('/api/service-accounts/:id', requireAuth, async (req: any, res) => {
+  app.delete('/api/service-accounts/:id', requireAuth, validateUuid('id'), requireOwnership('service-account'), async (req: any, res) => {
     try {
       await storage.deleteServiceAccount(req.params.id);
+      SecureLogger.logSecurityEvent('SERVICE_ACCOUNT_DELETED', { userId: req.user.id, serviceAccountId: req.params.id }, req);
       res.status(204).send();
     } catch (error) {
       console.error('Error deleting service account:', error);
@@ -133,7 +145,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/indexing-jobs/:id', requireAuth, async (req: any, res) => {
+  app.get('/api/indexing-jobs/:id', requireAuth, validateUuid('id'), requireOwnership('indexing-job'), async (req: any, res) => {
     try {
       const job = await storage.getIndexingJob(req.params.id);
       if (!job) {

@@ -4,6 +4,10 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { jobScheduler } from "./services/job-scheduler";
 import { securityHeaders, rateLimit, validateEnvironment, sanitizeLogsMiddleware } from "./middleware/security";
+import { sanitizeInputs, validateSqlInjection, validateFileUpload } from "./middleware/input-validation";
+import { requestLoggingMiddleware, errorLoggingMiddleware } from "./middleware/secure-logging";
+import { validateContentSecurityPolicy, csrfProtection } from "./middleware/authorization";
+import { SecurityAudit } from "./middleware/security-audit";
 
 // Validate environment variables at startup
 validateEnvironment();
@@ -12,7 +16,21 @@ const app = express();
 
 // Security middleware
 app.use(securityHeaders);
+app.use(requestLoggingMiddleware);
 app.use(sanitizeLogsMiddleware);
+
+// Advanced security monitoring
+app.use(SecurityAudit.monitorSuspiciousActivity);
+app.use(SecurityAudit.detectVulnerabilityScanning);
+app.use(SecurityAudit.monitorRequestPatterns);
+app.use(SecurityAudit.detectBruteForce());
+
+// Input validation and sanitization
+app.use(sanitizeInputs);
+app.use(validateSqlInjection);
+app.use(validateContentSecurityPolicy);
+app.use(csrfProtection);
+app.use(validateFileUpload());
 
 // Rate limiting for API routes
 app.use('/api/', rateLimit(100, 15 * 60 * 1000)); // 100 requests per 15 minutes
@@ -66,11 +84,19 @@ app.use((req, res, next) => {
 (async () => {
   const server = await registerRoutes(app);
 
+  app.use(errorLoggingMiddleware);
+  
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
 
-    res.status(status).json({ message });
+    // Don't expose internal error details in production
+    if (process.env.NODE_ENV === 'production') {
+      res.status(status).json({ error: status >= 500 ? 'Internal Server Error' : message });
+    } else {
+      res.status(status).json({ error: message, stack: err.stack });
+    }
+    
     throw err;
   });
 
