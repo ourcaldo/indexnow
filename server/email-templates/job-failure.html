@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +13,7 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
             background-color: #f5f5f5;
             color: #333;
             line-height: 1.6;
@@ -20,170 +21,150 @@
         }
         
         .email-container {
-            max-width: 600px;
+            max-width: 500px;
             margin: 0 auto;
             background-color: #ffffff;
-            border-radius: 8px;
+            border-radius: 0;
             overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: none;
+            border: 1px solid #e0e0e0;
         }
         
         .header {
-            background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
-            padding: 40px 20px;
-            text-align: center;
+            background-color: #ffffff;
+            padding: 30px 30px 20px 30px;
+            text-align: left;
+            border-bottom: none;
         }
         
         .logo {
-            height: 40px;
-            width: auto;
+            font-size: 18px;
+            font-weight: 700;
+            color: #000;
+            margin: 0;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
         
         .content {
-            padding: 60px 40px;
-            text-align: center;
+            padding: 20px 30px 30px 30px;
+            text-align: left;
         }
         
-        .error-icon {
-            width: 80px;
-            height: 80px;
-            background-color: #ef4444;
-            border-radius: 50%;
-            margin: 0 auto 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .error-icon::after {
-            content: "✕";
-            color: white;
-            font-size: 40px;
-            font-weight: bold;
+        .greeting {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 20px;
         }
         
         .title {
-            font-size: 28px;
+            font-size: 18px;
             font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 15px;
-        }
-        
-        .subtitle {
-            font-size: 16px;
-            color: #6b7280;
-            margin-bottom: 40px;
-            line-height: 1.5;
+            color: #000;
+            margin-bottom: 20px;
         }
         
         .message {
-            background-color: #fef2f2;
-            border: 1px solid #fecaca;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 30px 0;
-            color: #dc2626;
-            font-weight: 500;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 30px;
+            line-height: 1.6;
         }
         
         .error-details {
-            background-color: #f9fafb;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 30px 0;
-            text-align: left;
+            background-color: #f8f8f8;
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            margin: 20px 0;
             font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-            font-size: 14px;
-            color: #dc2626;
+            font-size: 12px;
+            color: #d32f2f;
+            word-break: break-all;
         }
         
         .troubleshooting {
-            text-align: left;
             margin: 30px 0;
         }
         
-        .troubleshooting h3 {
-            color: #1f2937;
-            font-size: 18px;
+        .troubleshooting-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #000;
             margin-bottom: 15px;
         }
         
         .troubleshooting ul {
-            color: #6b7280;
             padding-left: 20px;
+            margin: 0;
         }
         
         .troubleshooting li {
-            margin-bottom: 8px;
-        }
-        
-        .timestamp {
             font-size: 14px;
-            color: #9ca3af;
-            margin: 30px 0;
+            color: #333;
+            margin-bottom: 8px;
+            line-height: 1.5;
         }
         
-        .button {
-            display: inline-block;
-            background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
-            color: white;
-            text-decoration: none;
-            padding: 15px 30px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 16px;
-            margin: 10px;
+        .footer-message {
+            font-size: 14px;
+            color: #333;
+            margin: 30px 0 20px 0;
+            line-height: 1.6;
         }
         
-        .button.secondary {
-            background: #6b7280;
+        .signature {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .team-name {
+            font-size: 14px;
+            color: #333;
         }
         
         .footer {
-            background-color: #f9fafb;
-            padding: 30px 40px;
-            text-align: center;
-            border-top: 1px solid #e5e7eb;
+            background-color: #2c2c2c;
+            padding: 20px 30px;
+            text-align: left;
         }
         
-        .footer-text {
-            font-size: 14px;
-            color: #6b7280;
-            margin-bottom: 15px;
+        .footer-logo {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
         
-        .footer-links {
+        .social-icons {
             display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
         }
         
-        .footer-link {
-            color: #ea580c;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
+        .social-icon {
+            width: 20px;
+            height: 20px;
+            background-color: #555;
+            border-radius: 3px;
+            display: inline-block;
+        }
+        
+        .timestamp {
+            font-size: 12px;
+            color: #666;
+            margin-top: 20px;
         }
         
         @media (max-width: 600px) {
-            .content {
-                padding: 40px 20px;
+            .email-container {
+                margin: 0 10px;
             }
             
-            .footer {
+            .content, .header, .footer {
                 padding: 20px;
-            }
-            
-            .footer-links {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .button {
-                display: block;
-                margin: 10px 0;
             }
         }
     </style>
@@ -191,17 +172,16 @@
 <body>
     <div class="email-container">
         <div class="header">
-            <img src="https://bwkasvyrzbzhcdtvsbyg.supabase.co/storage/v1/object/public/indexnow-bucket/logo/indexnow-white.png" alt="IndexNow" class="logo">
+            <div class="logo">IndexNow</div>
         </div>
         
         <div class="content">
-            <div class="error-icon"></div>
+            <div class="greeting">Hi {{userName}},</div>
             
-            <h1 class="title">Job Failed</h1>
-            <p class="subtitle">Your indexing job "<strong>{{jobName}}</strong>" encountered an error and could not complete.</p>
+            <div class="title">Action Required: Job Failed</div>
             
             <div class="message">
-                <strong>Action Required:</strong> Please review the error details below and retry the job or check your service account configuration.
+                Your indexing job "{{jobName}}" encountered an error and could not complete. Please review the error details below and retry the job or check your service account configuration.
             </div>
             
             <div class="error-details">
@@ -209,7 +189,7 @@
             </div>
             
             <div class="troubleshooting">
-                <h3>Troubleshooting Steps:</h3>
+                <div class="troubleshooting-title">Troubleshooting Steps:</div>
                 <ul>
                     <li>Check that your Google Service Account is active and has proper permissions</li>
                     <li>Verify that the URLs in your job are valid and accessible</li>
@@ -218,22 +198,23 @@
                 </ul>
             </div>
             
-            <div class="timestamp">
-                Failed on {{timestamp}}
+            <div class="footer-message">
+                You can retry the job or update your settings from your dashboard.
             </div>
             
-            <a href="#" class="button">Retry Job</a>
-            <a href="#" class="button secondary">View Settings</a>
+            <div class="signature">Thank you for using IndexNow.</div>
+            <div class="team-name">The IndexNow Team</div>
+            
+            <div class="timestamp">Failed on {{timestamp}}</div>
         </div>
         
         <div class="footer">
-            <p class="footer-text">
-                You're receiving this email because you have failure notifications enabled in your IndexNow dashboard.
-            </p>
-            <div class="footer-links">
-                <a href="#" class="footer-link">Dashboard</a>
-                <a href="#" class="footer-link">Settings</a>
-                <a href="#" class="footer-link">Unsubscribe</a>
+            <div class="footer-logo">IndexNow</div>
+            <div class="social-icons">
+                <span class="social-icon"></span>
+                <span class="social-icon"></span>
+                <span class="social-icon"></span>
+                <span class="social-icon"></span>
             </div>
         </div>
     </div>

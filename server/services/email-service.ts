@@ -110,8 +110,9 @@ export class EmailService {
     }
   }
 
-  async sendJobCompletionEmail(userEmail: string, jobName: string, successUrls: number, failedUrls: number, totalUrls: number): Promise<boolean> {
+  async sendJobCompletionEmail(userEmail: string, userName: string, jobName: string, successUrls: number, failedUrls: number, totalUrls: number): Promise<boolean> {
     const data = {
+      userName,
       jobName,
       successUrls,
       failedUrls,
@@ -134,8 +135,9 @@ export class EmailService {
     });
   }
 
-  async sendJobFailureEmail(userEmail: string, jobName: string, errorMessage: string): Promise<boolean> {
+  async sendJobFailureEmail(userEmail: string, userName: string, jobName: string, errorMessage: string): Promise<boolean> {
     const data = {
+      userName,
       jobName,
       errorMessage,
       timestamp: new Date().toLocaleDateString('en-US', {
@@ -155,8 +157,9 @@ export class EmailService {
     });
   }
 
-  async sendDailyQuotaReport(userEmail: string, stats: any): Promise<boolean> {
+  async sendDailyQuotaReport(userEmail: string, userName: string, stats: any): Promise<boolean> {
     const data = {
+      userName,
       ...stats,
       reportDate: new Date().toLocaleDateString('en-US', {
         year: 'numeric',
