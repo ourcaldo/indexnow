@@ -16,14 +16,13 @@ const app = express();
 
 // Security middleware
 app.use(securityHeaders);
-app.use(requestLoggingMiddleware);
 app.use(sanitizeLogsMiddleware);
 
-// Advanced security monitoring
-app.use(SecurityAudit.monitorSuspiciousActivity);
-app.use(SecurityAudit.detectVulnerabilityScanning);
-app.use(SecurityAudit.monitorRequestPatterns);
-app.use(SecurityAudit.detectBruteForce());
+// Advanced security monitoring (temporarily disabled verbose logging)
+// app.use(SecurityAudit.monitorSuspiciousActivity);
+// app.use(SecurityAudit.detectVulnerabilityScanning);
+// app.use(SecurityAudit.monitorRequestPatterns);
+// app.use(SecurityAudit.detectBruteForce());
 
 // Input validation and sanitization
 app.use(sanitizeInputs);

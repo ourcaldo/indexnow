@@ -35,7 +35,7 @@ export class SecurityAudit {
     );
     
     if (isSuspicious) {
-      this.suspiciousIPs.add(ip);
+      SecurityAudit.suspiciousIPs.add(ip);
       SecureLogger.logSecurityEvent('SUSPICIOUS_REQUEST', {
         ip,
         userAgent,
@@ -47,7 +47,7 @@ export class SecurityAudit {
     }
     
     // Check for blocked IPs
-    if (this.blockedIPs.has(ip)) {
+    if (SecurityAudit.blockedIPs.has(ip)) {
       return res.status(403).json({ error: 'Access denied' });
     }
     
@@ -60,15 +60,15 @@ export class SecurityAudit {
     const isAuthEndpoint = req.path.includes('/auth') || req.path.includes('/login');
     
     if (isAuthEndpoint && res.statusCode === 401) {
-      const attempts = this.failedAttempts.get(ip) || { count: 0, lastAttempt: 0 };
+      const attempts = SecurityAudit.failedAttempts.get(ip) || { count: 0, lastAttempt: 0 };
       attempts.count++;
       attempts.lastAttempt = Date.now();
       
-      this.failedAttempts.set(ip, attempts);
+      SecurityAudit.failedAttempts.set(ip, attempts);
       
       // Block IP after 5 failed attempts within 15 minutes
       if (attempts.count >= 5 && Date.now() - attempts.lastAttempt < 15 * 60 * 1000) {
-        this.blockedIPs.add(ip);
+        SecurityAudit.blockedIPs.add(ip);
         SecureLogger.logSecurityEvent('IP_BLOCKED', {
           ip,
           reason: 'Too many failed authentication attempts',
@@ -145,7 +145,7 @@ export class SecurityAudit {
     
     if (isSuspiciousAgent) {
       const ip = req.ip || 'unknown';
-      this.suspiciousIPs.add(ip);
+      SecurityAudit.suspiciousIPs.add(ip);
       
       SecureLogger.logSecurityEvent('VULNERABILITY_SCANNER_DETECTED', {
         ip,
@@ -216,9 +216,9 @@ export class SecurityAudit {
   // Generate security report
   static generateSecurityReport() {
     return {
-      suspiciousIPs: Array.from(this.suspiciousIPs),
-      blockedIPs: Array.from(this.blockedIPs),
-      failedAttempts: Object.fromEntries(this.failedAttempts),
+      suspiciousIPs: Array.from(SecurityAudit.suspiciousIPs),
+      blockedIPs: Array.from(SecurityAudit.blockedIPs),
+      failedAttempts: Object.fromEntries(SecurityAudit.failedAttempts),
       timestamp: new Date().toISOString()
     };
   }
@@ -229,15 +229,15 @@ export class SecurityAudit {
     const cleanupInterval = 24 * 60 * 60 * 1000; // 24 hours
     
     // Clear failed attempts older than 24 hours
-    for (const [ip, attempts] of this.failedAttempts.entries()) {
+    for (const [ip, attempts] of SecurityAudit.failedAttempts.entries()) {
       if (now - attempts.lastAttempt > cleanupInterval) {
-        this.failedAttempts.delete(ip);
+        SecurityAudit.failedAttempts.delete(ip);
       }
     }
     
     // Clear blocked IPs after 24 hours (manual review recommended)
-    if (this.blockedIPs.size > 100) {
-      this.blockedIPs.clear();
+    if (SecurityAudit.blockedIPs.size > 100) {
+      SecurityAudit.blockedIPs.clear();
     }
   }
 }
