@@ -1,0 +1,49 @@
+Error fetching indexing job: PostgresError: invalid input syntax for type uuid: "undefined"
+    at ErrorResponse (file:///home/runner/workspace/node_modules/postgres/src/connection.js:794:26)
+    at handle (file:///home/runner/workspace/node_modules/postgres/src/connection.js:480:6)
+    at Socket.data (file:///home/runner/workspace/node_modules/postgres/src/connection.js:315:9)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:191:23) {
+  severity_local: 'ERROR',
+  severity: 'ERROR',
+  code: '22P02',
+  where: "unnamed portal parameter $1 = '...'",
+  file: 'uuid.c',
+  line: '138',
+  routine: 'string_to_uuid'
+}
+5:39:38 AM [express] GET /api/indexing-jobs/undefined 500 in 248ms :: {"error":"Failed to fetch inde…
+5:39:38 AM [express] GET /api/indexing-jobs 200 in 343ms :: [{"id":"3e46bcfe-9d8b-49cc-a2ce-f93e0b43…
+Error fetching URL submissions: PostgresError: invalid input syntax for type uuid: "undefined"
+    at ErrorResponse (file:///home/runner/workspace/node_modules/postgres/src/connection.js:794:26)
+    at handle (file:///home/runner/workspace/node_modules/postgres/src/connection.js:480:6)
+    at Socket.data (file:///home/runner/workspace/node_modules/postgres/src/connection.js:315:9)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:191:23) {
+  severity_local: 'ERROR',
+  severity: 'ERROR',
+  code: '22P02',
+  where: "unnamed portal parameter $1 = '...'",
+  file: 'uuid.c',
+  line: '138',
+  routine: 'string_to_uuid'
+}
+5:39:38 AM [express] GET /api/indexing-jobs/undefined/submissions 500 in 461ms :: {"error":"Failed t…
+Database update result: SUCCESS
+Token update callback completed
+
+=== Complete API Response ===
+Status Code: 200
+Headers: {}
+Raw Body: {
+  "urlNotificationMetadata": {
+    "url": "https://nexjob.tech/"
+  }
+}
+Job 3e46bcfe-9d8b-49cc-a2ce-f93e0b43d297 completed: 1 successful, 0 failed

@@ -70,7 +70,8 @@ export default function IndexNow() {
       schedule: string;
       cronExpression?: string;
     }) => {
-      return apiRequest("POST", "/api/indexing-jobs/from-urls", data);
+      const response = await apiRequest("POST", "/api/indexing-jobs/from-urls", data);
+      return await response.json();
     },
     onSuccess: (job) => {
       queryClient.invalidateQueries({ queryKey: ["/api/indexing-jobs"] });
@@ -80,7 +81,13 @@ export default function IndexNow() {
       });
       resetForm();
       // Redirect to job detail page
-      setLocation(`/dashboard/jobs/${job.id}`);
+      console.log('Job created:', job);
+      if (job?.id) {
+        setLocation(`/dashboard/jobs/${job.id}`);
+      } else {
+        console.error('No job ID found in response:', job);
+        setLocation('/dashboard/jobs');
+      }
     },
     onError: (error) => {
       toast({
@@ -98,7 +105,8 @@ export default function IndexNow() {
       schedule: string;
       cronExpression?: string;
     }) => {
-      return apiRequest("POST", "/api/indexing-jobs/from-sitemap", data);
+      const response = await apiRequest("POST", "/api/indexing-jobs/from-sitemap", data);
+      return await response.json();
     },
     onSuccess: (job) => {
       queryClient.invalidateQueries({ queryKey: ["/api/indexing-jobs"] });
@@ -108,7 +116,13 @@ export default function IndexNow() {
       });
       resetForm();
       // Redirect to job detail page
-      setLocation(`/dashboard/jobs/${job.id}`);
+      console.log('Job created:', job);
+      if (job?.id) {
+        setLocation(`/dashboard/jobs/${job.id}`);
+      } else {
+        console.error('No job ID found in response:', job);
+        setLocation('/dashboard/jobs');
+      }
     },
     onError: (error) => {
       toast({

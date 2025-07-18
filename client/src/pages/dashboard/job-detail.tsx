@@ -50,7 +50,8 @@ export default function JobDetail() {
   // Job action mutations
   const updateJobMutation = useMutation({
     mutationFn: async (data: { status: string }) => {
-      return apiRequest("PATCH", `/api/indexing-jobs/${jobId}`, data);
+      const response = await apiRequest("PATCH", `/api/indexing-jobs/${jobId}`, data);
+      return await response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/indexing-jobs", jobId] });
@@ -71,7 +72,8 @@ export default function JobDetail() {
 
   const rerunJobMutation = useMutation({
     mutationFn: async () => {
-      return apiRequest("POST", `/api/indexing-jobs/${jobId}/rerun`);
+      const response = await apiRequest("POST", `/api/indexing-jobs/${jobId}/rerun`);
+      return await response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/indexing-jobs", jobId] });
