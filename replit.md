@@ -145,24 +145,7 @@ The application is designed to be scalable and maintainable, with clear separati
 
 ## Recent Changes (July 18, 2025)
 
-### 🔒 Security Hardening - JWT Authentication & Dynamic Configuration (Latest - Updated)
-✓ **Fixed hardcoded Supabase URLs in CSP headers** - Now dynamically constructed from environment variables
-✓ **Implemented comprehensive JWT authentication service** - Token generation, validation, refresh, and revocation
-✓ **Added JWT token blacklisting** - Prevents reuse of revoked tokens with in-memory storage
-✓ **Enhanced authentication middleware** - Proper token validation with detailed error codes
-✓ **Added refresh token mechanism** - Secure token refresh with proper expiry handling
-✓ **Implemented role-based authorization** - Admin and super_admin role checking middleware
-✓ **Added token statistics endpoint** - Admin-only endpoint for monitoring token usage
-✓ **Enhanced security logging** - Comprehensive auth event logging with security analytics
-✓ **Added JWT environment variables** - JWT_SECRET, JWT_EXPIRY, REFRESH_TOKEN_EXPIRY configuration
-✓ **Implemented token cleanup** - Automatic cleanup of expired tokens and blacklisted entries
-
-### Environment Variables Added:
-- `JWT_SECRET` - Secret key for JWT token signing (change in production)
-- `JWT_EXPIRY` - Access token expiry time (default: 24h)
-- `REFRESH_TOKEN_EXPIRY` - Refresh token expiry time (default: 7d)
-
-### 📧 Email System Enhancement (Previous - Updated)
+### 📧 Email System Enhancement (Latest - Updated)
 ✓ **Fixed email template data issues** - Resolved parameter mismatch causing undefined values in email templates
 ✓ **Redesigned email templates with modern UI** - Created new templates based on user-provided design template
 ✓ **Updated email subjects** - Made subjects more engaging and descriptive with emojis

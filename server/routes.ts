@@ -10,7 +10,6 @@ import {
   updateUserSettingsSchema
 } from "@shared/schema";
 import { verifyAuth } from "./services/supabase";
-import { JWTAuthService } from "./services/jwt-auth";
 import { googleIndexingService } from "./services/google-indexing";
 import { sitemapParser } from "./services/sitemap-parser";
 import { jobScheduler } from "./services/job-scheduler";
@@ -21,7 +20,7 @@ import { assetConfig } from "./services/asset-config";
 import { emailService } from "./services/email-service";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Enhanced authentication middleware with JWT validation
+  // Authentication middleware
   const requireAuth = async (req: any, res: any, next: any) => {
     try {
       const authHeader = req.headers.authorization;
@@ -31,168 +30,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const token = authHeader.substring(7);
-      
-      // Use our JWT service for validation
-      const jwtPayload = await JWTAuthService.verifyAccessToken(token);
-      
-      // Fallback to Supabase auth if JWT fails (for backward compatibility)
-      let user;
-      try {
-        user = await verifyAuth(token);
-      } catch (supabaseError) {
-        // If both JWT and Supabase fail, use JWT payload
-        user = {
-          id: jwtPayload.userId,
-          email: jwtPayload.email,
-          role: jwtPayload.role
-        };
-      }
-      
+      const user = await verifyAuth(token);
       req.user = user;
-      req.jwtPayload = jwtPayload; // Store JWT payload for additional info
       next();
     } catch (error) {
-      SecureLogger.logSecurityEvent('AUTH_INVALID_TOKEN', { 
-        ip: req.ip, 
-        userAgent: req.get('User-Agent'), 
-        error: error.message,
-        tokenPresent: !!req.headers.authorization
-      }, req);
-      
-      // Return specific error messages for different failure types
-      if (error.message === 'Token expired') {
-        return res.status(401).json({ error: 'Token expired', code: 'TOKEN_EXPIRED' });
-      } else if (error.message === 'Token has been revoked') {
-        return res.status(401).json({ error: 'Token has been revoked', code: 'TOKEN_REVOKED' });
-      } else {
-        return res.status(401).json({ error: 'Invalid token', code: 'INVALID_TOKEN' });
-      }
+      SecureLogger.logSecurityEvent('AUTH_INVALID_TOKEN', { ip: req.ip, userAgent: req.get('User-Agent'), error: error.message }, req);
+      res.status(401).json({ error: 'Invalid token' });
     }
   };
-
-  // Authentication endpoints
-  app.post('/api/auth/login', async (req: any, res) => {
-    try {
-      const { email, password } = req.body;
-      
-      if (!email || !password) {
-        return res.status(400).json({ error: 'Email and password are required' });
-      }
-
-      // Authenticate with Supabase
-      const user = await verifyAuth(req.body.token || ''); // This will be replaced with proper login logic
-      
-      // Generate JWT token pair
-      const tokenPair = await JWTAuthService.generateTokenPair(user.id, user.email, user.role);
-      
-      SecureLogger.logSecurityEvent('AUTH_LOGIN_SUCCESS', { 
-        ip: req.ip, 
-        userAgent: req.get('User-Agent'),
-        userId: user.id,
-        email: user.email
-      }, req);
-      
-      res.json({
-        user: {
-          id: user.id,
-          email: user.email,
-          role: user.role
-        },
-        ...tokenPair
-      });
-    } catch (error) {
-      SecureLogger.logSecurityEvent('AUTH_LOGIN_FAILED', { 
-        ip: req.ip, 
-        userAgent: req.get('User-Agent'),
-        error: error.message,
-        email: req.body.email
-      }, req);
-      
-      res.status(401).json({ error: 'Authentication failed' });
-    }
-  });
-
-  app.post('/api/auth/refresh', async (req: any, res) => {
-    try {
-      const { refreshToken } = req.body;
-      
-      if (!refreshToken) {
-        return res.status(400).json({ error: 'Refresh token is required' });
-      }
-
-      const tokenPair = await JWTAuthService.refreshAccessToken(refreshToken);
-      
-      res.json(tokenPair);
-    } catch (error) {
-      SecureLogger.logSecurityEvent('AUTH_REFRESH_FAILED', { 
-        ip: req.ip, 
-        userAgent: req.get('User-Agent'),
-        error: error.message
-      }, req);
-      
-      res.status(401).json({ error: 'Token refresh failed', code: 'REFRESH_FAILED' });
-    }
-  });
-
-  app.post('/api/auth/logout', requireAuth, async (req: any, res) => {
-    try {
-      const authHeader = req.headers.authorization;
-      const token = authHeader?.substring(7);
-      const { refreshToken } = req.body;
-
-      // Revoke both tokens
-      if (token) {
-        await JWTAuthService.revokeAccessToken(token);
-      }
-      if (refreshToken) {
-        await JWTAuthService.revokeRefreshToken(refreshToken);
-      }
-
-      SecureLogger.logSecurityEvent('AUTH_LOGOUT', { 
-        ip: req.ip, 
-        userAgent: req.get('User-Agent'),
-        userId: req.user.id
-      }, req);
-
-      res.json({ message: 'Logged out successfully' });
-    } catch (error) {
-      console.error('Logout error:', error);
-      res.status(500).json({ error: 'Logout failed' });
-    }
-  });
-
-  app.post('/api/auth/revoke-all', requireAuth, async (req: any, res) => {
-    try {
-      await JWTAuthService.revokeAllUserTokens(req.user.id);
-      
-      SecureLogger.logSecurityEvent('AUTH_REVOKE_ALL', { 
-        ip: req.ip, 
-        userAgent: req.get('User-Agent'),
-        userId: req.user.id
-      }, req);
-
-      res.json({ message: 'All tokens revoked successfully' });
-    } catch (error) {
-      console.error('Revoke all tokens error:', error);
-      res.status(500).json({ error: 'Failed to revoke tokens' });
-    }
-  });
-
-  // Token statistics endpoint (admin only)
-  app.get('/api/auth/token-stats', requireAuth, async (req: any, res) => {
-    try {
-      // Only allow admin users to see token statistics
-      if (req.user.role !== 'admin' && req.user.role !== 'super_admin') {
-        return res.status(403).json({ error: 'Admin access required' });
-      }
-
-      const stats = JWTAuthService.getTokenStats();
-      res.json(stats);
-    } catch (error) {
-      console.error('Error fetching token stats:', error);
-      res.status(500).json({ error: 'Failed to fetch token statistics' });
-    }
-  });
 
   // Dashboard stats
   app.get('/api/dashboard/stats', requireAuth, async (req: any, res) => {
