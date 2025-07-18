@@ -13,6 +13,11 @@ export const userProfiles = pgTable("indb_user_profiles", {
   email: text("email").notNull(),
   fullName: text("full_name"),
   role: userRoleEnum("role").default('user').notNull(),
+  emailJobCompletion: boolean("email_job_completion").default(true),
+  emailJobFailures: boolean("email_job_failures").default(false),
+  emailDailyReports: boolean("email_daily_reports").default(true),
+  requestTimeout: integer("request_timeout").default(30),
+  retryAttempts: integer("retry_attempts").default(3),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -78,6 +83,14 @@ export const insertUserProfileSchema = createInsertSchema(userProfiles).omit({
   updatedAt: true,
 }).extend({
   role: z.enum(['user', 'admin', 'super_admin']).default('user'),
+});
+
+export const updateUserSettingsSchema = z.object({
+  emailJobCompletion: z.boolean().optional(),
+  emailJobFailures: z.boolean().optional(),
+  emailDailyReports: z.boolean().optional(),
+  requestTimeout: z.number().min(5).max(300).optional(),
+  retryAttempts: z.number().min(0).max(10).optional(),
 });
 
 export const insertServiceAccountSchema = createInsertSchema(serviceAccounts).omit({

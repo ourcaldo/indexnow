@@ -23,6 +23,7 @@ export interface IStorage {
   createUserProfile(profile: InsertUserProfile): Promise<UserProfile>;
   getUserProfile(id: string): Promise<UserProfile | undefined>;
   updateUserProfile(id: string, profile: Partial<UserProfile>): Promise<UserProfile>;
+  getUserSettings(id: string): Promise<{ emailJobCompletion: boolean; emailJobFailures: boolean; emailDailyReports: boolean; requestTimeout: number; retryAttempts: number; } | undefined>;
 
   // Service accounts
   createServiceAccount(account: Omit<InsertServiceAccount, 'serviceAccountJson'> & { serviceAccountJson: string }): Promise<ServiceAccount>;
@@ -74,6 +75,21 @@ export class SupabaseStorage implements IStorage {
       .set({ ...profile, updatedAt: new Date() })
       .where(eq(userProfiles.id, id))
       .returning();
+    return result[0];
+  }
+
+  async getUserSettings(id: string): Promise<{ emailJobCompletion: boolean; emailJobFailures: boolean; emailDailyReports: boolean; requestTimeout: number; retryAttempts: number; } | undefined> {
+    const result = await db
+      .select({
+        emailJobCompletion: userProfiles.emailJobCompletion,
+        emailJobFailures: userProfiles.emailJobFailures,
+        emailDailyReports: userProfiles.emailDailyReports,
+        requestTimeout: userProfiles.requestTimeout,
+        retryAttempts: userProfiles.retryAttempts,
+      })
+      .from(userProfiles)
+      .where(eq(userProfiles.id, id))
+      .limit(1);
     return result[0];
   }
 

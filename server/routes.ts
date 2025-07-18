@@ -6,7 +6,8 @@ import {
   insertServiceAccountSchema, 
   insertIndexingJobSchema,
   createJobFromSitemapSchema,
-  createJobFromUrlsSchema
+  createJobFromUrlsSchema,
+  updateUserSettingsSchema
 } from "@shared/schema";
 import { verifyAuth } from "./services/supabase";
 import { googleIndexingService } from "./services/google-indexing";
@@ -45,6 +46,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error fetching dashboard stats:', error);
       res.status(500).json({ error: 'Failed to fetch dashboard stats' });
+    }
+  });
+
+  // User settings routes
+  app.get('/api/user/settings', requireAuth, async (req: any, res) => {
+    try {
+      const settings = await storage.getUserSettings(req.user.id);
+      if (!settings) {
+        return res.status(404).json({ error: 'User settings not found' });
+      }
+      res.json(settings);
+    } catch (error) {
+      console.error('Error fetching user settings:', error);
+      res.status(500).json({ error: 'Failed to fetch user settings' });
+    }
+  });
+
+  app.patch('/api/user/settings', requireAuth, async (req: any, res) => {
+    try {
+      const validation = updateUserSettingsSchema.safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ error: validation.error.issues });
+      }
+
+      const updatedProfile = await storage.updateUserProfile(req.user.id, validation.data);
+      
+      // Return just the settings part
+      const settings = {
+        emailJobCompletion: updatedProfile.emailJobCompletion,
+        emailJobFailures: updatedProfile.emailJobFailures,
+        emailDailyReports: updatedProfile.emailDailyReports,
+        requestTimeout: updatedProfile.requestTimeout,
+        retryAttempts: updatedProfile.retryAttempts,
+      };
+      
+      res.json(settings);
+    } catch (error) {
+      console.error('Error updating user settings:', error);
+      res.status(500).json({ error: 'Failed to update user settings' });
     }
   });
 

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Failed</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
+            padding: 32px 24px;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0;
+            letter-spacing: -0.025em;
+        }
+        
+        .tagline {
+            color: #fed7aa;
+            font-size: 14px;
+            margin: 8px 0 0 0;
+        }
+        
+        .content {
+            padding: 32px 24px;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 0 0 16px 0;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #64748b;
+            margin: 0 0 24px 0;
+        }
+        
+        .button {
+            display: inline-block;
+            background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
+            color: #ffffff !important;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            margin: 24px 0;
+            transition: transform 0.2s ease;
+        }
+        
+        .button:hover {
+            transform: translateY(-1px);
+        }
+        
+        .alert {
+            background-color: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 6px;
+            padding: 16px;
+            margin: 24px 0;
+            color: #dc2626;
+        }
+        
+        .error-details {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 16px;
+            margin: 24px 0;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 14px;
+            color: #475569;
+            word-break: break-word;
+        }
+        
+        .footer {
+            background-color: #f8fafc;
+            padding: 24px;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .footer-text {
+            font-size: 14px;
+            color: #64748b;
+            margin: 0;
+        }
+        
+        .footer-links {
+            margin: 16px 0 0 0;
+        }
+        
+        .footer-link {
+            color: #ea580c;
+            text-decoration: none;
+            margin: 0 16px;
+            font-size: 14px;
+        }
+        
+        .timestamp {
+            background-color: #f1f5f9;
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-size: 14px;
+            color: #475569;
+            margin: 16px 0;
+            text-align: center;
+        }
+        
+        @media (max-width: 640px) {
+            .container {
+                margin: 16px;
+                border-radius: 0;
+            }
+            
+            .header {
+                padding: 24px 16px;
+            }
+            
+            .content {
+                padding: 24px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="logo">IndexNow</h1>
+            <p class="tagline">Google Search Console Indexing Dashboard</p>
+        </div>
+        
+        <div class="content">
+            <h2 class="title">❌ Job Failed</h2>
+            <p class="subtitle">Your indexing job "<strong>{{jobName}}</strong>" encountered an error and could not complete.</p>
+            
+            <div class="alert">
+                <strong>Action Required:</strong> Please review the error details below and retry the job or check your service account configuration.
+            </div>
+            
+            <h3 style="color: #1e293b; margin: 24px 0 12px 0;">Error Details:</h3>
+            <div class="error-details">
+                {{errorMessage}}
+            </div>
+            
+            <div class="timestamp">
+                Failed on {{timestamp}}
+            </div>
+            
+            <h3 style="color: #1e293b; margin: 24px 0 12px 0;">Troubleshooting Steps:</h3>
+            <ul style="color: #64748b; margin: 0 0 24px 20px;">
+                <li>Check that your Google Service Account is active and has proper permissions</li>
+                <li>Verify that the URLs in your job are valid and accessible</li>
+                <li>Ensure you haven't exceeded your daily Google Indexing API quota</li>
+                <li>Review your service account credentials in the settings</li>
+            </ul>
+            
+            <center>
+                <a href="#" class="button">Retry Job</a>
+                <a href="#" class="button" style="background: #64748b; margin-left: 12px;">View Settings</a>
+            </center>
+        </div>
+        
+        <div class="footer">
+            <p class="footer-text">
+                You're receiving this email because you have failure notifications enabled in your IndexNow dashboard.
+            </p>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Dashboard</a>
+                <a href="#" class="footer-link">Settings</a>
+                <a href="#" class="footer-link">Unsubscribe</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

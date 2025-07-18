@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -27,14 +27,39 @@ import {
   Clock
 } from "lucide-react";
 
+interface UserSettings {
+  emailJobCompletion: boolean;
+  emailJobFailures: boolean;
+  emailDailyReports: boolean;
+  requestTimeout: number;
+  retryAttempts: number;
+}
+
 export default function Settings() {
   const [serviceAccountModalOpen, setServiceAccountModalOpen] = useState(false);
+  const [settings, setSettings] = useState<UserSettings>({
+    emailJobCompletion: true,
+    emailJobFailures: false,
+    emailDailyReports: true,
+    requestTimeout: 30,
+    retryAttempts: 3,
+  });
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const { data: serviceAccounts, isLoading } = useQuery<ServiceAccount[]>({
     queryKey: ["/api/service-accounts"],
   });
+
+  const { data: userSettings, isLoading: settingsLoading } = useQuery<UserSettings>({
+    queryKey: ["/api/user/settings"],
+  });
+
+  useEffect(() => {
+    if (userSettings) {
+      setSettings(userSettings);
+    }
+  }, [userSettings]);
 
   const deleteServiceAccountMutation = useMutation({
     mutationFn: async (id: string) => {
@@ -56,10 +81,40 @@ export default function Settings() {
     },
   });
 
+  const updateSettingsMutation = useMutation({
+    mutationFn: async (newSettings: Partial<UserSettings>) => {
+      return apiRequest("PATCH", "/api/user/settings", newSettings);
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/user/settings"] });
+      setSettings(data);
+      toast({
+        title: "Settings saved",
+        description: "Your preferences have been updated successfully",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleDeleteServiceAccount = (id: string) => {
     if (confirm("Are you sure you want to delete this service account?")) {
       deleteServiceAccountMutation.mutate(id);
     }
+  };
+
+  const handleSettingsChange = (key: keyof UserSettings, value: boolean | number) => {
+    const newSettings = { ...settings, [key]: value };
+    setSettings(newSettings);
+  };
+
+  const handleSaveSettings = () => {
+    updateSettingsMutation.mutate(settings);
   };
 
   return (
@@ -182,19 +237,31 @@ export default function Settings() {
               </Label>
               <div className="space-y-3">
                 <div className="flex items-center space-x-2">
-                  <Checkbox id="emailCompletion" defaultChecked />
+                  <Checkbox 
+                    id="emailCompletion" 
+                    checked={settings.emailJobCompletion}
+                    onCheckedChange={(checked) => handleSettingsChange('emailJobCompletion', checked as boolean)}
+                  />
                   <Label htmlFor="emailCompletion" className="text-sm">
                     Email notifications for job completion
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Checkbox id="emailFailures" />
+                  <Checkbox 
+                    id="emailFailures" 
+                    checked={settings.emailJobFailures}
+                    onCheckedChange={(checked) => handleSettingsChange('emailJobFailures', checked as boolean)}
+                  />
                   <Label htmlFor="emailFailures" className="text-sm">
                     Email notifications for failures
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Checkbox id="dailyReports" defaultChecked />
+                  <Checkbox 
+                    id="dailyReports" 
+                    checked={settings.emailDailyReports}
+                    onCheckedChange={(checked) => handleSettingsChange('emailDailyReports', checked as boolean)}
+                  />
                   <Label htmlFor="dailyReports" className="text-sm">
                     Daily quota reports
                   </Label>
@@ -210,7 +277,8 @@ export default function Settings() {
               <Input
                 id="requestTimeout"
                 type="number"
-                defaultValue="30"
+                value={settings.requestTimeout}
+                onChange={(e) => handleSettingsChange('requestTimeout', parseInt(e.target.value) || 30)}
                 min="5"
                 max="300"
               />
@@ -224,15 +292,20 @@ export default function Settings() {
               <Input
                 id="retryAttempts"
                 type="number"
-                defaultValue="3"
+                value={settings.retryAttempts}
+                onChange={(e) => handleSettingsChange('retryAttempts', parseInt(e.target.value) || 3)}
                 min="0"
                 max="10"
               />
             </div>
 
             <div className="pt-4 border-t">
-              <Button className="w-full">
-                Save Settings
+              <Button 
+                className="w-full" 
+                onClick={handleSaveSettings}
+                disabled={updateSettingsMutation.isPending}
+              >
+                {updateSettingsMutation.isPending ? "Saving..." : "Save Settings"}
               </Button>
             </div>
           </CardContent>

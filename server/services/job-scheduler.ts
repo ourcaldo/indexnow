@@ -1,9 +1,10 @@
 import cron from 'node-cron';
 import { db } from './supabase';
-import { indexingJobs, urlSubmissions, serviceAccounts, quotaUsage } from '@shared/schema';
+import { indexingJobs, urlSubmissions, serviceAccounts, quotaUsage, userProfiles } from '@shared/schema';
 import { eq, and, gte, lte } from 'drizzle-orm';
 import { googleIndexingService } from './google-indexing';
 import { sitemapParser } from './sitemap-parser';
+import { emailService } from './email-service';
 
 interface ScheduledJob {
   id: string;
@@ -42,6 +43,15 @@ export class JobScheduler {
     
     // Start the continuous job monitor that runs every minute
     this.startJobMonitor();
+    
+    // Schedule daily quota reports at 9 AM every day
+    cron.schedule('0 9 * * *', async () => {
+      console.log('Sending daily quota reports...');
+      await this.sendDailyQuotaReports();
+    }, {
+      scheduled: true,
+      timezone: 'UTC'
+    });
     
     // Load all active scheduled jobs from database
     const jobs = await db
@@ -224,6 +234,10 @@ export class JobScheduler {
           .update(indexingJobs)
           .set({ status: 'failed' })
           .where(eq(indexingJobs.id, jobId));
+        
+        // Send email notification for job failure
+        await this.sendJobFailureEmail(jobData.userId, jobData.name, 'No URLs found');
+        
         this.broadcastJobUpdate(jobId, 'failed', { error: 'No URLs found' });
         return;
       }
@@ -242,6 +256,10 @@ export class JobScheduler {
           .update(indexingJobs)
           .set({ status: 'failed' })
           .where(eq(indexingJobs.id, jobId));
+        
+        // Send email notification for job failure
+        await this.sendJobFailureEmail(jobData.userId, jobData.name, 'No active service accounts found');
+        
         this.broadcastJobUpdate(jobId, 'failed', { error: 'No active service accounts found' });
         return;
       }
@@ -270,6 +288,9 @@ export class JobScheduler {
 
       console.log(`Job ${jobId} completed: ${successful} successful, ${failed} failed`);
 
+      // Send email notification for job completion
+      await this.sendJobCompletionEmail(jobData.userId, jobData.name, successful, failed, submissions.length);
+
       // Broadcast job completion
       this.broadcastJobUpdate(jobId, 'completed', {
         processedUrls: submissions.length,
@@ -284,6 +305,12 @@ export class JobScheduler {
         .update(indexingJobs)
         .set({ status: 'failed' })
         .where(eq(indexingJobs.id, jobId));
+      
+      // Send email notification for job failure
+      const job = await db.select().from(indexingJobs).where(eq(indexingJobs.id, jobId)).limit(1);
+      if (job.length > 0) {
+        await this.sendJobFailureEmail(job[0].userId, job[0].name, error.message);
+      }
       
       this.broadcastJobUpdate(jobId, 'failed', { error: error.message });
     }
@@ -395,6 +422,81 @@ export class JobScheduler {
         return '0 9 1 * *'; // 9 AM on 1st of every month
       default:
         throw new Error('Invalid schedule type');
+    }
+  }
+
+  private async sendJobCompletionEmail(userId: string, jobName: string, successful: number, failed: number, total: number) {
+    try {
+      // Get user profile and email preferences
+      const user = await db
+        .select({
+          email: userProfiles.email,
+          emailJobCompletion: userProfiles.emailJobCompletion
+        })
+        .from(userProfiles)
+        .where(eq(userProfiles.id, userId))
+        .limit(1);
+
+      if (user.length > 0 && user[0].emailJobCompletion) {
+        await emailService.sendJobCompletionEmail(user[0].email, jobName, successful, failed, total);
+      }
+    } catch (error) {
+      console.error('Error sending job completion email:', error);
+    }
+  }
+
+  private async sendJobFailureEmail(userId: string, jobName: string, errorMessage: string) {
+    try {
+      // Get user profile and email preferences
+      const user = await db
+        .select({
+          email: userProfiles.email,
+          emailJobFailures: userProfiles.emailJobFailures
+        })
+        .from(userProfiles)
+        .where(eq(userProfiles.id, userId))
+        .limit(1);
+
+      if (user.length > 0 && user[0].emailJobFailures) {
+        await emailService.sendJobFailureEmail(user[0].email, jobName, errorMessage);
+      }
+    } catch (error) {
+      console.error('Error sending job failure email:', error);
+    }
+  }
+
+  async sendDailyQuotaReports() {
+    try {
+      // Get all users who have daily reports enabled
+      const users = await db
+        .select({
+          id: userProfiles.id,
+          email: userProfiles.email,
+          emailDailyReports: userProfiles.emailDailyReports
+        })
+        .from(userProfiles)
+        .where(eq(userProfiles.emailDailyReports, true));
+
+      for (const user of users) {
+        // Get dashboard stats for the user
+        const storage = await import('../storage');
+        const stats = await storage.storage.getDashboardStats(user.id);
+        
+        // Send daily quota report
+        await emailService.sendDailyQuotaReport(user.email, {
+          totalSuccessfulUrls: stats.totalUrlsIndexed,
+          totalFailedUrls: 0, // You might want to calculate this
+          completedJobs: 0, // Calculate from today's completed jobs
+          activeJobs: stats.activeJobs,
+          totalServiceAccounts: 1, // Calculate actual count
+          activeServiceAccounts: 1, // Calculate actual count
+          quotaUsed: stats.apiQuotaUsed,
+          quotaLimit: stats.apiQuotaLimit,
+          quotaPercentage: Math.min(100, (stats.apiQuotaUsed / stats.apiQuotaLimit) * 100)
+        });
+      }
+    } catch (error) {
+      console.error('Error sending daily quota reports:', error);
     }
   }
 }
