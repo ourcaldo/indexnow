@@ -23,11 +23,6 @@
       font-weight: bold;
       padding: 20px 0;
       font-size: 18px;
-      background: #fff;
-    }
-    .header img {
-      max-width: 120px;
-      height: auto;
     }
     .content {
       padding: 20px 30px;
@@ -38,7 +33,6 @@
       font-size: 16px;
       font-weight: bold;
       margin-bottom: 16px;
-      color: #ff6b35;
     }
     .detail-box {
       background: #f9f9f9;
@@ -68,69 +62,37 @@
       color: #fff;
       font-size: 18px;
     }
-    .footer-logo img {
-      max-width: 80px;
-      height: auto;
-      filter: brightness(0) invert(1);
-    }
     .social-icons img {
       width: 20px;
       margin-left: 10px;
       vertical-align: middle;
       filter: brightness(0) invert(1);
     }
-    .success-badge {
-      background: #28a745;
-      color: white;
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: bold;
-      display: inline-block;
-      margin-bottom: 16px;
-    }
-    .dashboard-link {
-      background: #ff6b35;
-      color: white;
-      padding: 12px 24px;
-      text-decoration: none;
-      border-radius: 6px;
-      display: inline-block;
-      margin-top: 16px;
-      font-weight: bold;
-    }
-    .dashboard-link:hover {
-      background: #e55a2b;
-    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <img src="{{logoUrl}}" alt="IndexNow" />
+      <img src="{{logoUrl}}" alt="IndexNow" style="max-width: 120px; height: auto;">
     </div>
     <div class="content">
       <p>Hi {{userName}},</p>
-      <div class="success-badge">✓ JOB COMPLETED</div>
       <p class="highlight">Congratulations, your indexing job is complete!</p>
-      <p>We're happy to inform you that your IndexNow job "<strong>{{jobName}}</strong>" has been processed successfully. Your URLs have been submitted to Google Search Console for indexing.</p>
+      <p>We're happy to inform you that your indexing job has been processed successfully. Your URLs have been submitted to Google Search Console for indexing.</p>
       <div class="detail-box">
         <table>
           <tr><td>Job Name</td><td style="text-align:right;">{{jobName}}</td></tr>
           <tr><td>URLs Indexed</td><td style="text-align:right;">{{successUrls}}</td></tr>
           <tr><td>Failed URLs</td><td style="text-align:right;">{{failedUrls}}</td></tr>
           <tr><td>Total URLs</td><td style="text-align:right;">{{totalUrls}}</td></tr>
-          <tr><td>Completion Rate</td><td style="text-align:right;">{{completionRate}}%</td></tr>
-          <tr><td>Completed On</td><td style="text-align:right;">{{timestamp}}</td></tr>
         </table>
       </div>
-      <p>You can view your complete job details and track the indexing progress by accessing your dashboard.</p>
-      <a href="{{siteUrl}}" class="dashboard-link">View Dashboard</a>
-      <p>Thank you for using IndexNow and being part of our community.<br>Sincerely,<br>The IndexNow Team</p>
+      <p>You can view your indexing job details by clicking <a href="#">here</a>.</p>
+      <p>Thank you for choosing IndexNow and being part of our community.<br>Sincerely,<br>The IndexNow Team</p>
     </div>
     <div class="footer">
       <div class="footer-logo">
-        <img src="{{logoUrl}}" alt="IndexNow" />
+        <img src="{{logoUrl}}" alt="IndexNow" style="max-width: 80px; height: auto; filter: brightness(0) invert(1);">
       </div>
       <div class="social-icons">
         <img src="https://cdn-icons-png.flaticon.com/512/1384/1384031.png" alt="Instagram">

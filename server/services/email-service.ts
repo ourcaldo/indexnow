@@ -131,7 +131,7 @@ export class EmailService {
 
     return this.sendEmail({
       to: userEmail,
-      subject: `🎉 Great News! Your IndexNow Job "${jobName}" Has Been Completed Successfully`,
+      subject: `IndexNow Job Completed: ${jobName}`,
       template: 'job-completion',
       data
     });

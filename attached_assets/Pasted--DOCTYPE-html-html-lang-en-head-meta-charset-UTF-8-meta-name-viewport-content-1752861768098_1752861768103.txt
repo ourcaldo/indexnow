@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>G-SHOCK Payment Confirmation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #d9e1ee;
+      margin: 0;
+      padding: 40px 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .header {
+      text-align: center;
+      font-weight: bold;
+      padding: 20px 0;
+      font-size: 18px;
+    }
+    .content {
+      padding: 20px 30px;
+      font-size: 14px;
+      color: #333;
+    }
+    .highlight {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 16px;
+    }
+    .detail-box {
+      background: #f9f9f9;
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+    .detail-box table {
+      width: 100%;
+    }
+    .detail-box td {
+      padding: 6px 0;
+    }
+    .detail-box td:first-child {
+      font-weight: bold;
+    }
+    .footer {
+      background: #1b1b1b;
+      padding: 16px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-logo {
+      font-weight: bold;
+      color: #fff;
+      font-size: 18px;
+    }
+    .social-icons img {
+      width: 20px;
+      margin-left: 10px;
+      vertical-align: middle;
+      filter: brightness(0) invert(1);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">G-SHOCK</div>
+    <div class="content">
+      <p>Hi Ricky Ricardo,</p>
+      <p class="highlight">Congratulations, your payment is complete!</p>
+      <p>We’re happy to inform you that your payment has been processed and your order is confirmed. You’ve made a smart decision by choosing our products and services.</p>
+      <div class="detail-box">
+        <table>
+          <tr><td>Payment Number</td><td style="text-align:right;">#02934392392</td></tr>
+          <tr><td>Payment Date</td><td style="text-align:right;">January 23, 2024</td></tr>
+          <tr><td>Payment Method</td><td style="text-align:right;">Virtual Bank Account</td></tr>
+          <tr><td>Payment Amount</td><td style="text-align:right;">$380.60</td></tr>
+        </table>
+      </div>
+      <p>You can view your payment receipt and order details by clicking <a href="#">here</a>.</p>
+      <p>Thank you for choosing us and being part of our community.<br>Sincerely,<br>The G-Shock Team</p>
+    </div>
+    <div class="footer">
+      <div class="footer-logo">G-SHOCK</div>
+      <div class="social-icons">
+        <img src="https://cdn-icons-png.flaticon.com/512/1384/1384031.png" alt="Instagram">
+        <img src="https://cdn-icons-png.flaticon.com/512/1384/1384028.png" alt="YouTube">
+        <img src="https://cdn-icons-png.flaticon.com/512/1384/1384015.png" alt="Reddit">
+        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Messenger">
+      </div>
+    </div>
+  </div>
+</body>
+</html>
