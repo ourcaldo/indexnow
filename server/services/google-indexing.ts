@@ -28,16 +28,21 @@ export class GoogleIndexingService {
         scopes: ['https://www.googleapis.com/auth/indexing'],
       });
 
-      console.log('\n=== JWT Details ===');
-      console.log('Client Email:', serviceAccountData.client_email);
-      console.log('Private Key ID:', serviceAccountData.private_key_id);
-      console.log('Scope:', 'https://www.googleapis.com/auth/indexing');
+      // Debug logging only in development
+      if (process.env.NODE_ENV === 'development') {
+        console.log('\n=== JWT Details ===');
+        console.log('Client Email:', serviceAccountData.client_email);
+        console.log('Private Key ID:', serviceAccountData.private_key_id);
+        console.log('Scope:', 'https://www.googleapis.com/auth/indexing');
+      }
       
       // Exchange JWT for access token
       const tokenResponse = await jwtClient.authorize();
       
-      console.log('\n=== Raw Token Response ===');
-      console.log(tokenResponse);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('\n=== Raw Token Response ===');
+        console.log(tokenResponse);
+      }
 
       if (!tokenResponse || !tokenResponse.access_token) {
         throw new Error('Invalid token response - missing access_token');
@@ -68,9 +73,11 @@ export class GoogleIndexingService {
       
       // If token is still valid (with 5-minute buffer), use it
       if (expiryTime.getTime() > now.getTime() + 5 * 60 * 1000) {
+        if (process.env.NODE_ENV === 'development') {
         console.log('\n=== Using Cached Token ===');
         console.log('Token expires at:', expiryTime.toISOString());
         console.log('Time remaining:', Math.round((expiryTime.getTime() - now.getTime()) / 1000 / 60), 'minutes');
+      }
         
         const auth = new google.auth.OAuth2();
         auth.setCredentials({
@@ -80,8 +87,10 @@ export class GoogleIndexingService {
       }
     }
 
-    console.log('\n=== Generating New Token ===');
-    console.log('Reason:', !serviceAccount.accessToken ? 'No cached token' : 'Token expired or expiring soon');
+    if (process.env.NODE_ENV === 'development') {
+      console.log('\n=== Generating New Token ===');
+      console.log('Reason:', !serviceAccount.accessToken ? 'No cached token' : 'Token expired or expiring soon');
+    }
     
     // Generate new token
     const tokenInfo = await this.getAccessToken(serviceAccount);
@@ -103,20 +112,26 @@ export class GoogleIndexingService {
     try {
       const authResult = await this.createAuthClient(serviceAccount);
       
-      console.log('\n=== Auth Result Debug ===');
-      console.log('tokenUpdated:', authResult.tokenUpdated);
-      console.log('hasNewToken:', !!authResult.newToken);
-      console.log('hasNewExpiry:', !!authResult.newExpiry);
-      console.log('hasCallback:', !!updateTokenCallback);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('\n=== Auth Result Debug ===');
+        console.log('tokenUpdated:', authResult.tokenUpdated);
+        console.log('hasNewToken:', !!authResult.newToken);
+        console.log('hasNewExpiry:', !!authResult.newExpiry);
+        console.log('hasCallback:', !!updateTokenCallback);
+      }
       
       const indexing = google.indexing({ version: 'v3', auth: authResult.auth });
 
       // If token was updated and we have a callback to save it
       if (authResult.tokenUpdated && authResult.newToken && authResult.newExpiry && updateTokenCallback) {
-        console.log('\n=== Calling Token Update Callback ===');
+        if (process.env.NODE_ENV === 'development') {
+          console.log('\n=== Calling Token Update Callback ===');
+        }
         await updateTokenCallback(authResult.newToken, authResult.newExpiry);
-        console.log('Token update callback completed');
-      } else {
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Token update callback completed');
+        }
+      } else if (process.env.NODE_ENV === 'development') {
         console.log('\n=== Token Update Skipped ===');
         console.log('Conditions not met for token update');
       }
@@ -128,24 +143,31 @@ export class GoogleIndexingService {
         },
       });
 
-      console.log('\n=== Complete API Response ===');
-      console.log('Status Code:', response.status);
-      console.log('Headers:', JSON.stringify(response.headers, null, 2));
-      console.log('Raw Body:', JSON.stringify(response.data, null, 2));
+      if (process.env.NODE_ENV === 'development') {
+        console.log('\n=== Complete API Response ===');
+        console.log('Status Code:', response.status);
+        console.log('Headers:', JSON.stringify(response.headers, null, 2));
+        console.log('Raw Body:', JSON.stringify(response.data, null, 2));
+      }
 
       return {
         url,
         success: true,
       };
     } catch (error: any) {
-      console.error(`\n=== Indexing Failed ===`);
-      console.error('URL:', url);
-      console.error('Error:', error.message);
-      
-      if (error.response) {
-        console.error('Status:', error.response.status);
-        console.error('Headers:', JSON.stringify(error.response.headers, null, 2));
-        console.error('Body:', JSON.stringify(error.response.data, null, 2));
+      // Always log errors, but less verbose in production
+      if (process.env.NODE_ENV === 'development') {
+        console.error(`\n=== Indexing Failed ===`);
+        console.error('URL:', url);
+        console.error('Error:', error.message);
+        
+        if (error.response) {
+          console.error('Status:', error.response.status);
+          console.error('Headers:', JSON.stringify(error.response.headers, null, 2));
+          console.error('Body:', JSON.stringify(error.response.data, null, 2));
+        }
+      } else {
+        console.error(`Indexing failed for URL: ${url} - ${error.message}`);
       }
       
       return {

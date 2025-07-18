@@ -10,6 +10,7 @@ import { sanitizeInputs, validateSqlInjection, validateFileUpload } from "./midd
 import { requestLoggingMiddleware, errorLoggingMiddleware } from "./middleware/secure-logging";
 import { validateContentSecurityPolicy, csrfProtection } from "./middleware/authorization";
 import { SecurityAudit } from "./middleware/security-audit";
+import { assetConfig } from "./services/asset-config";
 
 // Validate environment variables at startup
 validateEnvironment();
@@ -36,11 +37,18 @@ app.use(validateFileUpload());
 // Rate limiting for API routes
 app.use('/api/', rateLimit(100, 15 * 60 * 1000)); // 100 requests per 15 minutes
 
-// CORS middleware
+// CORS middleware with environment-based origins
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
+  const allowedOrigins = assetConfig.getAllowedOrigins();
+  const origin = req.headers.origin;
+  
+  if (!origin || assetConfig.isOriginAllowed(origin)) {
+    res.header('Access-Control-Allow-Origin', origin || allowedOrigins[0]);
+  }
+  
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
   
   if (req.method === 'OPTIONS') {
     res.sendStatus(200);

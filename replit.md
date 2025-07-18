@@ -145,6 +145,21 @@ The application is designed to be scalable and maintainable, with clear separati
 
 ## Recent Changes (July 18, 2025)
 
+### 🔧 Critical Security and Performance Fixes (Latest)
+✓ **Fixed hardcoded Supabase URLs** - Moved all asset URLs to environment variables
+✓ **Fixed CORS security vulnerability** - Replaced wildcard (*) with configurable allowed origins
+✓ **Optimized production logging** - Reduced debug logging noise in production environment
+✓ **Added asset configuration service** - Centralized asset URL management with validation
+✓ **Enhanced environment validation** - Added URL format validation and comprehensive checks
+✓ **Provided database optimization recommendations** - Added indexes, constraints, and performance improvements
+
+### Environment Variables Added:
+- `LOGO_URL` - URL for application logo
+- `ICON_URL` - URL for application icon  
+- `FAVICON_URL` - URL for favicon
+- `SITE_URL` - Base site URL (default: localhost:5000)
+- `ALLOWED_ORIGINS` - Comma-separated list of allowed CORS origins
+
 ### Database Migration to Prefixed Schema
 ✓ Successfully migrated all database tables to use `indb_` prefix format
 ✓ Updated all table names: `indexing_jobs` → `indb_indexing_jobs`, etc.

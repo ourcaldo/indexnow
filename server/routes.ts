@@ -15,6 +15,7 @@ import { jobScheduler } from "./services/job-scheduler";
 import { requireOwnership, rateLimitPerUser } from "./middleware/authorization";
 import { validateUuid, validateServiceAccountJson } from "./middleware/input-validation";
 import { SecureLogger } from "./middleware/secure-logging";
+import { assetConfig } from "./services/asset-config";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Authentication middleware
@@ -352,7 +353,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Asset proxy routes to hide Supabase storage URLs
   app.get('/api/assets/logo', async (req, res) => {
     try {
-      const logoUrl = 'https://bwkasvyrzbzhcdtvsbyg.supabase.co/storage/v1/object/public/indexnow-bucket/logo/indexnow-black.png';
+      const logoUrl = assetConfig.getAssetUrl('logo');
       const response = await fetch(logoUrl);
       
       if (!response.ok) {
@@ -373,7 +374,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/assets/icon', async (req, res) => {
     try {
-      const iconUrl = 'https://bwkasvyrzbzhcdtvsbyg.supabase.co/storage/v1/object/public/indexnow-bucket/logo/indexnow-icon-black.png';
+      const iconUrl = assetConfig.getAssetUrl('icon');
       const response = await fetch(iconUrl);
       
       if (!response.ok) {
@@ -394,7 +395,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/assets/favicon', async (req, res) => {
     try {
-      const faviconUrl = 'https://bwkasvyrzbzhcdtvsbyg.supabase.co/storage/v1/object/public/indexnow-bucket/logo/IndexNow-icon.png';
+      const faviconUrl = assetConfig.getAssetUrl('favicon');
       const response = await fetch(faviconUrl);
       
       if (!response.ok) {

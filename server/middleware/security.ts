@@ -59,17 +59,57 @@ export function rateLimit(maxRequests: number = 100, windowMs: number = 15 * 60 
 }
 
 // Environment validation
-export function validateEnvironment() {
+export function validateEnvironment(): void {
   const requiredEnvVars = [
     'SUPABASE_URL',
-    'SUPABASE_ANON_KEY',
-    'DATABASE_URL'
+    'SUPABASE_SERVICE_ROLE_KEY',
+    'DATABASE_URL',
+    'VITE_SUPABASE_URL',
+    'VITE_SUPABASE_ANON_KEY',
+    'LOGO_URL',
+    'ICON_URL',
+    'FAVICON_URL'
   ];
-  
+
   const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
   
   if (missingVars.length > 0) {
-    throw new Error(`Missing required environment variables: ${missingVars.join(', ')}`);
+    console.error('❌ Missing required environment variables:', missingVars);
+    console.error('Please check your .env file and ensure all required variables are set');
+    process.exit(1);
+  }
+  
+  // Validate URLs
+  const urlVars = ['SUPABASE_URL', 'VITE_SUPABASE_URL', 'LOGO_URL', 'ICON_URL', 'FAVICON_URL'];
+  for (const varName of urlVars) {
+    const value = process.env[varName];
+    if (value && !isValidUrl(value)) {
+      console.error(`❌ Invalid URL format for ${varName}: ${value}`);
+      process.exit(1);
+    }
+  }
+  
+  // Validate CORS origins
+  const allowedOrigins = process.env.ALLOWED_ORIGINS;
+  if (allowedOrigins) {
+    const origins = allowedOrigins.split(',');
+    for (const origin of origins) {
+      if (!isValidUrl(origin.trim())) {
+        console.error(`❌ Invalid origin URL in ALLOWED_ORIGINS: ${origin}`);
+        process.exit(1);
+      }
+    }
+  }
+  
+  console.log('✅ All required environment variables are present and valid');
+}
+
+function isValidUrl(string: string): boolean {
+  try {
+    new URL(string);
+    return true;
+  } catch (_) {
+    return false;
   }
 }
 
