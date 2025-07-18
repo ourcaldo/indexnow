@@ -84,7 +84,7 @@ export default function Login() {
               className="h-24 w-auto max-w-sm"
             />
           </div>
-          <CardTitle className="text-2xl font-bold">IndexNow Pro</CardTitle>
+          
           <CardDescription>
             Sign in to your account to manage your indexing requests
           </CardDescription>
