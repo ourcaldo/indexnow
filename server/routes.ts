@@ -17,6 +17,7 @@ import { requireOwnership, rateLimitPerUser } from "./middleware/authorization";
 import { validateUuid, validateServiceAccountJson } from "./middleware/input-validation";
 import { SecureLogger } from "./middleware/secure-logging";
 import { assetConfig } from "./services/asset-config";
+import { emailService } from "./services/email-service";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Authentication middleware
@@ -451,6 +452,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error serving favicon:', error);
       res.status(500).json({ error: 'Failed to load favicon' });
+    }
+  });
+
+  // Test email connection endpoint
+  app.post('/api/test-email', requireAuth, async (req: any, res) => {
+    try {
+      console.log('Testing email connection...');
+      const success = await emailService.testConnection();
+      
+      if (success) {
+        // Try sending a test email
+        const testResult = await emailService.sendJobCompletionEmail(
+          req.user.email,
+          'Test Job',
+          5,
+          1,
+          6
+        );
+        
+        res.json({ 
+          connectionTest: success, 
+          emailTest: testResult,
+          message: 'Email test completed successfully'
+        });
+      } else {
+        res.status(500).json({ 
+          connectionTest: success, 
+          message: 'Email connection test failed'
+        });
+      }
+    } catch (error) {
+      console.error('Email test error:', error);
+      res.status(500).json({ error: 'Email test failed', details: error.message });
     }
   });
 

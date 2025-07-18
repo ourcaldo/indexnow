@@ -39,7 +39,7 @@ export class EmailService {
     return {
       host: process.env.SMTP_HOST!,
       port: parseInt(process.env.SMTP_PORT || '465'),
-      secure: process.env.SMTP_SECURE === 'true',
+      secure: false, // Always use TLS, not SSL
       user: process.env.SMTP_USER!,
       pass: process.env.SMTP_PASS!,
       fromName: process.env.SMTP_FROM_NAME!,
@@ -51,14 +51,18 @@ export class EmailService {
     return nodemailer.createTransport({
       host: this.config.host,
       port: this.config.port,
-      secure: this.config.secure,
+      secure: false, // Use STARTTLS instead of SSL
+      requireTLS: true, // Require TLS upgrade
       auth: {
         user: this.config.user,
         pass: this.config.pass,
       },
       tls: {
         rejectUnauthorized: false, // For self-signed certificates
-      }
+        minVersion: 'TLSv1.2', // Minimum TLS version
+      },
+      debug: true, // Enable debug logging
+      logger: true // Enable logging
     });
   }
 
