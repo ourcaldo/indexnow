@@ -33,17 +33,13 @@
         .header {
             background-color: #ffffff;
             padding: 30px 30px 20px 30px;
-            text-align: left;
+            text-align: center;
             border-bottom: none;
         }
         
         .logo {
-            font-size: 18px;
-            font-weight: 700;
-            color: #000;
-            margin: 0;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            max-width: 120px;
+            height: auto;
         }
         
         .content {
@@ -71,37 +67,29 @@
             line-height: 1.6;
         }
         
-        .stats-table {
-            width: 100%;
-            border-collapse: collapse;
+        .stats-container {
             margin: 30px 0;
-            border: 1px solid #e0e0e0;
         }
         
-        .stats-table th {
-            background-color: #f8f8f8;
-            padding: 12px;
-            text-align: left;
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
             font-size: 14px;
-            font-weight: 600;
-            color: #333;
-            border-bottom: 1px solid #e0e0e0;
         }
         
-        .stats-table td {
-            padding: 12px;
-            font-size: 14px;
-            color: #333;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        
-        .stats-table tr:last-child td {
+        .stats-row:last-child {
             border-bottom: none;
+            font-weight: 600;
         }
         
-        .total-row {
-            background-color: #f8f8f8;
-            font-weight: 600;
+        .stats-label {
+            color: #333;
+        }
+        
+        .stats-value {
+            color: #333;
         }
         
         .footer-message {
@@ -114,12 +102,19 @@
         .signature {
             font-size: 14px;
             color: #333;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
         
         .team-name {
             font-size: 14px;
             color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .timestamp {
+            font-size: 12px;
+            color: #666;
+            margin-top: 20px;
         }
         
         .footer {
@@ -129,12 +124,10 @@
         }
         
         .footer-logo {
-            font-size: 16px;
-            font-weight: 700;
-            color: #ffffff;
+            max-width: 80px;
+            height: auto;
             margin-bottom: 10px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            filter: brightness(0) invert(1);
         }
         
         .social-icons {
@@ -151,12 +144,6 @@
             display: inline-block;
         }
         
-        .timestamp {
-            font-size: 12px;
-            color: #666;
-            margin-top: 20px;
-        }
-        
         @media (max-width: 600px) {
             .email-container {
                 margin: 0 10px;
@@ -171,7 +158,7 @@
 <body>
     <div class="email-container">
         <div class="header">
-            <div class="logo">IndexNow</div>
+            <img src="{{logoUrl}}" alt="IndexNow" class="logo">
         </div>
         
         <div class="content">
@@ -183,28 +170,20 @@
                 We're excited to let you know that your indexing job "{{jobName}}" has been completed successfully. Your URLs have been submitted to Google for indexing.
             </div>
             
-            <table class="stats-table">
-                <thead>
-                    <tr>
-                        <th>Metric</th>
-                        <th>Count</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>URLs Indexed</td>
-                        <td>{{successUrls}}</td>
-                    </tr>
-                    <tr>
-                        <td>Failed URLs</td>
-                        <td>{{failedUrls}}</td>
-                    </tr>
-                    <tr class="total-row">
-                        <td>Total URLs</td>
-                        <td>{{totalUrls}}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="stats-container">
+                <div class="stats-row">
+                    <span class="stats-label">URLs Indexed</span>
+                    <span class="stats-value">{{successUrls}}</span>
+                </div>
+                <div class="stats-row">
+                    <span class="stats-label">Failed URLs</span>
+                    <span class="stats-value">{{failedUrls}}</span>
+                </div>
+                <div class="stats-row">
+                    <span class="stats-label">Total URLs</span>
+                    <span class="stats-value">{{totalUrls}}</span>
+                </div>
+            </div>
             
             <div class="footer-message">
                 You can view your job details and track the indexing progress by visiting your dashboard.
@@ -217,7 +196,7 @@
         </div>
         
         <div class="footer">
-            <div class="footer-logo">IndexNow</div>
+            <img src="{{logoUrl}}" alt="IndexNow" class="footer-logo">
             <div class="social-icons">
                 <span class="social-icon"></span>
                 <span class="social-icon"></span>

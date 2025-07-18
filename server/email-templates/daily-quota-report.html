@@ -33,17 +33,13 @@
         .header {
             background-color: #ffffff;
             padding: 30px 30px 20px 30px;
-            text-align: left;
+            text-align: center;
             border-bottom: none;
         }
         
         .logo {
-            font-size: 18px;
-            font-weight: 700;
-            color: #000;
-            margin: 0;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            max-width: 120px;
+            height: auto;
         }
         
         .content {
@@ -71,32 +67,28 @@
             line-height: 1.6;
         }
         
-        .stats-table {
-            width: 100%;
-            border-collapse: collapse;
+        .stats-container {
             margin: 30px 0;
-            border: 1px solid #e0e0e0;
         }
         
-        .stats-table th {
-            background-color: #f8f8f8;
-            padding: 12px;
-            text-align: left;
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
             font-size: 14px;
-            font-weight: 600;
-            color: #333;
-            border-bottom: 1px solid #e0e0e0;
         }
         
-        .stats-table td {
-            padding: 12px;
-            font-size: 14px;
-            color: #333;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        
-        .stats-table tr:last-child td {
+        .stats-row:last-child {
             border-bottom: none;
+        }
+        
+        .stats-label {
+            color: #333;
+        }
+        
+        .stats-value {
+            color: #333;
         }
         
         .detail-section {
@@ -111,31 +103,28 @@
         }
         
         .detail-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0;
-            border: 1px solid #e0e0e0;
+            margin: 15px 0;
         }
         
-        .detail-item {
-            padding: 12px;
-            border-bottom: 1px solid #e0e0e0;
-            border-right: 1px solid #e0e0e0;
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
             font-size: 14px;
-            color: #333;
         }
         
-        .detail-item:nth-child(even) {
-            border-right: none;
-        }
-        
-        .detail-item:nth-last-child(-n+2) {
+        .detail-row:last-child {
             border-bottom: none;
         }
         
         .detail-label {
             font-weight: 600;
             color: #000;
+        }
+        
+        .detail-value {
+            color: #333;
         }
         
         .footer-message {
@@ -148,12 +137,19 @@
         .signature {
             font-size: 14px;
             color: #333;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
         
         .team-name {
             font-size: 14px;
             color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .timestamp {
+            font-size: 12px;
+            color: #666;
+            margin-top: 20px;
         }
         
         .footer {
@@ -163,12 +159,10 @@
         }
         
         .footer-logo {
-            font-size: 16px;
-            font-weight: 700;
-            color: #ffffff;
+            max-width: 80px;
+            height: auto;
             margin-bottom: 10px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            filter: brightness(0) invert(1);
         }
         
         .social-icons {
@@ -185,12 +179,6 @@
             display: inline-block;
         }
         
-        .timestamp {
-            font-size: 12px;
-            color: #666;
-            margin-top: 20px;
-        }
-        
         @media (max-width: 600px) {
             .email-container {
                 margin: 0 10px;
@@ -199,21 +187,13 @@
             .content, .header, .footer {
                 padding: 20px;
             }
-            
-            .detail-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .detail-item {
-                border-right: none;
-            }
         }
     </style>
 </head>
 <body>
     <div class="email-container">
         <div class="header">
-            <div class="logo">IndexNow</div>
+            <img src="{{logoUrl}}" alt="IndexNow" class="logo">
         </div>
         
         <div class="content">
@@ -225,44 +205,44 @@
                 Here's your daily summary for {{reportDate}}. We're happy to inform you about your indexing activities and quota usage.
             </div>
             
-            <table class="stats-table">
-                <thead>
-                    <tr>
-                        <th>Activity</th>
-                        <th>Count</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>URLs Indexed</td>
-                        <td>{{totalSuccessfulUrls}}</td>
-                    </tr>
-                    <tr>
-                        <td>Failed URLs</td>
-                        <td>{{totalFailedUrls}}</td>
-                    </tr>
-                    <tr>
-                        <td>Jobs Completed</td>
-                        <td>{{completedJobs}}</td>
-                    </tr>
-                    <tr>
-                        <td>Active Jobs</td>
-                        <td>{{activeJobs}}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="stats-container">
+                <div class="stats-row">
+                    <span class="stats-label">URLs Indexed</span>
+                    <span class="stats-value">{{totalSuccessfulUrls}}</span>
+                </div>
+                <div class="stats-row">
+                    <span class="stats-label">Failed URLs</span>
+                    <span class="stats-value">{{totalFailedUrls}}</span>
+                </div>
+                <div class="stats-row">
+                    <span class="stats-label">Jobs Completed</span>
+                    <span class="stats-value">{{completedJobs}}</span>
+                </div>
+                <div class="stats-row">
+                    <span class="stats-label">Active Jobs</span>
+                    <span class="stats-value">{{activeJobs}}</span>
+                </div>
+            </div>
             
             <div class="detail-section">
                 <div class="detail-title">Detail Payment</div>
                 <div class="detail-grid">
-                    <div class="detail-item detail-label">Service Accounts</div>
-                    <div class="detail-item">{{totalServiceAccounts}}</div>
-                    <div class="detail-item detail-label">Active Accounts</div>
-                    <div class="detail-item">{{activeServiceAccounts}}</div>
-                    <div class="detail-item detail-label">Quota Used</div>
-                    <div class="detail-item">{{quotaUsed}}</div>
-                    <div class="detail-item detail-label">Quota Limit</div>
-                    <div class="detail-item">{{quotaLimit}}</div>
+                    <div class="detail-row">
+                        <span class="detail-label">Service Accounts</span>
+                        <span class="detail-value">{{totalServiceAccounts}}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Active Accounts</span>
+                        <span class="detail-value">{{activeServiceAccounts}}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Quota Used</span>
+                        <span class="detail-value">{{quotaUsed}}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Quota Limit</span>
+                        <span class="detail-value">{{quotaLimit}}</span>
+                    </div>
                 </div>
             </div>
             
@@ -277,7 +257,7 @@
         </div>
         
         <div class="footer">
-            <div class="footer-logo">IndexNow</div>
+            <img src="{{logoUrl}}" alt="IndexNow" class="footer-logo">
             <div class="social-icons">
                 <span class="social-icon"></span>
                 <span class="social-icon"></span>

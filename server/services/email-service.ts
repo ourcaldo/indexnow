@@ -118,6 +118,7 @@ export class EmailService {
       failedUrls,
       totalUrls,
       completionRate: Math.round((successUrls / totalUrls) * 100),
+      logoUrl: process.env.LOGO_URL || '',
       timestamp: new Date().toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
@@ -140,6 +141,7 @@ export class EmailService {
       userName,
       jobName,
       errorMessage,
+      logoUrl: process.env.LOGO_URL || '',
       timestamp: new Date().toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
@@ -161,6 +163,7 @@ export class EmailService {
     const data = {
       userName,
       ...stats,
+      logoUrl: process.env.LOGO_URL || '',
       reportDate: new Date().toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',

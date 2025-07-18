@@ -33,17 +33,13 @@
         .header {
             background-color: #ffffff;
             padding: 30px 30px 20px 30px;
-            text-align: left;
+            text-align: center;
             border-bottom: none;
         }
         
         .logo {
-            font-size: 18px;
-            font-weight: 700;
-            color: #000;
-            margin: 0;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            max-width: 120px;
+            height: auto;
         }
         
         .content {
@@ -115,12 +111,19 @@
         .signature {
             font-size: 14px;
             color: #333;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
         
         .team-name {
             font-size: 14px;
             color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .timestamp {
+            font-size: 12px;
+            color: #666;
+            margin-top: 20px;
         }
         
         .footer {
@@ -130,12 +133,10 @@
         }
         
         .footer-logo {
-            font-size: 16px;
-            font-weight: 700;
-            color: #ffffff;
+            max-width: 80px;
+            height: auto;
             margin-bottom: 10px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            filter: brightness(0) invert(1);
         }
         
         .social-icons {
@@ -152,12 +153,6 @@
             display: inline-block;
         }
         
-        .timestamp {
-            font-size: 12px;
-            color: #666;
-            margin-top: 20px;
-        }
-        
         @media (max-width: 600px) {
             .email-container {
                 margin: 0 10px;
@@ -172,7 +167,7 @@
 <body>
     <div class="email-container">
         <div class="header">
-            <div class="logo">IndexNow</div>
+            <img src="{{logoUrl}}" alt="IndexNow" class="logo">
         </div>
         
         <div class="content">
@@ -209,7 +204,7 @@
         </div>
         
         <div class="footer">
-            <div class="footer-logo">IndexNow</div>
+            <img src="{{logoUrl}}" alt="IndexNow" class="footer-logo">
             <div class="social-icons">
                 <span class="social-icon"></span>
                 <span class="social-icon"></span>
