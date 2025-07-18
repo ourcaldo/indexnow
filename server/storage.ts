@@ -127,6 +127,10 @@ export class SupabaseStorage implements IStorage {
   }
 
   async deleteIndexingJob(id: string): Promise<void> {
+    // Delete associated URL submissions first to avoid foreign key constraint violations
+    await db.delete(urlSubmissions).where(eq(urlSubmissions.jobId, id));
+    
+    // Then delete the job
     await db.delete(indexingJobs).where(eq(indexingJobs.id, id));
   }
 
@@ -135,6 +139,12 @@ export class SupabaseStorage implements IStorage {
   }
 
   async createUrlSubmission(submission: InsertUrlSubmission): Promise<UrlSubmission> {
+    // Validate that the job exists before creating URL submission
+    const job = await this.getIndexingJob(submission.jobId);
+    if (!job) {
+      throw new Error(`Job with ID ${submission.jobId} not found. Cannot create URL submission.`);
+    }
+    
     const result = await db.insert(urlSubmissions).values(submission).returning();
     return result[0];
   }
