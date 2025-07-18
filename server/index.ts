@@ -1,9 +1,21 @@
+import 'dotenv/config';
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { jobScheduler } from "./services/job-scheduler";
+import { securityHeaders, rateLimit, validateEnvironment, sanitizeLogsMiddleware } from "./middleware/security";
+
+// Validate environment variables at startup
+validateEnvironment();
 
 const app = express();
+
+// Security middleware
+app.use(securityHeaders);
+app.use(sanitizeLogsMiddleware);
+
+// Rate limiting for API routes
+app.use('/api/', rateLimit(100, 15 * 60 * 1000)); // 100 requests per 15 minutes
 
 // CORS middleware
 app.use((req, res, next) => {
@@ -18,8 +30,8 @@ app.use((req, res, next) => {
   }
 });
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json({ limit: '10mb' })); // Limit JSON payload size
+app.use(express.urlencoded({ extended: false, limit: '10mb' })); // Limit URL-encoded payload size
 
 app.use((req, res, next) => {
   const start = Date.now();

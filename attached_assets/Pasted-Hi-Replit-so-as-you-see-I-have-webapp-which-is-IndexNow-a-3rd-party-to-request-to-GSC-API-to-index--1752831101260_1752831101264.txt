@@ -1,0 +1,47 @@
+Hi Replit, so as you see I have webapp which is IndexNow a 3rd party to request to GSC API to index a link. This webapp is same and inspirated by Instant Indexing wordpress plugin by RankMath.
+
+So, as this webapp is on development stage and for personal use only. I need you to focus to enhance and fix some problem in dashboard and panel.
+
+Before you do make the changes, I need you to do a deep dive into the codebase, so you do have better understanding about this webapp, the current stage and feature and the obstacles.
+
+For now everything is good execpt one. I saw that you do hardcode the supabase endpoint url, anon key and service role key in the code, not using the .env. I want you to change that, we need to use .env, not hardcode it.
+
+Please do that along with this improvement (only do, if this approach is better, good to use, and compatible with this project)
+
+Best Practices for a Secure and Optimized SPA Dashboard
+Disable Source Maps in Production
+In your vite.config.ts, set this:
+
+build: {
+sourcemap: false, // Prevents exposing your source code in production
+}
+Avoid Hardcoding Secrets in the Codebase
+
+Use .env files for things like:
+
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_ANON_KEY=your-anon-key
+Access them in code using import.meta.env.VITE_SUPABASE_URL, etc.
+
+Don't use prefix like Vite or other that may make it exposed in the public.
+
+Restrict Access to Dashboard via Authentication
+Protect all dashboard routes using authentication. No user = no access.
+
+Use API for Dynamic Data (Not Embed in HTML)
+Load user data, stats, etc., via REST/GraphQL API after login — not pre-rendered.
+
+Don’t Expose Sensitive Data in Frontend
+Even though .env helps, remember:
+
+VITE-prefixed variables are still exposed in the client
+
+Never store service-level keys, admin keys, or DB credentials in frontend
+
+This is the key that we can save into ,env
+Project URL: https://bwkasvyrzbzhcdtvsbyg.supabase.co
+API key (anon public): eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3a2FzdnlyemJ6aGNkdHZzYnlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3NTUxNDIsImV4cCI6MjA2ODMzMTE0Mn0._YnFB_X6glA_67HRBcPQIVJ0lzcOQ5PinZzilecvB98
+service_role key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3a2FzdnlyemJ6aGNkdHZzYnlnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1Mjc1NTE0MiwiZXhwIjoyMDY4MzMxMTQyfQ.oq8nyR7VVuxPjquZr_PSGBBniCRwSrQ_3kgnW92iZXg
+Direct connection string: postgresql://postgres:Jembut123!@db.bwkasvyrzbzhcdtvsbyg.supabase.co:5432/postgres
+Transaction Pooler: postgresql://postgres.bwkasvyrzbzhcdtvsbyg:Jembut123!@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres
+Session Pooler: postgresql://postgres.bwkasvyrzbzhcdtvsbyg:Jembut123!@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres
