@@ -431,6 +431,7 @@ export class JobScheduler {
       const user = await db
         .select({
           email: userProfiles.email,
+          fullName: userProfiles.fullName,
           emailJobCompletion: userProfiles.emailJobCompletion
         })
         .from(userProfiles)
@@ -438,7 +439,14 @@ export class JobScheduler {
         .limit(1);
 
       if (user.length > 0 && user[0].emailJobCompletion) {
-        await emailService.sendJobCompletionEmail(user[0].email, jobName, successful, failed, total);
+        await emailService.sendJobCompletionEmail(
+          user[0].email, 
+          user[0].fullName || 'User', 
+          jobName, 
+          successful, 
+          failed, 
+          total
+        );
       }
     } catch (error) {
       console.error('Error sending job completion email:', error);

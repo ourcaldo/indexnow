@@ -1,217 +1,179 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Failed</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
-            line-height: 1.6;
-            padding: 20px 0;
-        }
-        
-        .email-container {
-            max-width: 500px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 0;
-            overflow: hidden;
-            box-shadow: none;
-            border: 1px solid #e0e0e0;
-        }
-        
-        .header {
-            background-color: #ffffff;
-            padding: 30px 30px 20px 30px;
-            text-align: center;
-            border-bottom: none;
-        }
-        
-        .logo {
-            max-width: 120px;
-            height: auto;
-        }
-        
-        .content {
-            padding: 20px 30px 30px 30px;
-            text-align: left;
-        }
-        
-        .greeting {
-            font-size: 14px;
-            color: #333;
-            margin-bottom: 20px;
-        }
-        
-        .title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #000;
-            margin-bottom: 20px;
-        }
-        
-        .message {
-            font-size: 14px;
-            color: #333;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
-        
-        .error-details {
-            background-color: #f8f8f8;
-            border: 1px solid #e0e0e0;
-            padding: 15px;
-            margin: 20px 0;
-            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-            font-size: 12px;
-            color: #d32f2f;
-            word-break: break-all;
-        }
-        
-        .troubleshooting {
-            margin: 30px 0;
-        }
-        
-        .troubleshooting-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: #000;
-            margin-bottom: 15px;
-        }
-        
-        .troubleshooting ul {
-            padding-left: 20px;
-            margin: 0;
-        }
-        
-        .troubleshooting li {
-            font-size: 14px;
-            color: #333;
-            margin-bottom: 8px;
-            line-height: 1.5;
-        }
-        
-        .footer-message {
-            font-size: 14px;
-            color: #333;
-            margin: 30px 0 20px 0;
-            line-height: 1.6;
-        }
-        
-        .signature {
-            font-size: 14px;
-            color: #333;
-            margin-bottom: 5px;
-        }
-        
-        .team-name {
-            font-size: 14px;
-            color: #333;
-            margin-bottom: 10px;
-        }
-        
-        .timestamp {
-            font-size: 12px;
-            color: #666;
-            margin-top: 20px;
-        }
-        
-        .footer {
-            background-color: #2c2c2c;
-            padding: 20px 30px;
-            text-align: left;
-        }
-        
-        .footer-logo {
-            max-width: 80px;
-            height: auto;
-            margin-bottom: 10px;
-            filter: brightness(0) invert(1);
-        }
-        
-        .social-icons {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-        
-        .social-icon {
-            width: 20px;
-            height: 20px;
-            background-color: #555;
-            border-radius: 3px;
-            display: inline-block;
-        }
-        
-        @media (max-width: 600px) {
-            .email-container {
-                margin: 0 10px;
-            }
-            
-            .content, .header, .footer {
-                padding: 20px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IndexNow Job Failed</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #d9e1ee;
+      margin: 0;
+      padding: 40px 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .header {
+      text-align: center;
+      font-weight: bold;
+      padding: 20px 0;
+      font-size: 18px;
+      background: #fff;
+    }
+    .header img {
+      max-width: 120px;
+      height: auto;
+    }
+    .content {
+      padding: 20px 30px;
+      font-size: 14px;
+      color: #333;
+    }
+    .highlight {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 16px;
+      color: #dc3545;
+    }
+    .detail-box {
+      background: #f9f9f9;
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+    .detail-box table {
+      width: 100%;
+    }
+    .detail-box td {
+      padding: 6px 0;
+    }
+    .detail-box td:first-child {
+      font-weight: bold;
+    }
+    .footer {
+      background: #1b1b1b;
+      padding: 16px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-logo {
+      font-weight: bold;
+      color: #fff;
+      font-size: 18px;
+    }
+    .footer-logo img {
+      max-width: 80px;
+      height: auto;
+      filter: brightness(0) invert(1);
+    }
+    .social-icons img {
+      width: 20px;
+      margin-left: 10px;
+      vertical-align: middle;
+      filter: brightness(0) invert(1);
+    }
+    .error-badge {
+      background: #dc3545;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      display: inline-block;
+      margin-bottom: 16px;
+    }
+    .dashboard-link {
+      background: #ff6b35;
+      color: white;
+      padding: 12px 24px;
+      text-decoration: none;
+      border-radius: 6px;
+      display: inline-block;
+      margin-top: 16px;
+      font-weight: bold;
+    }
+    .dashboard-link:hover {
+      background: #e55a2b;
+    }
+    .error-details {
+      background: #f8d7da;
+      color: #721c24;
+      padding: 12px 20px;
+      border-radius: 6px;
+      margin: 16px 0;
+      font-size: 14px;
+      border-left: 4px solid #dc3545;
+    }
+    .troubleshooting {
+      background: #fff3cd;
+      color: #856404;
+      padding: 12px 20px;
+      border-radius: 6px;
+      margin: 16px 0;
+      font-size: 14px;
+      border-left: 4px solid #ffc107;
+    }
+    .troubleshooting ul {
+      margin: 8px 0;
+      padding-left: 20px;
+    }
+    .troubleshooting li {
+      margin-bottom: 4px;
+    }
+  </style>
 </head>
 <body>
-    <div class="email-container">
-        <div class="header">
-            <img src="{{logoUrl}}" alt="IndexNow" class="logo">
-        </div>
-        
-        <div class="content">
-            <div class="greeting">Hi {{userName}},</div>
-            
-            <div class="title">Action Required: Job Failed</div>
-            
-            <div class="message">
-                Your indexing job "{{jobName}}" encountered an error and could not complete. Please review the error details below and retry the job or check your service account configuration.
-            </div>
-            
-            <div class="error-details">
-                {{errorMessage}}
-            </div>
-            
-            <div class="troubleshooting">
-                <div class="troubleshooting-title">Troubleshooting Steps:</div>
-                <ul>
-                    <li>Check that your Google Service Account is active and has proper permissions</li>
-                    <li>Verify that the URLs in your job are valid and accessible</li>
-                    <li>Ensure you haven't exceeded your daily Google Indexing API quota</li>
-                    <li>Review your service account credentials in the settings</li>
-                </ul>
-            </div>
-            
-            <div class="footer-message">
-                You can retry the job or update your settings from your dashboard.
-            </div>
-            
-            <div class="signature">Thank you for using IndexNow.</div>
-            <div class="team-name">The IndexNow Team</div>
-            
-            <div class="timestamp">Failed on {{timestamp}}</div>
-        </div>
-        
-        <div class="footer">
-            <img src="{{logoUrl}}" alt="IndexNow" class="footer-logo">
-            <div class="social-icons">
-                <span class="social-icon"></span>
-                <span class="social-icon"></span>
-                <span class="social-icon"></span>
-                <span class="social-icon"></span>
-            </div>
-        </div>
+  <div class="container">
+    <div class="header">
+      <img src="{{logoUrl}}" alt="IndexNow" />
     </div>
+    <div class="content">
+      <p>Hi {{userName}},</p>
+      <div class="error-badge">⚠ JOB FAILED</div>
+      <p class="highlight">Action Required: Your indexing job needs attention</p>
+      <p>We regret to inform you that your IndexNow job "<strong>{{jobName}}</strong>" encountered an error and could not complete successfully.</p>
+      <div class="detail-box">
+        <table>
+          <tr><td>Job Name</td><td style="text-align:right;">{{jobName}}</td></tr>
+          <tr><td>Failed On</td><td style="text-align:right;">{{timestamp}}</td></tr>
+          <tr><td>Status</td><td style="text-align:right;">Failed</td></tr>
+        </table>
+      </div>
+      <div class="error-details">
+        <strong>Error Details:</strong><br>
+        {{errorMessage}}
+      </div>
+      <div class="troubleshooting">
+        <strong>Troubleshooting Steps:</strong>
+        <ul>
+          <li>Check that your Google Service Account is active and has proper permissions</li>
+          <li>Verify that the URLs in your job are valid and accessible</li>
+          <li>Ensure you haven't exceeded your daily Google Indexing API quota</li>
+          <li>Review your service account credentials in the settings</li>
+        </ul>
+      </div>
+      <p>You can retry the job or update your settings from your dashboard.</p>
+      <a href="{{siteUrl}}" class="dashboard-link">Access Dashboard</a>
+      <p>If you continue to experience issues, please contact our support team.<br>Sincerely,<br>The IndexNow Team</p>
+    </div>
+    <div class="footer">
+      <div class="footer-logo">
+        <img src="{{logoUrl}}" alt="IndexNow" />
+      </div>
+      <div class="social-icons">
+        <img src="https://cdn-icons-png.flaticon.com/512/1384/1384031.png" alt="Instagram">
+        <img src="https://cdn-icons-png.flaticon.com/512/1384/1384028.png" alt="YouTube">
+        <img src="https://cdn-icons-png.flaticon.com/512/1384/1384015.png" alt="Reddit">
+        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Messenger">
+      </div>
+    </div>
+  </div>
 </body>
 </html>

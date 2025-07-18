@@ -119,6 +119,7 @@ export class EmailService {
       totalUrls,
       completionRate: Math.round((successUrls / totalUrls) * 100),
       logoUrl: process.env.LOGO_URL || '',
+      siteUrl: process.env.SITE_URL || 'http://localhost:5000',
       timestamp: new Date().toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
@@ -130,7 +131,7 @@ export class EmailService {
 
     return this.sendEmail({
       to: userEmail,
-      subject: `IndexNow Job Completed: ${jobName}`,
+      subject: `🎉 Great News! Your IndexNow Job "${jobName}" Has Been Completed Successfully`,
       template: 'job-completion',
       data
     });
@@ -142,6 +143,7 @@ export class EmailService {
       jobName,
       errorMessage,
       logoUrl: process.env.LOGO_URL || '',
+      siteUrl: process.env.SITE_URL || 'http://localhost:5000',
       timestamp: new Date().toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
@@ -153,7 +155,7 @@ export class EmailService {
 
     return this.sendEmail({
       to: userEmail,
-      subject: `IndexNow Job Failed: ${jobName}`,
+      subject: `⚠️ Action Required: IndexNow Job "${jobName}" Encountered an Issue`,
       template: 'job-failure',
       data
     });

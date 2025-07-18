@@ -1,209 +1,144 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Completed Successfully</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
-            line-height: 1.6;
-            padding: 20px 0;
-        }
-        
-        .email-container {
-            max-width: 500px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 0;
-            overflow: hidden;
-            box-shadow: none;
-            border: 1px solid #e0e0e0;
-        }
-        
-        .header {
-            background-color: #ffffff;
-            padding: 30px 30px 20px 30px;
-            text-align: center;
-            border-bottom: none;
-        }
-        
-        .logo {
-            max-width: 120px;
-            height: auto;
-        }
-        
-        .content {
-            padding: 20px 30px 30px 30px;
-            text-align: left;
-        }
-        
-        .greeting {
-            font-size: 14px;
-            color: #333;
-            margin-bottom: 20px;
-        }
-        
-        .title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #000;
-            margin-bottom: 20px;
-        }
-        
-        .message {
-            font-size: 14px;
-            color: #333;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
-        
-        .stats-container {
-            margin: 30px 0;
-        }
-        
-        .stats-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid #f0f0f0;
-            font-size: 14px;
-        }
-        
-        .stats-row:last-child {
-            border-bottom: none;
-            font-weight: 600;
-        }
-        
-        .stats-label {
-            color: #333;
-        }
-        
-        .stats-value {
-            color: #333;
-        }
-        
-        .footer-message {
-            font-size: 14px;
-            color: #333;
-            margin: 30px 0 20px 0;
-            line-height: 1.6;
-        }
-        
-        .signature {
-            font-size: 14px;
-            color: #333;
-            margin-bottom: 5px;
-        }
-        
-        .team-name {
-            font-size: 14px;
-            color: #333;
-            margin-bottom: 10px;
-        }
-        
-        .timestamp {
-            font-size: 12px;
-            color: #666;
-            margin-top: 20px;
-        }
-        
-        .footer {
-            background-color: #2c2c2c;
-            padding: 20px 30px;
-            text-align: left;
-        }
-        
-        .footer-logo {
-            max-width: 80px;
-            height: auto;
-            margin-bottom: 10px;
-            filter: brightness(0) invert(1);
-        }
-        
-        .social-icons {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-        
-        .social-icon {
-            width: 20px;
-            height: 20px;
-            background-color: #555;
-            border-radius: 3px;
-            display: inline-block;
-        }
-        
-        @media (max-width: 600px) {
-            .email-container {
-                margin: 0 10px;
-            }
-            
-            .content, .header, .footer {
-                padding: 20px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IndexNow Job Completion</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #d9e1ee;
+      margin: 0;
+      padding: 40px 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .header {
+      text-align: center;
+      font-weight: bold;
+      padding: 20px 0;
+      font-size: 18px;
+      background: #fff;
+    }
+    .header img {
+      max-width: 120px;
+      height: auto;
+    }
+    .content {
+      padding: 20px 30px;
+      font-size: 14px;
+      color: #333;
+    }
+    .highlight {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 16px;
+      color: #ff6b35;
+    }
+    .detail-box {
+      background: #f9f9f9;
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+    .detail-box table {
+      width: 100%;
+    }
+    .detail-box td {
+      padding: 6px 0;
+    }
+    .detail-box td:first-child {
+      font-weight: bold;
+    }
+    .footer {
+      background: #1b1b1b;
+      padding: 16px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-logo {
+      font-weight: bold;
+      color: #fff;
+      font-size: 18px;
+    }
+    .footer-logo img {
+      max-width: 80px;
+      height: auto;
+      filter: brightness(0) invert(1);
+    }
+    .social-icons img {
+      width: 20px;
+      margin-left: 10px;
+      vertical-align: middle;
+      filter: brightness(0) invert(1);
+    }
+    .success-badge {
+      background: #28a745;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      display: inline-block;
+      margin-bottom: 16px;
+    }
+    .dashboard-link {
+      background: #ff6b35;
+      color: white;
+      padding: 12px 24px;
+      text-decoration: none;
+      border-radius: 6px;
+      display: inline-block;
+      margin-top: 16px;
+      font-weight: bold;
+    }
+    .dashboard-link:hover {
+      background: #e55a2b;
+    }
+  </style>
 </head>
 <body>
-    <div class="email-container">
-        <div class="header">
-            <img src="{{logoUrl}}" alt="IndexNow" class="logo">
-        </div>
-        
-        <div class="content">
-            <div class="greeting">Hi {{userName}},</div>
-            
-            <div class="title">Job Completed Successfully!</div>
-            
-            <div class="message">
-                We're excited to let you know that your indexing job "{{jobName}}" has been completed successfully. Your URLs have been submitted to Google for indexing.
-            </div>
-            
-            <div class="stats-container">
-                <div class="stats-row">
-                    <span class="stats-label">URLs Indexed</span>
-                    <span class="stats-value">{{successUrls}}</span>
-                </div>
-                <div class="stats-row">
-                    <span class="stats-label">Failed URLs</span>
-                    <span class="stats-value">{{failedUrls}}</span>
-                </div>
-                <div class="stats-row">
-                    <span class="stats-label">Total URLs</span>
-                    <span class="stats-value">{{totalUrls}}</span>
-                </div>
-            </div>
-            
-            <div class="footer-message">
-                You can view your job details and track the indexing progress by visiting your dashboard.
-            </div>
-            
-            <div class="signature">Thank you for using IndexNow.</div>
-            <div class="team-name">The IndexNow Team</div>
-            
-            <div class="timestamp">Completed on {{timestamp}}</div>
-        </div>
-        
-        <div class="footer">
-            <img src="{{logoUrl}}" alt="IndexNow" class="footer-logo">
-            <div class="social-icons">
-                <span class="social-icon"></span>
-                <span class="social-icon"></span>
-                <span class="social-icon"></span>
-                <span class="social-icon"></span>
-            </div>
-        </div>
+  <div class="container">
+    <div class="header">
+      <img src="{{logoUrl}}" alt="IndexNow" />
     </div>
+    <div class="content">
+      <p>Hi {{userName}},</p>
+      <div class="success-badge">✓ JOB COMPLETED</div>
+      <p class="highlight">Congratulations, your indexing job is complete!</p>
+      <p>We're happy to inform you that your IndexNow job "<strong>{{jobName}}</strong>" has been processed successfully. Your URLs have been submitted to Google Search Console for indexing.</p>
+      <div class="detail-box">
+        <table>
+          <tr><td>Job Name</td><td style="text-align:right;">{{jobName}}</td></tr>
+          <tr><td>URLs Indexed</td><td style="text-align:right;">{{successUrls}}</td></tr>
+          <tr><td>Failed URLs</td><td style="text-align:right;">{{failedUrls}}</td></tr>
+          <tr><td>Total URLs</td><td style="text-align:right;">{{totalUrls}}</td></tr>
+          <tr><td>Completion Rate</td><td style="text-align:right;">{{completionRate}}%</td></tr>
+          <tr><td>Completed On</td><td style="text-align:right;">{{timestamp}}</td></tr>
+        </table>
+      </div>
+      <p>You can view your complete job details and track the indexing progress by accessing your dashboard.</p>
+      <a href="{{siteUrl}}" class="dashboard-link">View Dashboard</a>
+      <p>Thank you for using IndexNow and being part of our community.<br>Sincerely,<br>The IndexNow Team</p>
+    </div>
+    <div class="footer">
+      <div class="footer-logo">
+        <img src="{{logoUrl}}" alt="IndexNow" />
+      </div>
+      <div class="social-icons">
+        <img src="https://cdn-icons-png.flaticon.com/512/1384/1384031.png" alt="Instagram">
+        <img src="https://cdn-icons-png.flaticon.com/512/1384/1384028.png" alt="YouTube">
+        <img src="https://cdn-icons-png.flaticon.com/512/1384/1384015.png" alt="Reddit">
+        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Messenger">
+      </div>
+    </div>
+  </div>
 </body>
 </html>
