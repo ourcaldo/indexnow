@@ -7,10 +7,12 @@ This is a full-stack web application that provides an instant indexing solution 
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
-Database: Uses Supabase (not local PostgreSQL) with service_account_json and access_token columns.
-Authentication: JWT-based approach for Google Indexing API with token caching.
-Database: Use Supabase for database operations, never use local PostgreSQL.
-Authentication: Use JWT-based authentication approach for Google API integration.
+**CRITICAL DATABASE POLICY: SUPABASE ONLY**
+- This project uses SUPABASE database exclusively - NO local PostgreSQL, NO local database installation EVER
+- Database connection: Supabase PostgreSQL via DATABASE_URL environment variable only
+- Authentication: JWT-based approach for Google Indexing API with token caching
+- NEVER install local PostgreSQL or any local database solutions
+- ALL database operations go through Supabase connection string only
 
 ## Recent Changes
 

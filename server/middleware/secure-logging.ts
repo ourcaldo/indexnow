@@ -147,8 +147,8 @@ export class SecureLogger {
     next();
   }
   
-  // Security event logging
-  static logSecurityEvent(event: string, details: any, req?: Request) {
+  // Security event logging with database integration
+  static async logSecurityEvent(event: string, details: any, req?: Request) {
     const securityLogData = {
       event,
       details: this.sanitizeObject(details),
@@ -159,6 +159,24 @@ export class SecureLogger {
     };
     
     console.warn('🔒 SECURITY EVENT:', JSON.stringify(securityLogData, null, 2));
+    
+    // Save to database for analytics
+    try {
+      const { SecurityAnalyticsService } = await import('../services/security-analytics');
+      await SecurityAnalyticsService.logSecurityEvent({
+        event_type: event,
+        severity: 'HIGH',
+        ip_address: req?.ip,
+        user_agent: req?.get('User-Agent'),
+        request_url: req?.url,
+        request_method: req?.method,
+        request_body: req?.body,
+        request_query: req?.query,
+        details: details
+      });
+    } catch (error) {
+      console.error('Failed to save security event to database:', error);
+    }
   }
 }
 
