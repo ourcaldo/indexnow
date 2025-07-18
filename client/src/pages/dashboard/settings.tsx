@@ -97,6 +97,7 @@ export default function Settings() {
                       ? "border-emerald-200 bg-emerald-50" 
                       : "border-slate-200 bg-slate-50"
                   }`}
+                  style={{ wordBreak: 'break-word' }}
                 >
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-medium text-slate-700">
@@ -120,7 +121,7 @@ export default function Settings() {
                       </Button>
                     </div>
                   </div>
-                  <p className="text-xs text-slate-600 truncate">
+                  <p className="text-xs text-slate-600 break-all">
                     {account.clientEmail}
                   </p>
                   <p className="text-xs text-slate-500 mt-1">

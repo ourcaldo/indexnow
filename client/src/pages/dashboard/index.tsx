@@ -112,10 +112,10 @@ export default function Dashboard() {
                 variant="ghost" 
                 className="w-full justify-start p-4 h-auto bg-primary/5 hover:bg-primary/10"
               >
-                <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center mr-3">
+                <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
                   <Zap className="h-5 w-5 text-white" />
                 </div>
-                <div className="text-left">
+                <div className="text-left flex-1 min-w-0">
                   <p className="font-medium text-slate-800">Submit URLs for Indexing</p>
                   <p className="text-sm text-slate-600">Manually add URLs or import from sitemap</p>
                 </div>
@@ -127,10 +127,10 @@ export default function Dashboard() {
                 variant="ghost" 
                 className="w-full justify-start p-4 h-auto bg-amber-50 hover:bg-amber-100"
               >
-                <div className="w-10 h-10 bg-amber-500 rounded-lg flex items-center justify-center mr-3">
+                <div className="w-10 h-10 bg-amber-500 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
                   <Key className="h-5 w-5 text-white" />
                 </div>
-                <div className="text-left">
+                <div className="text-left flex-1 min-w-0">
                   <p className="font-medium text-slate-800">Manage Service Accounts</p>
                   <p className="text-sm text-slate-600">Add or update Google service accounts</p>
                 </div>
@@ -142,10 +142,10 @@ export default function Dashboard() {
                 variant="ghost" 
                 className="w-full justify-start p-4 h-auto bg-emerald-50 hover:bg-emerald-100"
               >
-                <div className="w-10 h-10 bg-emerald-500 rounded-lg flex items-center justify-center mr-3">
+                <div className="w-10 h-10 bg-emerald-500 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
                   <BarChart3 className="h-5 w-5 text-white" />
                 </div>
-                <div className="text-left">
+                <div className="text-left flex-1 min-w-0">
                   <p className="font-medium text-slate-800">View Job Status</p>
                   <p className="text-sm text-slate-600">Monitor indexing progress and results</p>
                 </div>
