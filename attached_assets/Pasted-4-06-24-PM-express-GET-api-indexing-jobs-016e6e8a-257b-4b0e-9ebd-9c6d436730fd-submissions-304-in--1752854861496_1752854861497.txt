@@ -1,0 +1,359 @@
+4:06:24 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd/submissions 304 in …
+
+=== Complete API Response ===
+Status Code: 200
+Headers: {}
+Raw Body: {
+  "urlNotificationMetadata": {
+    "url": "https://nexjob.tech/"
+  }
+}
+4:06:24 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd/submissions 200 in …
+4:06:24 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd 304 in 628ms :: {"i…
+Job 016e6e8a-257b-4b0e-9ebd-9c6d436730fd completed: 3 successful, 0 failed
+[2025-07-18 16:06:25] DEBUG Sending mail using SMTP/7.0.5[client:7.0.5]
+[2025-07-18 16:06:25] DEBUG [FxMXmPCl0Iw] Resolved mail.indexnow.studio as 160.79.119.42 [cache miss]
+4:06:25 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd/submissions 304 in …
+[2025-07-18 16:06:25] INFO  [FxMXmPCl0Iw] Connection established to 160.79.119.42:587
+4:06:25 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd 200 in 440ms :: {"i…
+4:06:25 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd/submissions 304 in …
+[2025-07-18 16:06:25] DEBUG [FxMXmPCl0Iw] S: 220 srv69.redsolution.id ESMTP Postfix
+[2025-07-18 16:06:25] DEBUG [FxMXmPCl0Iw] C: EHLO [127.0.0.1]
+[2025-07-18 16:06:25] DEBUG [FxMXmPCl0Iw] S: 250-srv69.redsolution.id
+[2025-07-18 16:06:25] DEBUG [FxMXmPCl0Iw] S: 250-PIPELINING
+[2025-07-18 16:06:25] DEBUG [FxMXmPCl0Iw] S: 250-SIZE 102400000
+[2025-07-18 16:06:25] DEBUG [FxMXmPCl0Iw] S: 250-VRFY
+[2025-07-18 16:06:25] DEBUG [FxMXmPCl0Iw] S: 250-ETRN
+[2025-07-18 16:06:25] DEBUG [FxMXmPCl0Iw] S: 250-STARTTLS
+[2025-07-18 16:06:25] DEBUG [FxMXmPCl0Iw] S: 250-ENHANCEDSTATUSCODES
+[2025-07-18 16:06:25] DEBUG [FxMXmPCl0Iw] S: 250-8BITMIME
+[2025-07-18 16:06:25] DEBUG [FxMXmPCl0Iw] S: 250-DSN
+[2025-07-18 16:06:25] DEBUG [FxMXmPCl0Iw] S: 250-SMTPUTF8
+[2025-07-18 16:06:25] DEBUG [FxMXmPCl0Iw] S: 250 CHUNKING
+[2025-07-18 16:06:25] DEBUG [FxMXmPCl0Iw] C: STARTTLS
+4:06:25 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd 304 in 351ms :: {"i…
+4:06:26 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd/submissions 304 in …
+[2025-07-18 16:06:26] DEBUG [FxMXmPCl0Iw] S: 220 2.0.0 Ready to start TLS
+[2025-07-18 16:06:26] INFO  [FxMXmPCl0Iw] Connection upgraded with STARTTLS
+[2025-07-18 16:06:26] DEBUG [FxMXmPCl0Iw] C: EHLO [127.0.0.1]
+4:06:26 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd/submissions 304 in …
+4:06:26 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd 304 in 463ms :: {"i…
+[2025-07-18 16:06:26] DEBUG [FxMXmPCl0Iw] S: 250-srv69.redsolution.id
+[2025-07-18 16:06:26] DEBUG [FxMXmPCl0Iw] S: 250-PIPELINING
+[2025-07-18 16:06:26] DEBUG [FxMXmPCl0Iw] S: 250-SIZE 102400000
+[2025-07-18 16:06:26] DEBUG [FxMXmPCl0Iw] S: 250-VRFY
+[2025-07-18 16:06:26] DEBUG [FxMXmPCl0Iw] S: 250-ETRN
+[2025-07-18 16:06:26] DEBUG [FxMXmPCl0Iw] S: 250-AUTH PLAIN LOGIN
+[2025-07-18 16:06:26] DEBUG [FxMXmPCl0Iw] S: 250-ENHANCEDSTATUSCODES
+[2025-07-18 16:06:26] DEBUG [FxMXmPCl0Iw] S: 250-8BITMIME
+[2025-07-18 16:06:26] DEBUG [FxMXmPCl0Iw] S: 250-DSN
+[2025-07-18 16:06:26] DEBUG [FxMXmPCl0Iw] S: 250-SMTPUTF8
+[2025-07-18 16:06:26] DEBUG [FxMXmPCl0Iw] S: 250 CHUNKING
+[2025-07-18 16:06:26] DEBUG [FxMXmPCl0Iw] SMTP handshake finished
+[2025-07-18 16:06:26] DEBUG [FxMXmPCl0Iw] C: AUTH PLAIN AG5vdGlmaWthc2lAaW5kZXhub3cuc3R1ZGlvAC8qIHNlY3JldCAqLw==
+4:06:26 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd/submissions 304 in …
+[2025-07-18 16:06:26] DEBUG [FxMXmPCl0Iw] S: 235 2.7.0 Authentication successful
+[2025-07-18 16:06:26] INFO  [FxMXmPCl0Iw] User "notifikasi@indexnow.studio" authenticated
+[2025-07-18 16:06:26] INFO  Sending message <dc076a3e-9abc-9d93-5066-20587803466e@indexnow.studio> to <aldodkris@gmail.com>
+[2025-07-18 16:06:26] DEBUG [FxMXmPCl0Iw] C: MAIL FROM:<notifikasi@indexnow.studio>
+4:06:27 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd 304 in 453ms :: {"i…
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] S: 250 2.1.0 Ok
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] C: RCPT TO:<aldodkris@gmail.com>
+4:06:27 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd/submissions 304 in …
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] S: 250 2.1.5 Ok
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] C: DATA
+4:06:27 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd/submissions 304 in …
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] S: 354 End data with <CR><LF>.<CR><LF>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] From: IndexNow <notifikasi@indexnow.studio>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] To: aldodkris@gmail.com
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] Subject: IndexNow Job Completed: #Job-22
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] Message-ID: <dc076a3e-9abc-9d93-5066-20587803466e@indexnow.studio>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] Content-Transfer-Encoding: quoted-printable
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] Date: Fri, 18 Jul 2025 16:06:25 +0000
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] MIME-Version: 1.0
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] Content-Type: text/html; charset=utf-8
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] 
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] <!DOCTYPE html>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] <html lang=3D"en">
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] <head>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]     <meta charset=3D"UTF-8">
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]     <meta name=3D"viewport" content=3D"width=3Ddevice-width, =
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] initial-scale=3D1.0">
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]     <title>Job Completed Successfully</title>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]     <style>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         body {
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             margin: 0;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             padding: 0;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', =
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             =
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] background-color: #f8fafc;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             color: #334155;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             line-height: 1.6;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         }
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]        =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         .container {
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             max-width: 600px;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             margin: 0 auto;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             background-color: #ffffff;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             border-radius: 8px;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             overflow: hidden;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             box-shadow: 0 4px 6px -1px rgba(0=
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] , 0, 0, 0.1);
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         }
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]        =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         .header {
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             padding: 32px 24px;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             text-align: center;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         }
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]        =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         .logo {
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             font-size: 28px;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             font-weight: 700;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             color: #ffffff;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             margin: 0;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             letter-spacing: -0.025em;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         }
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]        =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         .tagline {
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             color: #fed7aa;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             font-size: 14px;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             margin: 8px 0 0 0;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         }
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]        =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         .content {
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             padding: 32px 24px;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         }
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]        =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         .title {
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             font-size: 24px;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             font-weight: 600;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             color: #1e293b;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             margin: 0 0 16px 0;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         }
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]        =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         .subtitle {
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             font-size: 16px;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             color: #64748b;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             margin: 0 0 24px 0;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         }
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]        =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         .stats-grid {
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             display: grid;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             grid-template-columns: repeat(2, =
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] 1fr);
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             gap: 16px;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             margin: 24px 0;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         }
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]        =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         .stat-card {
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             background-color: #f8fafc;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             border: 1px solid #e2e8f0;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             border-radius: 6px;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             padding: 16px;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             text-align: center;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         }
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]        =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         .stat-number {
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             font-size: 28px;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             font-weight: 700;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             color: #ea580c;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             margin: 0;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         }
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]        =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         .stat-label {
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             font-size: 14px;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             color: #64748b;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             margin: 4px 0 0 0;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         }
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]        =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         .success-stat .stat-number {
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             color: #059669;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         }
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]        =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         .error-stat .stat-number {
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             color: #dc2626;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         }
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]        =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         .button {
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             display: inline-block;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             color: #ffffff !important;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             text-decoration: none;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             padding: 12px 24px;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             border-radius: 6px;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             font-weight: 600;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             font-size: 14px;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             margin: 24px 0;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             transition: transform 0.2s ease;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         }
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]        =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         .button:hover {
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             transform: =
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] translateY(-1px);
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         }
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]        =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         .alert {
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             background-color: #f0fdf4;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             border: 1px solid =
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] #bbf7d0;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             border-radius: 6px;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             padding: 16px;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             margin: 24px 0;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             color: #059669;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         }
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]        =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         .footer {
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             background-color: #f8fafc;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             padding: 24px;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             text-align: center;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             border-top: 1px solid #e2e8f0;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         }
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]        =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         .footer-text {
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             font-size: 14px;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             color: #64748b;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             margin: 0;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         }
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]        =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         .footer-links {
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             margin: 16px 0 0 0;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         }
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]        =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         .footer-link {
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             color: #ea580c;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             text-decoration: none;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             margin: 0 16px;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             font-size: 14px;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         }
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]        =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         .timestamp {
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             background-color: #f1f5f9;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             border-radius: 4px;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             padding: 8px 12px;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             font-size: 14px;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             color: #475569;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             margin: 16px 0;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             text-align: center;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         }
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]        =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         @media (max-width: 640px) {
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             .container {
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]                 margin: 16px;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]                 border-radius: 0;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             }
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]            =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             .stats-grid {
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]                 grid-template-columns: 1fr;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             }
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]            =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             .header {
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]                 padding: 24px 16px;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             }
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]            =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             .content {
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]                 padding: 24px 16px;
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             }
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         }
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]     </style>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] </head>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] <body>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]     <div class=3D"container">
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         <div class=3D"header">
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             <h1 class=3D"logo">IndexNow</h1>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             <p =
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] class=3D"tagline">Google Search Console Indexing Dashboard</p>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         </div>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]        =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         <div class=3D"content">
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             <h2 class=3D"title">=E2=9C=85 Job Completed Successfully!</h2>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             <p class=3D"subtitle">Your indexing job =
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] "<strong>#Job-22</strong>" has finished processing.</p>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]            =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             <div class=3D"alert">
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]                 <strong>Great news!=
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] </strong> Your URLs have been successfully submitted to Google Search =
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] Console for indexing.
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             </div>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]            =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             <div class=3D"stats-grid">
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]                 <div =
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] class=3D"stat-card success-stat">
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]                     <p =
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] class=3D"stat-number">3</p>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]                     <p class=3D"stat-label">URL=
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] s Indexed</p>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]                 </div>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]                 <div =
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] class=3D"stat-card error-stat">
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]                     <p =
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] class=3D"stat-number">0</p>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]                     <p class=3D"stat-label">Fai=
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] led URLs</p>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]                 </div>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]                 <div =
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] class=3D"stat-card">
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]                     <p class=3D"stat-number">3</p>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]                     <p class=3D"stat-label">Total URLs</p>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]                 </div>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]                 <div class=3D"stat-card">
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]                     <p class=3D"stat-number">100%</p>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]                     <p class=3D"stat-label">Success Rate</p>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]                 </div>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             </div>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]            =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             <div class=3D"timestamp">
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]                 Completed on July 18,=
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]  2025 at 04:06 PM
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             </div>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]            =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             <center>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]                 <a href=3D"#" class=3D"button">View Job Details</a>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             </center>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         </div>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]        =20
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         <div =
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] class=3D"footer">
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             <p class=3D"footer-text">
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]                 You're receiving this email because you have job completion=
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]  notifications enabled in your IndexNow dashboard.
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             </p>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             <div class=3D"footer-links">
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]                 <a href=3D"#" =
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] class=3D"footer-link">Dashboard</a>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]                 <a href=3D"#" =
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] class=3D"footer-link">Settings</a>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]                 <a href=3D"#" =
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] class=3D"footer-link">Unsubscribe</a>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]             </div>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]         </div>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw]     </div>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] </body>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] </html>
+[2025-07-18 16:06:27] DEBUG [FxMXmPCl0Iw] .
+[2025-07-18 16:06:27] INFO  [FxMXmPCl0Iw] <7303 bytes encoded mime message (source size 7067 bytes)>
+[2025-07-18 16:06:28] DEBUG [FxMXmPCl0Iw] S: 250 2.0.0 Ok: queued as 4764F51001DD7
+[2025-07-18 16:06:28] DEBUG [FxMXmPCl0Iw] Closing connection to the server using "end"
+Email sent successfully to aldodkris@gmail.com: <dc076a3e-9abc-9d93-5066-20587803466e@indexnow.studio>
+[2025-07-18 16:06:28] INFO  [FxMXmPCl0Iw] Connection closed
+4:06:28 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd 304 in 345ms :: {"i…
+4:06:29 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd/submissions 304 in …
+4:06:29 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd 304 in 479ms :: {"i…
+4:06:29 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd/submissions 304 in …
+4:06:29 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd/submissions 304 in …
+4:06:30 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd 304 in 506ms :: {"i…
+4:06:30 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd/submissions 304 in …
+4:06:30 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd 304 in 376ms :: {"i…
+4:06:30 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd/submissions 304 in …
+4:06:30 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd/submissions 304 in …
+4:06:30 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd 304 in 351ms :: {"i…
+4:06:31 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd/submissions 304 in …
+4:06:31 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd 304 in 341ms :: {"i…
+4:06:31 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd/submissions 304 in …
+4:06:31 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd/submissions 304 in …
+4:06:31 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd 304 in 458ms :: {"i…
+4:06:32 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd/submissions 304 in …
+4:06:32 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd 304 in 403ms :: {"i…
+4:06:32 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd/submissions 304 in …
+4:06:32 PM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd/submissions 304 in …

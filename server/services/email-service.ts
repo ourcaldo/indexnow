@@ -61,8 +61,8 @@ export class EmailService {
         rejectUnauthorized: false, // For self-signed certificates
         minVersion: 'TLSv1.2', // Minimum TLS version
       },
-      debug: true, // Enable debug logging
-      logger: true // Enable logging
+      debug: false, // Disable debug logging
+      logger: false // Disable logging
     });
   }
 

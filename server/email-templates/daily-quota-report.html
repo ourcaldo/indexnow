@@ -29,18 +29,10 @@
             text-align: center;
         }
         
-        .logo {
-            font-size: 28px;
-            font-weight: 700;
-            color: #ffffff;
+        .logo-img {
+            height: 40px;
+            width: auto;
             margin: 0;
-            letter-spacing: -0.025em;
-        }
-        
-        .tagline {
-            color: #fed7aa;
-            font-size: 14px;
-            margin: 8px 0 0 0;
         }
         
         .content {
@@ -203,13 +195,17 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1 class="logo">IndexNow</h1>
-            <p class="tagline">Google Search Console Indexing Dashboard</p>
+            <img src="https://bwkasvyrzbzhcdtvsbyg.supabase.co/storage/v1/object/public/indexnow-bucket/logo/indexnow-white.png" alt="IndexNow" class="logo-img">
         </div>
         
         <div class="content">
-            <h2 class="title">📊 Daily Quota Report</h2>
-            <p class="subtitle">Here's your daily summary for <strong>{{reportDate}}</strong></p>
+            <div style="text-align: center; margin-bottom: 32px;">
+                <div style="width: 64px; height: 64px; background: #2563eb; border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center;">
+                    <span style="color: white; font-size: 32px; font-weight: bold;">📊</span>
+                </div>
+                <h2 class="title">Daily Quota Report</h2>
+                <p class="subtitle">Here's your daily summary for <strong>{{reportDate}}</strong></p>
+            </div>
             
             <div class="stats-grid">
                 <div class="stat-card success-stat">

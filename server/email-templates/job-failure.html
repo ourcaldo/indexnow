@@ -29,18 +29,10 @@
             text-align: center;
         }
         
-        .logo {
-            font-size: 28px;
-            font-weight: 700;
-            color: #ffffff;
+        .logo-img {
+            height: 40px;
+            width: auto;
             margin: 0;
-            letter-spacing: -0.025em;
-        }
-        
-        .tagline {
-            color: #fed7aa;
-            font-size: 14px;
-            margin: 8px 0 0 0;
         }
         
         .content {
@@ -151,20 +143,24 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1 class="logo">IndexNow</h1>
-            <p class="tagline">Google Search Console Indexing Dashboard</p>
+            <img src="https://bwkasvyrzbzhcdtvsbyg.supabase.co/storage/v1/object/public/indexnow-bucket/logo/indexnow-white.png" alt="IndexNow" class="logo-img">
         </div>
         
         <div class="content">
-            <h2 class="title">❌ Job Failed</h2>
-            <p class="subtitle">Your indexing job "<strong>{{jobName}}</strong>" encountered an error and could not complete.</p>
+            <div style="text-align: center; margin-bottom: 32px;">
+                <div style="width: 64px; height: 64px; background: #dc2626; border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center;">
+                    <span style="color: white; font-size: 32px; font-weight: bold;">✕</span>
+                </div>
+                <h2 class="title">Job Failed</h2>
+                <p class="subtitle">Your indexing job "<strong>{{jobName}}</strong>" encountered an error and could not complete.</p>
+            </div>
             
-            <div class="alert">
-                <strong>Action Required:</strong> Please review the error details below and retry the job or check your service account configuration.
+            <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 16px; margin: 24px 0;">
+                <p style="color: #dc2626; margin: 0; font-weight: 500;"><strong>Action Required:</strong> Please review the error details below and retry the job or check your service account configuration.</p>
             </div>
             
             <h3 style="color: #1e293b; margin: 24px 0 12px 0;">Error Details:</h3>
-            <div class="error-details">
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 16px; font-family: monospace; color: #dc2626;">
                 {{errorMessage}}
             </div>
             
@@ -180,10 +176,10 @@
                 <li>Review your service account credentials in the settings</li>
             </ul>
             
-            <center>
+            <div style="text-align: center; margin: 32px 0;">
                 <a href="#" class="button">Retry Job</a>
                 <a href="#" class="button" style="background: #64748b; margin-left: 12px;">View Settings</a>
-            </center>
+            </div>
         </div>
         
         <div class="footer">

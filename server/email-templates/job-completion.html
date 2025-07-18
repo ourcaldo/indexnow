@@ -29,22 +29,14 @@
             text-align: center;
         }
         
-        .logo {
-            font-size: 28px;
-            font-weight: 700;
-            color: #ffffff;
+        .logo-img {
+            height: 40px;
+            width: auto;
             margin: 0;
-            letter-spacing: -0.025em;
-        }
-        
-        .tagline {
-            color: #fed7aa;
-            font-size: 14px;
-            margin: 8px 0 0 0;
         }
         
         .content {
-            padding: 32px 24px;
+            padding: 40px 40px;
         }
         
         .title {
@@ -179,34 +171,40 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1 class="logo">IndexNow</h1>
-            <p class="tagline">Google Search Console Indexing Dashboard</p>
+            <img src="https://bwkasvyrzbzhcdtvsbyg.supabase.co/storage/v1/object/public/indexnow-bucket/logo/indexnow-white.png" alt="IndexNow" class="logo-img">
         </div>
         
         <div class="content">
-            <h2 class="title">✅ Job Completed Successfully!</h2>
-            <p class="subtitle">Your indexing job "<strong>{{jobName}}</strong>" has finished processing.</p>
-            
-            <div class="alert">
-                <strong>Great news!</strong> Your URLs have been successfully submitted to Google Search Console for indexing.
+            <div style="text-align: center; margin-bottom: 32px;">
+                <div style="width: 64px; height: 64px; background: #10b981; border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center;">
+                    <span style="color: white; font-size: 32px; font-weight: bold;">✓</span>
+                </div>
+                <h2 class="title">Job Completed Successfully!</h2>
+                <p class="subtitle">Your indexing job "<strong>{{jobName}}</strong>" has finished processing.</p>
             </div>
             
-            <div class="stats-grid">
-                <div class="stat-card success-stat">
-                    <p class="stat-number">{{successUrls}}</p>
-                    <p class="stat-label">URLs Indexed</p>
-                </div>
-                <div class="stat-card error-stat">
-                    <p class="stat-number">{{failedUrls}}</p>
-                    <p class="stat-label">Failed URLs</p>
-                </div>
-                <div class="stat-card">
-                    <p class="stat-number">{{totalUrls}}</p>
-                    <p class="stat-label">Total URLs</p>
-                </div>
-                <div class="stat-card">
-                    <p class="stat-number">{{completionRate}}%</p>
-                    <p class="stat-label">Success Rate</p>
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; margin: 24px 0; text-align: center;">
+                <p style="color: #059669; margin: 0; font-weight: 500;">Great news! Your URLs have been successfully submitted to Google for indexing.</p>
+            </div>
+            
+            <div style="background: #f8fafc; border-radius: 12px; padding: 24px; margin: 24px 0;">
+                <div class="stats-grid">
+                    <div class="stat-card success-stat">
+                        <p class="stat-number">{{successUrls}}</p>
+                        <p class="stat-label">URLs Indexed</p>
+                    </div>
+                    <div class="stat-card error-stat">
+                        <p class="stat-number">{{failedUrls}}</p>
+                        <p class="stat-label">Failed URLs</p>
+                    </div>
+                    <div class="stat-card">
+                        <p class="stat-number">{{totalUrls}}</p>
+                        <p class="stat-label">Total URLs</p>
+                    </div>
+                    <div class="stat-card">
+                        <p class="stat-number">{{completionRate}}%</p>
+                        <p class="stat-label">Success Rate</p>
+                    </div>
                 </div>
             </div>
             
@@ -214,9 +212,9 @@
                 Completed on {{timestamp}}
             </div>
             
-            <center>
+            <div style="text-align: center; margin: 32px 0;">
                 <a href="#" class="button">View Job Details</a>
-            </center>
+            </div>
         </div>
         
         <div class="footer">
