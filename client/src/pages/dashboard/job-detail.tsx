@@ -453,40 +453,42 @@ export default function JobDetail() {
             </div>
           ) : submissions && submissions.length > 0 ? (
             <div className="rounded-md border overflow-hidden">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>URL</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Submitted At</TableHead>
-                    <TableHead>Error Message</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {submissions.map((submission) => (
-                    <TableRow key={submission.id}>
-                      <TableCell className="font-mono text-sm max-w-md truncate">
-                        {submission.url}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center space-x-2">
-                          {getUrlStatusIcon(submission.status)}
-                          {getUrlStatusBadge(submission.status)}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        {submission.submittedAt 
-                          ? new Date(submission.submittedAt).toLocaleString()
-                          : "-"
-                        }
-                      </TableCell>
-                      <TableCell className="max-w-xs truncate">
-                        {submission.errorMessage || "-"}
-                      </TableCell>
+              <div className="max-h-96 overflow-y-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>URL</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Submitted At</TableHead>
+                      <TableHead>Error Message</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {submissions.map((submission) => (
+                      <TableRow key={submission.id}>
+                        <TableCell className="font-mono text-sm max-w-md truncate">
+                          {submission.url}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center space-x-2">
+                            {getUrlStatusIcon(submission.status)}
+                            {getUrlStatusBadge(submission.status)}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          {submission.submittedAt 
+                            ? new Date(submission.submittedAt).toLocaleString()
+                            : "-"
+                          }
+                        </TableCell>
+                        <TableCell className="max-w-xs truncate">
+                          {submission.errorMessage || "-"}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
             </div>
           ) : (
             <div className="text-center py-8 text-slate-500">

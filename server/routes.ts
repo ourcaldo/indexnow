@@ -325,6 +325,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: 'Job not found' });
       }
 
+      // Delete old URL submissions to avoid accumulation
+      await storage.deleteUrlSubmissionsForJob(req.params.id);
+
       // Reset job status and counters for re-run
       const updatedJob = await storage.updateIndexingJob(req.params.id, {
         status: 'pending',

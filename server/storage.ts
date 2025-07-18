@@ -42,6 +42,7 @@ export interface IStorage {
   getUrlSubmissions(jobId: string): Promise<UrlSubmission[]>;
   createUrlSubmission(submission: InsertUrlSubmission): Promise<UrlSubmission>;
   updateUrlSubmission(id: string, submission: Partial<UrlSubmission>): Promise<UrlSubmission>;
+  deleteUrlSubmissionsForJob(jobId: string): Promise<void>;
 
   // Quota usage
   getQuotaUsage(serviceAccountId: string, date: string): Promise<QuotaUsage | undefined>;
@@ -152,6 +153,10 @@ export class SupabaseStorage implements IStorage {
 
   async getUrlSubmissions(jobId: string): Promise<UrlSubmission[]> {
     return db.select().from(urlSubmissions).where(eq(urlSubmissions.jobId, jobId));
+  }
+
+  async deleteUrlSubmissionsForJob(jobId: string): Promise<void> {
+    await db.delete(urlSubmissions).where(eq(urlSubmissions.jobId, jobId));
   }
 
   async createUrlSubmission(submission: InsertUrlSubmission): Promise<UrlSubmission> {
