@@ -208,6 +208,9 @@ export class JobScheduler {
 
       const jobData = job[0];
 
+      // Clear any existing URL submissions for this job to ensure fresh start
+      await db.delete(urlSubmissions).where(eq(urlSubmissions.jobId, jobId));
+
       // Update job status to running
       await db
         .update(indexingJobs)

@@ -177,7 +177,7 @@ export default function JobDetail() {
     );
   }
 
-  const progress = job.totalUrls > 0 ? (job.processedUrls / job.totalUrls) * 100 : 0;
+  const progress = job.totalUrls > 0 ? Math.min((job.processedUrls / job.totalUrls) * 100, 100) : 0;
   const successRate = job.processedUrls > 0 ? (job.successfulUrls / job.processedUrls) * 100 : 0;
 
   const getStatusBadge = (status: string) => {
