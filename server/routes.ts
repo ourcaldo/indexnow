@@ -1,5 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
 import { 
   insertServiceAccountSchema, 
@@ -336,9 +337,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Initialize job scheduler
-  jobScheduler.initializeScheduler();
-
   const httpServer = createServer(app);
+  
+  // Setup WebSocket server for real-time updates
+  const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
+  
+  wss.on('connection', (ws: WebSocket) => {
+    console.log('Client connected to WebSocket');
+    
+    ws.on('close', () => {
+      console.log('Client disconnected from WebSocket');
+    });
+    
+    ws.on('error', (error) => {
+      console.error('WebSocket error:', error);
+    });
+  });
+
+  // Store WebSocket server reference for broadcasting updates
+  (global as any).wss = wss;
+  
   return httpServer;
 }

@@ -13,6 +13,29 @@ interface ScheduledJob {
 export class JobScheduler {
   private scheduledJobs: Map<string, ScheduledJob> = new Map();
 
+  private broadcastJobUpdate(jobId: string, status: string, data?: any) {
+    try {
+      const wss = (global as any).wss;
+      if (wss) {
+        const message = JSON.stringify({
+          type: 'jobUpdate',
+          jobId,
+          status,
+          data,
+          timestamp: new Date().toISOString()
+        });
+
+        wss.clients.forEach((client: any) => {
+          if (client.readyState === 1) { // WebSocket.OPEN
+            client.send(message);
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Failed to broadcast job update:', error);
+    }
+  }
+
   async initializeScheduler() {
     // Load all active scheduled jobs from database
     const jobs = await db
@@ -90,6 +113,9 @@ export class JobScheduler {
         })
         .where(eq(indexingJobs.id, jobId));
 
+      // Broadcast job started
+      this.broadcastJobUpdate(jobId, 'running');
+
       let urls: string[] = [];
 
       // Get URLs from sitemap or manual input
@@ -104,6 +130,7 @@ export class JobScheduler {
           .update(indexingJobs)
           .set({ status: 'failed' })
           .where(eq(indexingJobs.id, jobId));
+        this.broadcastJobUpdate(jobId, 'failed', { error: 'No URLs found' });
         return;
       }
 
@@ -121,6 +148,7 @@ export class JobScheduler {
           .update(indexingJobs)
           .set({ status: 'failed' })
           .where(eq(indexingJobs.id, jobId));
+        this.broadcastJobUpdate(jobId, 'failed', { error: 'No active service accounts found' });
         return;
       }
 
@@ -148,6 +176,13 @@ export class JobScheduler {
 
       console.log(`Job ${jobId} completed: ${successful} successful, ${failed} failed`);
 
+      // Broadcast job completion
+      this.broadcastJobUpdate(jobId, 'completed', {
+        processedUrls: submissions.length,
+        successfulUrls: successful,
+        failedUrls: failed
+      });
+
     } catch (error) {
       console.error(`Error executing job ${jobId}:`, error);
       
@@ -155,6 +190,8 @@ export class JobScheduler {
         .update(indexingJobs)
         .set({ status: 'failed' })
         .where(eq(indexingJobs.id, jobId));
+      
+      this.broadcastJobUpdate(jobId, 'failed', { error: error.message });
     }
   }
 

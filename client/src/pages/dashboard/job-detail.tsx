@@ -16,6 +16,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { IndexingJob, UrlSubmission } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { useWebSocket } from "@/hooks/useWebSocket";
 import { 
   ArrowLeft, 
   Calendar, 
@@ -37,6 +38,9 @@ export default function JobDetail() {
   const jobId = params.id;
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  
+  // Initialize WebSocket for real-time updates
+  useWebSocket();
 
   const { data: job, isLoading: jobLoading } = useQuery<IndexingJob>({
     queryKey: ["/api/indexing-jobs", jobId],

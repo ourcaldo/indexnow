@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { jobScheduler } from "./services/job-scheduler";
 
 const app = express();
 
@@ -79,7 +80,15 @@ app.use((req, res, next) => {
     port,
     host: "0.0.0.0",
     reusePort: true,
-  }, () => {
+  }, async () => {
     log(`serving on port ${port}`);
+    
+    // Initialize job scheduler after server starts
+    try {
+      await jobScheduler.initializeScheduler();
+      log("Job scheduler initialized successfully");
+    } catch (error) {
+      console.error("Failed to initialize job scheduler:", error);
+    }
   });
 })();

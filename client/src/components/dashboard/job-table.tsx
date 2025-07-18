@@ -28,6 +28,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { IndexingJob } from "@shared/schema";
+import { useWebSocket } from "@/hooks/useWebSocket";
 import { Eye, MoreHorizontal, Pause, Play, Trash2, Filter } from "lucide-react";
 
 interface JobTableProps {
@@ -38,6 +39,9 @@ export default function JobTable({ limit }: JobTableProps) {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  
+  // Initialize WebSocket for real-time updates
+  useWebSocket();
 
   const { data: jobs, isLoading } = useQuery<IndexingJob[]>({
     queryKey: ["/api/indexing-jobs"],
