@@ -14,14 +14,17 @@ export function securityHeaders(req: Request, res: Response, next: NextFunction)
   // Referrer policy for privacy
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   
-  // Content Security Policy (basic for SPA)
+  // Content Security Policy (basic for SPA) - dynamically constructed from environment
+  const supabaseUrl = process.env.SUPABASE_URL || 'https://bwkasvyrzbzhcdtvsbyg.supabase.co';
+  const supabaseWsUrl = supabaseUrl.replace('https://', 'wss://');
+  
   res.setHeader('Content-Security-Policy', 
     "default-src 'self'; " +
     "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
     "style-src 'self' 'unsafe-inline'; " +
     "img-src 'self' data: https:; " +
     "font-src 'self' data:; " +
-    "connect-src 'self' https://bwkasvyrzbzhcdtvsbyg.supabase.co wss://bwkasvyrzbzhcdtvsbyg.supabase.co; " +
+    `connect-src 'self' ${supabaseUrl} ${supabaseWsUrl}; ` +
     "frame-ancestors 'none';"
   );
   
@@ -70,6 +73,19 @@ export function validateEnvironment(): void {
     'ICON_URL',
     'FAVICON_URL'
   ];
+
+  // Optional but recommended security vars
+  const recommendedVars = [
+    'JWT_SECRET',
+    'JWT_EXPIRY',
+    'REFRESH_TOKEN_EXPIRY'
+  ];
+
+  const missingRecommended = recommendedVars.filter(varName => !process.env[varName]);
+  if (missingRecommended.length > 0) {
+    console.warn('⚠️  Missing recommended security environment variables:', missingRecommended);
+    console.warn('Using defaults, but consider setting these for production.');
+  }
 
   const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
   
