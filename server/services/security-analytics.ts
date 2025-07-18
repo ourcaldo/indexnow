@@ -52,11 +52,11 @@ export class SecurityAnalyticsService {
         ) VALUES (
           ${eventData.event_type}, 
           ${eventData.severity}, 
-          ${eventData.ip_address}, 
-          ${eventData.user_agent}, 
-          ${eventData.user_id}, 
-          ${eventData.request_url}, 
-          ${eventData.request_method}, 
+          ${eventData.ip_address || null}, 
+          ${eventData.user_agent || null}, 
+          ${eventData.user_id || null}, 
+          ${eventData.request_url || null}, 
+          ${eventData.request_method || null}, 
           ${eventData.request_body ? JSON.stringify(eventData.request_body) : null}, 
           ${eventData.request_query ? JSON.stringify(eventData.request_query) : null}, 
           ${eventData.details ? JSON.stringify(eventData.details) : null}
@@ -77,8 +77,8 @@ export class SecurityAnalyticsService {
           ip_address, attempted_email, user_agent, endpoint, failure_reason
         ) VALUES (
           ${authData.ip_address}, 
-          ${authData.attempted_email}, 
-          ${authData.user_agent}, 
+          ${authData.attempted_email || null}, 
+          ${authData.user_agent || null}, 
           ${authData.endpoint}, 
           ${authData.failure_reason}
         )
@@ -98,9 +98,9 @@ export class SecurityAnalyticsService {
         ) VALUES (
           ${activityData.ip_address}, 
           ${activityData.activity_type}, 
-          ${activityData.user_agent}, 
-          ${activityData.request_url}, 
-          ${activityData.request_method}, 
+          ${activityData.user_agent || null}, 
+          ${activityData.request_url || null}, 
+          ${activityData.request_method || null}, 
           ${activityData.detected_patterns ? JSON.stringify(activityData.detected_patterns) : null}, 
           ${activityData.risk_score || 1}
         )
