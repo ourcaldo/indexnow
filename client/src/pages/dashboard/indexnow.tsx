@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useLocation } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -39,6 +40,7 @@ export default function IndexNow() {
   
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [, setLocation] = useLocation();
 
   // Fetch existing jobs to generate automatic job names
   const { data: existingJobs } = useQuery({
@@ -70,13 +72,15 @@ export default function IndexNow() {
     }) => {
       return apiRequest("POST", "/api/indexing-jobs/from-urls", data);
     },
-    onSuccess: () => {
+    onSuccess: (job) => {
       queryClient.invalidateQueries({ queryKey: ["/api/indexing-jobs"] });
       toast({
         title: "Success",
         description: "Indexing job created successfully",
       });
       resetForm();
+      // Redirect to job detail page
+      setLocation(`/dashboard/jobs/${job.id}`);
     },
     onError: (error) => {
       toast({
@@ -96,13 +100,15 @@ export default function IndexNow() {
     }) => {
       return apiRequest("POST", "/api/indexing-jobs/from-sitemap", data);
     },
-    onSuccess: () => {
+    onSuccess: (job) => {
       queryClient.invalidateQueries({ queryKey: ["/api/indexing-jobs"] });
       toast({
         title: "Success",
         description: "Indexing job created successfully",
       });
       resetForm();
+      // Redirect to job detail page
+      setLocation(`/dashboard/jobs/${job.id}`);
     },
     onError: (error) => {
       toast({

@@ -1,5 +1,5 @@
 import { useParams, useLocation } from "wouter";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { IndexingJob, UrlSubmission } from "@shared/schema";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 import { 
   ArrowLeft, 
   Calendar, 
@@ -21,13 +23,19 @@ import {
   CheckCircle, 
   XCircle, 
   Clock,
-  AlertTriangle
+  AlertTriangle,
+  Play,
+  Pause,
+  Square,
+  RotateCcw
 } from "lucide-react";
 
 export default function JobDetail() {
   const params = useParams();
   const [, setLocation] = useLocation();
   const jobId = params.id;
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const { data: job, isLoading: jobLoading } = useQuery<IndexingJob>({
     queryKey: ["/api/indexing-jobs", jobId],
@@ -38,6 +46,72 @@ export default function JobDetail() {
     queryKey: ["/api/indexing-jobs", jobId, "submissions"],
     enabled: !!jobId,
   });
+
+  // Job action mutations
+  const updateJobMutation = useMutation({
+    mutationFn: async (data: { status: string }) => {
+      return apiRequest("PATCH", `/api/indexing-jobs/${jobId}`, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/indexing-jobs", jobId] });
+      queryClient.invalidateQueries({ queryKey: ["/api/indexing-jobs"] });
+      toast({
+        title: "Success",
+        description: "Job status updated successfully",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  const rerunJobMutation = useMutation({
+    mutationFn: async () => {
+      return apiRequest("POST", `/api/indexing-jobs/${jobId}/rerun`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/indexing-jobs", jobId] });
+      queryClient.invalidateQueries({ queryKey: ["/api/indexing-jobs"] });
+      toast({
+        title: "Success",
+        description: "Job re-run started successfully",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Job action handlers
+  const handleStartJob = () => {
+    updateJobMutation.mutate({ status: 'pending' });
+  };
+
+  const handlePauseJob = () => {
+    updateJobMutation.mutate({ status: 'paused' });
+  };
+
+  const handleStopJob = () => {
+    updateJobMutation.mutate({ status: 'cancelled' });
+  };
+
+  const handleRerunJob = () => {
+    rerunJobMutation.mutate();
+  };
+
+  // Determine which buttons should be shown based on job status
+  const canStart = job && ['paused', 'failed', 'cancelled'].includes(job.status);
+  const canPause = job && job.status === 'running';
+  const canStop = job && ['pending', 'running', 'paused'].includes(job.status);
+  const canRerun = job && ['completed', 'failed', 'cancelled'].includes(job.status);
 
   if (jobLoading) {
     return (
@@ -119,18 +193,71 @@ export default function JobDetail() {
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
-      <div className="flex items-center space-x-4">
-        <Button 
-          variant="outline" 
-          size="sm"
-          onClick={() => setLocation("/dashboard/jobs")}
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Jobs
-        </Button>
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800">{job.name}</h1>
-          <p className="text-slate-600">Job details and progress</p>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setLocation("/dashboard/jobs")}
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Jobs
+          </Button>
+          <div>
+            <h1 className="text-2xl font-bold text-slate-800">{job.name}</h1>
+            <p className="text-slate-600">Job details and progress</p>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex items-center space-x-2">
+          {canStart && (
+            <Button
+              onClick={handleStartJob}
+              disabled={updateJobMutation.isPending}
+              size="sm"
+              className="bg-emerald-600 hover:bg-emerald-700"
+            >
+              <Play className="h-4 w-4 mr-2" />
+              Start
+            </Button>
+          )}
+          
+          {canPause && (
+            <Button
+              onClick={handlePauseJob}
+              disabled={updateJobMutation.isPending}
+              size="sm"
+              variant="outline"
+            >
+              <Pause className="h-4 w-4 mr-2" />
+              Pause
+            </Button>
+          )}
+          
+          {canStop && (
+            <Button
+              onClick={handleStopJob}
+              disabled={updateJobMutation.isPending}
+              size="sm"
+              variant="destructive"
+            >
+              <Square className="h-4 w-4 mr-2" />
+              Stop
+            </Button>
+          )}
+          
+          {canRerun && (
+            <Button
+              onClick={handleRerunJob}
+              disabled={rerunJobMutation.isPending}
+              size="sm"
+              variant="outline"
+            >
+              <RotateCcw className="h-4 w-4 mr-2" />
+              Re-run
+            </Button>
+          )}
         </div>
       </div>
 

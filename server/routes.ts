@@ -263,6 +263,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post('/api/indexing-jobs/:id/rerun', requireAuth, async (req: any, res) => {
+    try {
+      const job = await storage.getIndexingJob(req.params.id);
+      if (!job) {
+        return res.status(404).json({ error: 'Job not found' });
+      }
+
+      // Reset job status and counters for re-run
+      const updatedJob = await storage.updateIndexingJob(req.params.id, {
+        status: 'pending',
+        processedUrls: 0,
+        successfulUrls: 0,
+        failedUrls: 0,
+        lastRun: null,
+        nextRun: new Date()
+      });
+
+      // Execute the job immediately
+      setImmediate(() => {
+        jobScheduler.executeJob(req.params.id);
+      });
+
+      res.json(updatedJob);
+    } catch (error) {
+      console.error('Error re-running indexing job:', error);
+      res.status(500).json({ error: 'Failed to re-run indexing job' });
+    }
+  });
+
   // URL submissions routes
   app.get('/api/indexing-jobs/:id/submissions', requireAuth, async (req: any, res) => {
     try {

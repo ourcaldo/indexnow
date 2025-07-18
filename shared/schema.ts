@@ -98,6 +98,20 @@ export const insertIndexingJobSchema = createInsertSchema(indexingJobs).omit({
   failedUrls: true,
 });
 
+export const createJobFromSitemapSchema = z.object({
+  name: z.string().min(1, "Job name is required"),
+  sitemapUrl: z.string().url("Valid sitemap URL is required"),
+  schedule: z.enum(['one-time', 'hourly', 'daily', 'weekly', 'monthly']).default('one-time'),
+  cronExpression: z.string().optional(),
+});
+
+export const createJobFromUrlsSchema = z.object({
+  name: z.string().min(1, "Job name is required"),
+  urls: z.array(z.string().url("Valid URL is required")).min(1, "At least one URL is required"),
+  schedule: z.enum(['one-time', 'hourly', 'daily', 'weekly', 'monthly']).default('one-time'),
+  cronExpression: z.string().optional(),
+});
+
 export const insertUrlSubmissionSchema = createInsertSchema(urlSubmissions).omit({
   id: true,
   createdAt: true,
@@ -123,21 +137,6 @@ export type InsertUrlSubmission = z.infer<typeof insertUrlSubmissionSchema>;
 
 export type QuotaUsage = typeof quotaUsage.$inferSelect;
 export type InsertQuotaUsage = z.infer<typeof insertQuotaUsageSchema>;
-
-// Additional schemas for API
-export const createJobFromSitemapSchema = z.object({
-  name: z.string().min(1, "Job name is required"),
-  sitemapUrl: z.string().url("Valid sitemap URL is required"),
-  schedule: z.enum(['one-time', 'hourly', 'daily', 'weekly', 'monthly']),
-  cronExpression: z.string().optional(),
-});
-
-export const createJobFromUrlsSchema = z.object({
-  name: z.string().min(1, "Job name is required"),
-  urls: z.array(z.string().url()).min(1, "At least one URL is required"),
-  schedule: z.enum(['one-time', 'hourly', 'daily', 'weekly', 'monthly']),
-  cronExpression: z.string().optional(),
-});
 
 export type CreateJobFromSitemap = z.infer<typeof createJobFromSitemapSchema>;
 export type CreateJobFromUrls = z.infer<typeof createJobFromUrlsSchema>;
