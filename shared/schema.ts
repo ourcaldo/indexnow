@@ -5,23 +5,6 @@ import { z } from "zod";
 export const jobStatusEnum = pgEnum('job_status', ['pending', 'running', 'completed', 'failed', 'paused', 'cancelled']);
 export const jobScheduleEnum = pgEnum('job_schedule', ['one-time', 'hourly', 'daily', 'weekly', 'monthly']);
 export const urlStatusEnum = pgEnum('url_status', ['pending', 'success', 'error', 'quota_exceeded']);
-export const securityEventEnum = pgEnum('security_event_type', [
-  'LOGIN_ATTEMPT',
-  'LOGIN_SUCCESS', 
-  'LOGIN_FAILURE',
-  'UNAUTHORIZED_ACCESS',
-  'SUSPICIOUS_REQUEST',
-  'VULNERABILITY_SCANNER_DETECTED',
-  'BRUTE_FORCE_ATTEMPT',
-  'IP_BLOCKED',
-  'RATE_LIMIT_EXCEEDED',
-  'INVALID_TOKEN',
-  'CSRF_ATTEMPT',
-  'XSS_ATTEMPT',
-  'SQL_INJECTION_ATTEMPT',
-  'FILE_UPLOAD_BLOCKED',
-  'ANOMALY_DETECTED'
-]);
 
 export const userProfiles = pgTable("user_profiles", {
   id: uuid("id").primaryKey(),
@@ -85,21 +68,6 @@ export const quotaUsage = pgTable("quota_usage", {
   requestsCount: integer("requests_count").default(0),
 });
 
-export const securityEvents = pgTable("security_events", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  userId: uuid("user_id"), // Optional - not all events have a user
-  eventType: securityEventEnum("event_type").notNull(),
-  severity: text("severity").notNull(), // 'low', 'medium', 'high', 'critical'
-  ipAddress: text("ip_address").notNull(),
-  userAgent: text("user_agent"),
-  requestMethod: text("request_method"),
-  requestUrl: text("request_url"),
-  message: text("message"),
-  details: text("details"), // JSON string for additional event data
-  blocked: boolean("blocked").default(false),
-  createdAt: timestamp("created_at").defaultNow(),
-});
-
 // Insert schemas
 export const insertUserProfileSchema = createInsertSchema(userProfiles).omit({
   id: true,
@@ -154,11 +122,6 @@ export const insertQuotaUsageSchema = createInsertSchema(quotaUsage).omit({
   id: true,
 });
 
-export const insertSecurityEventSchema = createInsertSchema(securityEvents).omit({
-  id: true,
-  createdAt: true,
-});
-
 // Types
 export type UserProfile = typeof userProfiles.$inferSelect;
 export type InsertUserProfile = z.infer<typeof insertUserProfileSchema>;
@@ -174,9 +137,6 @@ export type InsertUrlSubmission = z.infer<typeof insertUrlSubmissionSchema>;
 
 export type QuotaUsage = typeof quotaUsage.$inferSelect;
 export type InsertQuotaUsage = z.infer<typeof insertQuotaUsageSchema>;
-
-export type SecurityEvent = typeof securityEvents.$inferSelect;
-export type InsertSecurityEvent = z.infer<typeof insertSecurityEventSchema>;
 
 export type CreateJobFromSitemap = z.infer<typeof createJobFromSitemapSchema>;
 export type CreateJobFromUrls = z.infer<typeof createJobFromUrlsSchema>;

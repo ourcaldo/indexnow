@@ -15,7 +15,6 @@ import { jobScheduler } from "./services/job-scheduler";
 import { requireOwnership, rateLimitPerUser } from "./middleware/authorization";
 import { validateUuid, validateServiceAccountJson } from "./middleware/input-validation";
 import { SecureLogger } from "./middleware/secure-logging";
-import { DatabaseSecurityLogger } from "./services/security-logger";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Authentication middleware
@@ -23,11 +22,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const authHeader = req.headers.authorization;
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        DatabaseSecurityLogger.logSecurityEvent('LOGIN_FAILURE', {
-          severity: 'medium',
-          message: 'Missing authorization header',
-          details: { endpoint: req.url }
-        }, req);
+        SecureLogger.logSecurityEvent('AUTH_MISSING_HEADER', { ip: req.ip, userAgent: req.get('User-Agent') }, req);
         return res.status(401).json({ error: 'Authorization header required' });
       }
 

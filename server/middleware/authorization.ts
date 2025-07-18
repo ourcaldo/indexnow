@@ -1,6 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
 import { storage } from "../storage";
-import { DatabaseSecurityLogger } from "../services/security-logger";
 
 // Resource ownership verification middleware
 export function requireOwnership(resourceType: 'service-account' | 'indexing-job' | 'url-submission') {
@@ -41,18 +40,6 @@ export function requireOwnership(resourceType: 'service-account' | 'indexing-job
       }
       
       if (!isOwner) {
-        // Log unauthorized access attempt
-        DatabaseSecurityLogger.logSecurityEvent('UNAUTHORIZED_ACCESS', {
-          userId,
-          severity: 'high',
-          message: `Unauthorized access attempt to ${resourceType}`,
-          details: {
-            resourceType,
-            resourceId,
-            attemptedAction: req.method
-          }
-        }, req);
-        
         return res.status(403).json({ error: 'Access denied: Resource not found or not owned by user' });
       }
       
@@ -72,17 +59,6 @@ export function requireAdmin(req: any, res: Response, next: NextFunction) {
   const adminEmails = process.env.ADMIN_EMAILS?.split(',') || [];
   
   if (!adminEmails.includes(userEmail)) {
-    // Log unauthorized admin access attempt
-    DatabaseSecurityLogger.logSecurityEvent('UNAUTHORIZED_ACCESS', {
-      userId: req.user?.id,
-      severity: 'critical',
-      message: 'Unauthorized admin access attempt',
-      details: {
-        email: userEmail,
-        endpoint: req.url
-      }
-    }, req);
-    
     return res.status(403).json({ error: 'Admin access required' });
   }
   
@@ -109,19 +85,6 @@ export function rateLimitPerUser(maxRequests: number = 50, windowMs: number = 15
     }
     
     if (userData.count >= maxRequests) {
-      // Log rate limit exceeded
-      DatabaseSecurityLogger.logSecurityEvent('RATE_LIMIT_EXCEEDED', {
-        userId,
-        severity: 'medium',
-        message: 'User rate limit exceeded',
-        details: {
-          maxRequests,
-          currentCount: userData.count,
-          windowMs,
-          endpoint: req.url
-        }
-      }, req);
-      
       return res.status(429).json({ 
         error: 'Rate limit exceeded. Please try again later.',
         retryAfter: Math.ceil((userData.resetTime - now) / 1000)
