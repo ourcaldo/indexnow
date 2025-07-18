@@ -6,7 +6,7 @@ export const jobStatusEnum = pgEnum('job_status', ['pending', 'running', 'comple
 export const jobScheduleEnum = pgEnum('job_schedule', ['one-time', 'hourly', 'daily', 'weekly', 'monthly']);
 export const urlStatusEnum = pgEnum('url_status', ['pending', 'success', 'error', 'quota_exceeded']);
 
-export const userProfiles = pgTable("user_profiles", {
+export const userProfiles = pgTable("indb_user_profiles", {
   id: uuid("id").primaryKey(),
   email: text("email").notNull(),
   fullName: text("full_name"),
@@ -14,7 +14,7 @@ export const userProfiles = pgTable("user_profiles", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-export const serviceAccounts = pgTable("service_accounts", {
+export const serviceAccounts = pgTable("indb_service_accounts", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: uuid("user_id").notNull(),
   name: text("name").notNull(),
@@ -30,7 +30,7 @@ export const serviceAccounts = pgTable("service_accounts", {
   tokenExpiresAt: timestamp("token_expires_at"),
 });
 
-export const indexingJobs = pgTable("indexing_jobs", {
+export const indexingJobs = pgTable("indb_indexing_jobs", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: uuid("user_id").notNull(),
   name: text("name").notNull(),
@@ -49,7 +49,7 @@ export const indexingJobs = pgTable("indexing_jobs", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-export const urlSubmissions = pgTable("url_submissions", {
+export const urlSubmissions = pgTable("indb_url_submissions", {
   id: uuid("id").primaryKey().defaultRandom(),
   jobId: uuid("job_id").notNull(),
   url: text("url").notNull(),
@@ -61,7 +61,7 @@ export const urlSubmissions = pgTable("url_submissions", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-export const quotaUsage = pgTable("quota_usage", {
+export const quotaUsage = pgTable("indb_quota_usage", {
   id: uuid("id").primaryKey().defaultRandom(),
   serviceAccountId: uuid("service_account_id").notNull(),
   date: date("date").defaultNow(),

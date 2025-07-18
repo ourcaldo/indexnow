@@ -46,7 +46,7 @@ export class SecurityAnalyticsService {
   static async logSecurityEvent(eventData: SecurityEventData): Promise<void> {
     try {
       await db.execute(sql`
-        INSERT INTO security_events (
+        INSERT INTO indb_security_events (
           event_type, severity, ip_address, user_agent, user_id, 
           request_url, request_method, request_body, request_query, details
         ) VALUES (
@@ -73,7 +73,7 @@ export class SecurityAnalyticsService {
   static async logFailedAuth(authData: FailedAuthData): Promise<void> {
     try {
       await db.execute(sql`
-        INSERT INTO failed_auth_attempts (
+        INSERT INTO indb_security_failed_auth_attempts (
           ip_address, attempted_email, user_agent, endpoint, failure_reason
         ) VALUES (
           ${authData.ip_address}, 
@@ -92,7 +92,7 @@ export class SecurityAnalyticsService {
   static async logSuspiciousActivity(activityData: SuspiciousActivityData): Promise<void> {
     try {
       await db.execute(sql`
-        INSERT INTO suspicious_activities (
+        INSERT INTO indb_security_suspicious_activities (
           ip_address, activity_type, user_agent, request_url, 
           request_method, detected_patterns, risk_score
         ) VALUES (
@@ -114,7 +114,7 @@ export class SecurityAnalyticsService {
   static async blockIP(blockData: BlockedIPData): Promise<void> {
     try {
       await db.execute(sql`
-        INSERT INTO blocked_ips (
+        INSERT INTO indb_security_blocked_ips (
           ip_address, reason, blocked_until, failed_attempts, is_permanent, created_by
         ) VALUES (
           ${blockData.ip_address}, 
@@ -126,7 +126,7 @@ export class SecurityAnalyticsService {
         )
         ON CONFLICT (ip_address) 
         DO UPDATE SET 
-          failed_attempts = blocked_ips.failed_attempts + 1,
+          failed_attempts = indb_security_blocked_ips.failed_attempts + 1,
           blocked_until = EXCLUDED.blocked_until,
           reason = EXCLUDED.reason
       `);
@@ -139,7 +139,7 @@ export class SecurityAnalyticsService {
   static async isIPBlocked(ip_address: string): Promise<boolean> {
     try {
       const result = await db.execute(sql`
-        SELECT id FROM blocked_ips 
+        SELECT id FROM indb_security_blocked_ips 
         WHERE ip_address = ${ip_address} 
         AND (blocked_until IS NULL OR blocked_until > NOW())
       `);
@@ -164,7 +164,7 @@ export class SecurityAnalyticsService {
           brute_force_attempts,
           unique_ips,
           high_risk_events
-        FROM security_analytics 
+        FROM indb_security_analytics 
         WHERE date >= CURRENT_DATE - INTERVAL '${days} days'
         ORDER BY date DESC
       `);
@@ -187,7 +187,7 @@ export class SecurityAnalyticsService {
           request_url,
           timestamp,
           details
-        FROM security_events 
+        FROM indb_security_events 
         ORDER BY timestamp DESC 
         LIMIT ${limit}
       `);
@@ -207,7 +207,7 @@ export class SecurityAnalyticsService {
           COUNT(*) as attack_count,
           array_agg(DISTINCT event_type) as event_types,
           MAX(timestamp) as last_seen
-        FROM security_events 
+        FROM indb_security_events 
         WHERE timestamp >= NOW() - INTERVAL '${days} days'
         GROUP BY ip_address
         ORDER BY attack_count DESC
@@ -229,7 +229,7 @@ export class SecurityAnalyticsService {
           COUNT(*) as events_count,
           COUNT(DISTINCT ip_address) as unique_ips,
           COUNT(*) FILTER (WHERE severity = 'HIGH') as high_severity_count
-        FROM security_events 
+        FROM indb_security_events 
         WHERE timestamp >= NOW() - INTERVAL '24 hours'
         GROUP BY hour
         ORDER BY hour DESC
