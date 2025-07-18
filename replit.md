@@ -169,3 +169,14 @@ The application is designed to be scalable and maintainable, with clear separati
 ✓ Enhanced job execution with real-time progress updates
 ✓ Pending jobs now execute immediately on server restart
 ✓ Scheduled jobs run at their designated times with cron expressions
+
+### Enhanced Job Management and UI Improvements (July 18, 2025)
+✓ Added continuous job monitoring with cron-based background process
+✓ Implemented automatic stuck job recovery (jobs running > 5 minutes reset to pending)
+✓ Enhanced job scheduler with every-minute checks for pending and scheduled jobs
+✓ Changed logo from icon-based to text-based "pulse" with green gradient
+✓ Restructured sidebar navigation with hierarchical IndexNow menu
+✓ Moved Jobs under IndexNow as "Manage Jobs" submenu
+✓ Added "New Index" submenu for creating new indexing jobs
+✓ Implemented collapsible sidebar sections with proper state management
+✓ Updated menu styling to use subtle slate colors instead of orange highlights

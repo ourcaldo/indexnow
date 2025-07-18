@@ -10,6 +10,7 @@ import Login from "@/pages/auth/login";
 import Signup from "@/pages/auth/signup";
 import Dashboard from "@/pages/dashboard/index";
 import IndexNow from "@/pages/dashboard/indexnow";
+import NewIndex from "@/pages/dashboard/new-index";
 import Jobs from "@/pages/dashboard/jobs";
 import JobDetail from "@/pages/dashboard/job-detail";
 import Settings from "@/pages/dashboard/settings";
@@ -40,7 +41,7 @@ function Router() {
       <Route path="/dashboard/indexnow">
         {!user ? <Redirect to="/login" /> : (
           <DashboardLayout>
-            <IndexNow />
+            <NewIndex />
           </DashboardLayout>
         )}
       </Route>

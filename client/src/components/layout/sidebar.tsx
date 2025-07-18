@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { 
-  Search, 
   Home, 
   Zap, 
   Briefcase, 
@@ -13,13 +12,22 @@ import {
   Menu,
   LogOut,
   User,
-  X
+  X,
+  Plus,
+  ChevronDown,
+  ChevronRight
 } from "lucide-react";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
-  { name: "IndexNow", href: "/dashboard/indexnow", icon: Zap },
-  { name: "Jobs", href: "/dashboard/jobs", icon: Briefcase },
+  { 
+    name: "IndexNow", 
+    icon: Zap, 
+    children: [
+      { name: "New Index", href: "/dashboard/indexnow", icon: Plus },
+      { name: "Manage Jobs", href: "/dashboard/jobs", icon: Briefcase }
+    ]
+  },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
@@ -28,14 +36,107 @@ interface SidebarProps {
   onCollapsedChange: (collapsed: boolean) => void;
 }
 
+interface NavigationItem {
+  name: string;
+  href?: string;
+  icon: any;
+  children?: NavigationItem[];
+}
+
 export default function Sidebar({ collapsed, onCollapsedChange }: SidebarProps) {
   const [location] = useLocation();
   const { user, signOut } = useAuth();
   const isMobile = useIsMobile();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [expandedItems, setExpandedItems] = useState<string[]>(['IndexNow']);
 
   const handleSignOut = async () => {
     await signOut();
+  };
+
+  const toggleExpanded = (itemName: string) => {
+    setExpandedItems(prev => 
+      prev.includes(itemName) 
+        ? prev.filter(name => name !== itemName)
+        : [...prev, itemName]
+    );
+  };
+
+  const isItemActive = (item: NavigationItem): boolean => {
+    if (item.href) {
+      return location === item.href || 
+        (item.href !== "/dashboard" && location.startsWith(item.href));
+    }
+    
+    if (item.children) {
+      return item.children.some(child => 
+        location === child.href || 
+        (child.href !== "/dashboard" && location.startsWith(child.href!))
+      );
+    }
+    
+    return false;
+  };
+
+  const renderNavigationItem = (item: NavigationItem, depth = 0) => {
+    const isActive = isItemActive(item);
+    const isExpanded = expandedItems.includes(item.name);
+    const hasChildren = item.children && item.children.length > 0;
+
+    if (hasChildren) {
+      return (
+        <div key={item.name}>
+          <button
+            onClick={() => toggleExpanded(item.name)}
+            className={cn(
+              "flex items-center justify-between w-full px-4 py-3 rounded-lg transition-colors text-left",
+              collapsed ? "justify-center" : "",
+              isActive
+                ? "bg-slate-100 text-slate-900"
+                : "text-slate-600 hover:bg-slate-50"
+            )}
+          >
+            <div className="flex items-center space-x-3">
+              <item.icon className="h-5 w-5" />
+              {!collapsed && (
+                <span className="font-medium">{item.name}</span>
+              )}
+            </div>
+            {!collapsed && (
+              isExpanded ? 
+                <ChevronDown className="h-4 w-4" /> : 
+                <ChevronRight className="h-4 w-4" />
+            )}
+          </button>
+          
+          {!collapsed && isExpanded && (
+            <div className="ml-6 mt-1 space-y-1">
+              {item.children.map(child => renderNavigationItem(child, depth + 1))}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    return (
+      <Link key={item.name} href={item.href!}>
+        <a
+          className={cn(
+            "flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors",
+            collapsed ? "justify-center" : "",
+            depth > 0 ? "text-sm" : "",
+            isActive
+              ? "bg-slate-100 text-slate-900"
+              : "text-slate-600 hover:bg-slate-50"
+          )}
+        >
+          <item.icon className="h-5 w-5" />
+          {!collapsed && (
+            <span className="font-medium">{item.name}</span>
+          )}
+        </a>
+      </Link>
+    );
   };
 
   if (isMobile) {
@@ -69,11 +170,8 @@ export default function Sidebar({ collapsed, onCollapsedChange }: SidebarProps) 
           {/* Header */}
           <div className="p-6 border-b border-gray-200">
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-gradient-to-r from-primary to-orange-500 rounded-lg flex items-center justify-center">
-                  <Search className="h-4 w-4 text-white" />
-                </div>
-                <h1 className="text-xl font-bold text-slate-800">IndexNow Pro</h1>
+              <div className="flex items-center">
+                <h1 className="text-xl font-bold bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent">pulse</h1>
               </div>
               <Button
                 variant="ghost"
@@ -89,17 +187,65 @@ export default function Sidebar({ collapsed, onCollapsedChange }: SidebarProps) 
           {/* Navigation */}
           <nav className="p-4 space-y-2">
             {navigation.map((item) => {
+              if (item.children) {
+                const isActive = isItemActive(item);
+                const isExpanded = expandedItems.includes(item.name);
+                
+                return (
+                  <div key={item.name}>
+                    <button
+                      onClick={() => toggleExpanded(item.name)}
+                      className={cn(
+                        "flex items-center justify-between w-full px-4 py-3 rounded-lg transition-colors text-left",
+                        isActive
+                          ? "bg-slate-100 text-slate-900"
+                          : "text-slate-600 hover:bg-slate-50"
+                      )}
+                    >
+                      <div className="flex items-center space-x-3">
+                        <item.icon className="h-5 w-5" />
+                        <span className="font-medium">{item.name}</span>
+                      </div>
+                      {isExpanded ? 
+                        <ChevronDown className="h-4 w-4" /> : 
+                        <ChevronRight className="h-4 w-4" />}
+                    </button>
+                    
+                    {isExpanded && (
+                      <div className="ml-6 mt-1 space-y-1">
+                        {item.children.map(child => (
+                          <Link key={child.name} href={child.href}>
+                            <a
+                              className={cn(
+                                "flex items-center space-x-3 px-4 py-2 rounded-lg transition-colors text-sm",
+                                (location === child.href || location.startsWith(child.href!))
+                                  ? "bg-slate-100 text-slate-900"
+                                  : "text-slate-600 hover:bg-slate-50"
+                              )}
+                              onClick={() => setMobileMenuOpen(false)}
+                            >
+                              <child.icon className="h-4 w-4" />
+                              <span className="font-medium">{child.name}</span>
+                            </a>
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+              
               const isActive = location === item.href || 
-                (item.href !== "/dashboard" && location.startsWith(item.href));
+                (item.href !== "/dashboard" && location.startsWith(item.href!));
               
               return (
-                <Link key={item.name} href={item.href}>
+                <Link key={item.name} href={item.href!}>
                   <a
                     className={cn(
                       "flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors",
                       isActive
-                        ? "bg-primary/10 text-primary border-l-4 border-primary"
-                        : "text-slate-600 hover:bg-gray-50"
+                        ? "bg-slate-100 text-slate-900"
+                        : "text-slate-600 hover:bg-slate-50"
                     )}
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -157,13 +303,13 @@ export default function Sidebar({ collapsed, onCollapsedChange }: SidebarProps) 
           )}>
             <div className={cn(
               "flex items-center",
-              collapsed ? "justify-center" : "space-x-3"
+              collapsed ? "justify-center" : ""
             )}>
-              <div className="w-8 h-8 bg-gradient-to-r from-primary to-orange-500 rounded-lg flex items-center justify-center">
-                <Search className="h-4 w-4 text-white" />
-              </div>
               {!collapsed && (
-                <h1 className="text-xl font-bold text-slate-800">IndexNow Pro</h1>
+                <h1 className="text-xl font-bold bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent">pulse</h1>
+              )}
+              {collapsed && (
+                <h1 className="text-lg font-bold bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent">P</h1>
               )}
             </div>
             {!collapsed && (
@@ -193,29 +339,7 @@ export default function Sidebar({ collapsed, onCollapsedChange }: SidebarProps) 
 
         {/* Navigation */}
         <nav className="p-4 space-y-2">
-          {navigation.map((item) => {
-            const isActive = location === item.href || 
-              (item.href !== "/dashboard" && location.startsWith(item.href));
-            
-            return (
-              <Link key={item.name} href={item.href}>
-                <a
-                  className={cn(
-                    "flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors",
-                    collapsed ? "justify-center" : "",
-                    isActive
-                      ? "bg-primary/10 text-primary border-l-4 border-primary"
-                      : "text-slate-600 hover:bg-gray-50"
-                  )}
-                >
-                  <item.icon className="h-5 w-5" />
-                  {!collapsed && (
-                    <span className="font-medium">{item.name}</span>
-                  )}
-                </a>
-              </Link>
-            );
-          })}
+          {navigation.map((item) => renderNavigationItem(item))}
         </nav>
 
         {/* User section */}

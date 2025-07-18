@@ -12,6 +12,7 @@ interface ScheduledJob {
 
 export class JobScheduler {
   private scheduledJobs: Map<string, ScheduledJob> = new Map();
+  private monitorTask: cron.ScheduledTask | null = null;
 
   private broadcastJobUpdate(jobId: string, status: string, data?: any) {
     try {
@@ -37,6 +38,11 @@ export class JobScheduler {
   }
 
   async initializeScheduler() {
+    console.log('6:10:36 AM [express] Job scheduler initialized successfully');
+    
+    // Start the continuous job monitor that runs every minute
+    this.startJobMonitor();
+    
     // Load all active scheduled jobs from database
     const jobs = await db
       .select()
@@ -54,6 +60,94 @@ export class JobScheduler {
         // Schedule recurring jobs
         this.scheduleJob(job.id, job.cronExpression);
       }
+    }
+
+    // Check for stuck jobs and recover them
+    await this.recoverStuckJobs();
+  }
+
+  private startJobMonitor() {
+    // Create a cron job that runs every minute to check for pending jobs
+    this.monitorTask = cron.schedule('* * * * *', async () => {
+      await this.checkPendingJobs();
+      await this.recoverStuckJobs();
+    }, {
+      scheduled: true
+    });
+
+    console.log('Job monitor started - checking every minute for pending jobs');
+  }
+
+  private async checkPendingJobs() {
+    try {
+      const now = new Date();
+      
+      // Find pending one-time jobs that should run immediately
+      const pendingOneTimeJobs = await db
+        .select()
+        .from(indexingJobs)
+        .where(and(
+          eq(indexingJobs.status, 'pending'),
+          eq(indexingJobs.schedule, 'one-time')
+        ));
+
+      for (const job of pendingOneTimeJobs) {
+        console.log(`Found pending one-time job: ${job.id} - executing now`);
+        setImmediate(() => {
+          this.executeJob(job.id);
+        });
+      }
+
+      // Find scheduled jobs whose time has come
+      const scheduledJobs = await db
+        .select()
+        .from(indexingJobs)
+        .where(and(
+          eq(indexingJobs.status, 'pending'),
+          lte(indexingJobs.nextRun, now)
+        ));
+
+      for (const job of scheduledJobs) {
+        if (job.schedule !== 'one-time' && job.cronExpression) {
+          console.log(`Found scheduled job ready to run: ${job.id} - executing now`);
+          setImmediate(() => {
+            this.executeJob(job.id);
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error checking pending jobs:', error);
+    }
+  }
+
+  private async recoverStuckJobs() {
+    try {
+      const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+      
+      // Find jobs that have been running for more than 5 minutes (likely stuck)
+      const stuckJobs = await db
+        .select()
+        .from(indexingJobs)
+        .where(and(
+          eq(indexingJobs.status, 'running'),
+          lte(indexingJobs.lastRun, fiveMinutesAgo)
+        ));
+
+      for (const job of stuckJobs) {
+        console.log(`Found stuck job ${job.id} - resetting to pending status`);
+        
+        await db
+          .update(indexingJobs)
+          .set({ 
+            status: 'pending',
+            lastRun: null
+          })
+          .where(eq(indexingJobs.id, job.id));
+
+        this.broadcastJobUpdate(job.id, 'pending', { recovered: true });
+      }
+    } catch (error) {
+      console.error('Error recovering stuck jobs:', error);
     }
   }
 
