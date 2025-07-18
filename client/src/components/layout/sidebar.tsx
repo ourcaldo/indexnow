@@ -172,9 +172,9 @@ export default function Sidebar({ collapsed, onCollapsedChange }: SidebarProps) 
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <img 
-                  src="https://bwkasvyrzbzhcdtvsbyg.supabase.co/storage/v1/object/public/indexnow-bucket/logo/IndexNow.png" 
+                  src="https://bwkasvyrzbzhcdtvsbyg.supabase.co/storage/v1/object/public/indexnow-bucket/logo/indexnow-black.png" 
                   alt="IndexNow" 
-                  className="h-10 w-auto"
+                  className="h-12 w-auto"
                 />
               </div>
               <Button
@@ -311,14 +311,14 @@ export default function Sidebar({ collapsed, onCollapsedChange }: SidebarProps) 
             )}>
               {!collapsed && (
                 <img 
-                  src="https://bwkasvyrzbzhcdtvsbyg.supabase.co/storage/v1/object/public/indexnow-bucket/logo/IndexNow.png" 
+                  src="https://bwkasvyrzbzhcdtvsbyg.supabase.co/storage/v1/object/public/indexnow-bucket/logo/indexnow-black.png" 
                   alt="IndexNow" 
-                  className="h-10 w-auto"
+                  className="h-12 w-auto"
                 />
               )}
               {collapsed && (
                 <img 
-                  src="https://bwkasvyrzbzhcdtvsbyg.supabase.co/storage/v1/object/public/indexnow-bucket/logo/IndexNow-icon.png" 
+                  src="https://bwkasvyrzbzhcdtvsbyg.supabase.co/storage/v1/object/public/indexnow-bucket/logo/indexnow-icon-black.png" 
                   alt="IndexNow" 
                   className="h-10 w-10 object-contain"
                 />
