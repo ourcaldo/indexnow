@@ -178,6 +178,8 @@ The application is designed to be scalable and maintainable, with clear separati
 ✓ Enhanced favicon with proper sizing and added SEO meta tags
 ✓ Fixed login/signup pages to display IndexNow logo instead of old icon branding
 ✓ Increased logo sizes throughout application for better visibility
+✓ Created API layer for assets to hide Supabase storage URLs from frontend
+✓ Updated favicon to use original icon while sidebar uses black icon version
 ✓ Restructured sidebar navigation with hierarchical IndexNow menu
 ✓ Moved Jobs under IndexNow as "Manage Jobs" submenu
 ✓ Added "New Index" submenu for creating new indexing jobs

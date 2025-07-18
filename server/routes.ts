@@ -337,6 +337,70 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Asset proxy routes to hide Supabase storage URLs
+  app.get('/api/assets/logo', async (req, res) => {
+    try {
+      const logoUrl = 'https://bwkasvyrzbzhcdtvsbyg.supabase.co/storage/v1/object/public/indexnow-bucket/logo/indexnow-black.png';
+      const response = await fetch(logoUrl);
+      
+      if (!response.ok) {
+        return res.status(404).json({ error: 'Logo not found' });
+      }
+      
+      const buffer = await response.arrayBuffer();
+      res.set({
+        'Content-Type': 'image/png',
+        'Cache-Control': 'public, max-age=86400' // Cache for 24 hours
+      });
+      res.send(Buffer.from(buffer));
+    } catch (error) {
+      console.error('Error serving logo:', error);
+      res.status(500).json({ error: 'Failed to load logo' });
+    }
+  });
+
+  app.get('/api/assets/icon', async (req, res) => {
+    try {
+      const iconUrl = 'https://bwkasvyrzbzhcdtvsbyg.supabase.co/storage/v1/object/public/indexnow-bucket/logo/indexnow-icon-black.png';
+      const response = await fetch(iconUrl);
+      
+      if (!response.ok) {
+        return res.status(404).json({ error: 'Icon not found' });
+      }
+      
+      const buffer = await response.arrayBuffer();
+      res.set({
+        'Content-Type': 'image/png',
+        'Cache-Control': 'public, max-age=86400' // Cache for 24 hours
+      });
+      res.send(Buffer.from(buffer));
+    } catch (error) {
+      console.error('Error serving icon:', error);
+      res.status(500).json({ error: 'Failed to load icon' });
+    }
+  });
+
+  app.get('/api/assets/favicon', async (req, res) => {
+    try {
+      const faviconUrl = 'https://bwkasvyrzbzhcdtvsbyg.supabase.co/storage/v1/object/public/indexnow-bucket/logo/IndexNow-icon.png';
+      const response = await fetch(faviconUrl);
+      
+      if (!response.ok) {
+        return res.status(404).json({ error: 'Favicon not found' });
+      }
+      
+      const buffer = await response.arrayBuffer();
+      res.set({
+        'Content-Type': 'image/png',
+        'Cache-Control': 'public, max-age=86400' // Cache for 24 hours
+      });
+      res.send(Buffer.from(buffer));
+    } catch (error) {
+      console.error('Error serving favicon:', error);
+      res.status(500).json({ error: 'Failed to load favicon' });
+    }
+  });
+
   const httpServer = createServer(app);
   
   // Setup WebSocket server for real-time updates
