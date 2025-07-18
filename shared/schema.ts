@@ -6,10 +6,13 @@ export const jobStatusEnum = pgEnum('job_status', ['pending', 'running', 'comple
 export const jobScheduleEnum = pgEnum('job_schedule', ['one-time', 'hourly', 'daily', 'weekly', 'monthly']);
 export const urlStatusEnum = pgEnum('url_status', ['pending', 'success', 'error', 'quota_exceeded']);
 
+export const userRoleEnum = pgEnum('user_role', ['user', 'admin', 'super_admin']);
+
 export const userProfiles = pgTable("indb_user_profiles", {
   id: uuid("id").primaryKey(),
   email: text("email").notNull(),
   fullName: text("full_name"),
+  role: userRoleEnum("role").default('user').notNull(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -73,6 +76,8 @@ export const insertUserProfileSchema = createInsertSchema(userProfiles).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
+}).extend({
+  role: z.enum(['user', 'admin', 'super_admin']).default('user'),
 });
 
 export const insertServiceAccountSchema = createInsertSchema(serviceAccounts).omit({
@@ -140,3 +145,31 @@ export type InsertQuotaUsage = z.infer<typeof insertQuotaUsageSchema>;
 
 export type CreateJobFromSitemap = z.infer<typeof createJobFromSitemapSchema>;
 export type CreateJobFromUrls = z.infer<typeof createJobFromUrlsSchema>;
+
+// User role types and utilities
+export type UserRole = 'user' | 'admin' | 'super_admin';
+
+export const USER_ROLES = {
+  USER: 'user' as const,
+  ADMIN: 'admin' as const,
+  SUPER_ADMIN: 'super_admin' as const,
+} as const;
+
+// Role hierarchy utilities for authorization
+export function hasPermission(userRole: UserRole, requiredRole: UserRole): boolean {
+  const roleHierarchy = {
+    'user': 1,
+    'admin': 2,
+    'super_admin': 3,
+  };
+  
+  return roleHierarchy[userRole] >= roleHierarchy[requiredRole];
+}
+
+export function isAdmin(userRole: UserRole): boolean {
+  return userRole === 'admin' || userRole === 'super_admin';
+}
+
+export function isSuperAdmin(userRole: UserRole): boolean {
+  return userRole === 'super_admin';
+}
