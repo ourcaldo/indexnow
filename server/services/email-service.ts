@@ -131,7 +131,7 @@ export class EmailService {
 
     return this.sendEmail({
       to: userEmail,
-      subject: `🎉 Success! Your ${jobName} indexing job has finished - ${successUrls} URLs submitted to Google`,
+      subject: `🎉 Success! Your ${jobName} indexing job has finished!`,
       template: 'job-completion',
       data
     });
