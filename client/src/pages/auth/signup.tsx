@@ -66,9 +66,11 @@ export default function Signup() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-primary to-orange-500 rounded-xl flex items-center justify-center">
-              <Search className="h-6 w-6 text-white" />
-            </div>
+            <img 
+              src="https://bwkasvyrzbzhcdtvsbyg.supabase.co/storage/v1/object/public/indexnow-bucket/logo/IndexNow.png" 
+              alt="IndexNow" 
+              className="h-16 w-auto"
+            />
           </div>
           <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
           <CardDescription>

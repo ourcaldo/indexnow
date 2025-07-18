@@ -174,7 +174,7 @@ export default function Sidebar({ collapsed, onCollapsedChange }: SidebarProps) 
                 <img 
                   src="https://bwkasvyrzbzhcdtvsbyg.supabase.co/storage/v1/object/public/indexnow-bucket/logo/IndexNow.png" 
                   alt="IndexNow" 
-                  className="h-8 w-auto"
+                  className="h-10 w-auto"
                 />
               </div>
               <Button
@@ -313,14 +313,14 @@ export default function Sidebar({ collapsed, onCollapsedChange }: SidebarProps) 
                 <img 
                   src="https://bwkasvyrzbzhcdtvsbyg.supabase.co/storage/v1/object/public/indexnow-bucket/logo/IndexNow.png" 
                   alt="IndexNow" 
-                  className="h-8 w-auto"
+                  className="h-10 w-auto"
                 />
               )}
               {collapsed && (
                 <img 
                   src="https://bwkasvyrzbzhcdtvsbyg.supabase.co/storage/v1/object/public/indexnow-bucket/logo/IndexNow-icon.png" 
                   alt="IndexNow" 
-                  className="h-8 w-8 object-contain"
+                  className="h-10 w-10 object-contain"
                 />
               )}
             </div>

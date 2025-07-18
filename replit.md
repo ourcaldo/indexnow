@@ -174,8 +174,10 @@ The application is designed to be scalable and maintainable, with clear separati
 ✓ Added continuous job monitoring with cron-based background process
 ✓ Implemented automatic stuck job recovery (jobs running > 5 minutes reset to pending)
 ✓ Enhanced job scheduler with every-minute checks for pending and scheduled jobs
-✓ Updated logo to use custom IndexNow branding from Supabase storage
-✓ Added favicon and proper meta tags for SEO optimization
+✓ Updated logo to use custom IndexNow branding from Supabase storage across all pages
+✓ Enhanced favicon with proper sizing and added SEO meta tags
+✓ Fixed login/signup pages to display IndexNow logo instead of old icon branding
+✓ Increased logo sizes throughout application for better visibility
 ✓ Restructured sidebar navigation with hierarchical IndexNow menu
 ✓ Moved Jobs under IndexNow as "Manage Jobs" submenu
 ✓ Added "New Index" submenu for creating new indexing jobs
