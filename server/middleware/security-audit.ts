@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import { SecureLogger } from "./secure-logging";
+import { DatabaseSecurityLogger } from "../services/security-logger";
 
 // Security audit and monitoring middleware
 export class SecurityAudit {
@@ -36,13 +37,16 @@ export class SecurityAudit {
     
     if (isSuspicious) {
       SecurityAudit.suspiciousIPs.add(ip);
-      SecureLogger.logSecurityEvent('SUSPICIOUS_REQUEST', {
-        ip,
-        userAgent,
-        url: req.url,
-        method: req.method,
-        body: req.body,
-        query: req.query
+      DatabaseSecurityLogger.logSecurityEvent('SUSPICIOUS_REQUEST', {
+        severity: 'high',
+        message: 'Suspicious request pattern detected',
+        details: {
+          patterns: suspiciousPatterns.map(p => p.source),
+          url: req.url,
+          method: req.method,
+          body: req.body,
+          query: req.query
+        }
       }, req);
     }
     
@@ -69,10 +73,14 @@ export class SecurityAudit {
       // Block IP after 5 failed attempts within 15 minutes
       if (attempts.count >= 5 && Date.now() - attempts.lastAttempt < 15 * 60 * 1000) {
         SecurityAudit.blockedIPs.add(ip);
-        SecureLogger.logSecurityEvent('IP_BLOCKED', {
-          ip,
-          reason: 'Too many failed authentication attempts',
-          attempts: attempts.count
+        DatabaseSecurityLogger.logSecurityEvent('IP_BLOCKED', {
+          severity: 'critical',
+          message: 'IP blocked due to too many failed authentication attempts',
+          details: {
+            attempts: attempts.count,
+            timeWindow: '15 minutes'
+          },
+          blocked: true
         }, req);
       }
     }
@@ -147,11 +155,15 @@ export class SecurityAudit {
       const ip = req.ip || 'unknown';
       SecurityAudit.suspiciousIPs.add(ip);
       
-      SecureLogger.logSecurityEvent('VULNERABILITY_SCANNER_DETECTED', {
-        ip,
-        userAgent,
-        url: req.url,
-        method: req.method
+      DatabaseSecurityLogger.logSecurityEvent('VULNERABILITY_SCANNER_DETECTED', {
+        severity: 'critical',
+        message: 'Vulnerability scanner detected and blocked',
+        details: {
+          userAgent,
+          url: req.url,
+          method: req.method
+        },
+        blocked: true
       }, req);
       
       // Block known vulnerability scanners
