@@ -37,9 +37,17 @@ import { Eye, MoreHorizontal, Pause, Play, Trash2, ChevronLeft, ChevronRight } f
 
 interface SimpleJobTableProps {
   limit?: number;
+  searchTerm?: string;
+  statusFilter?: string;
+  scheduleFilter?: string;
 }
 
-export default function SimpleJobTable({ limit }: SimpleJobTableProps) {
+export default function SimpleJobTable({ 
+  limit, 
+  searchTerm = "", 
+  statusFilter = "all", 
+  scheduleFilter = "all" 
+}: SimpleJobTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedJobs, setSelectedJobs] = useState<string[]>([]);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -55,12 +63,26 @@ export default function SimpleJobTable({ limit }: SimpleJobTableProps) {
     // Use the default queryFn from queryClient
   });
 
-  // Client-side pagination with safety checks
+  // Client-side filtering and pagination with safety checks
   const safeJobs = Array.isArray(jobs) ? jobs : [];
-  const totalPages = limit ? 1 : Math.ceil(safeJobs.length / pageSize);
+  
+  // Apply filters
+  const filteredJobs = safeJobs.filter(job => {
+    const matchesSearch = searchTerm === "" || 
+      job.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (job.sitemapUrl && job.sitemapUrl.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (job.manualUrls && job.manualUrls.some(url => url.toLowerCase().includes(searchTerm.toLowerCase())));
+    
+    const matchesStatus = statusFilter === "all" || job.status === statusFilter;
+    const matchesSchedule = scheduleFilter === "all" || job.schedule === scheduleFilter;
+    
+    return matchesSearch && matchesStatus && matchesSchedule;
+  });
+  
+  const totalPages = limit ? 1 : Math.ceil(filteredJobs.length / pageSize);
   const startIndex = limit ? 0 : (currentPage - 1) * pageSize;
   const endIndex = limit ? limit : startIndex + pageSize;
-  const displayJobs = safeJobs.slice(startIndex, endIndex);
+  const displayJobs = filteredJobs.slice(startIndex, endIndex);
 
   const updateJobMutation = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
@@ -209,11 +231,14 @@ export default function SimpleJobTable({ limit }: SimpleJobTableProps) {
 
   // Debug log
   console.log('SimpleJobTable render:', { 
-    jobsRaw: jobs,
     jobsLength: safeJobs.length, 
+    filteredJobsLength: filteredJobs.length,
     displayJobsLength: displayJobs.length,
     limit,
     currentPage,
+    searchTerm,
+    statusFilter,
+    scheduleFilter,
     isLoading,
     error: error?.message
   });
@@ -349,7 +374,8 @@ export default function SimpleJobTable({ limit }: SimpleJobTableProps) {
       {!limit && totalPages > 1 && (
         <div className="flex items-center justify-between">
           <div className="text-sm text-slate-600">
-            Page {currentPage} of {totalPages}
+            Showing {startIndex + 1} to {Math.min(endIndex, filteredJobs.length)} of {filteredJobs.length} jobs
+            {filteredJobs.length !== safeJobs.length && ` (${safeJobs.length} total)`}
           </div>
           <div className="flex items-center space-x-2">
             <Button

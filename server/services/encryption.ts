@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 
 export class EncryptionService {
-  private static algorithm = 'aes-256-gcm';
+  private static algorithm = 'aes-256-cbc';
   private static keyLength = 32; // 256 bits
   
   private static getEncryptionKey(): Buffer {
@@ -29,18 +29,15 @@ export class EncryptionService {
       const key = this.getEncryptionKey();
       const iv = crypto.randomBytes(16); // 128 bits IV
       
-      const cipher = crypto.createCipherGCM(this.algorithm, key, iv);
-      cipher.setAAD(Buffer.from('access_token', 'utf8')); // Additional authenticated data
+      const cipher = crypto.createCipher('aes-256-cbc', key);
       
       let encrypted = cipher.update(text, 'utf8', 'hex');
       encrypted += cipher.final('hex');
       
-      const tag = cipher.getAuthTag();
-      
       return {
         encrypted,
         iv: iv.toString('hex'),
-        tag: tag.toString('hex')
+        tag: '' // Not needed for CBC mode
       };
     } catch (error) {
       console.error('Encryption failed:', error);
@@ -51,12 +48,8 @@ export class EncryptionService {
   static decrypt(encryptedData: { encrypted: string; iv: string; tag: string }): string {
     try {
       const key = this.getEncryptionKey();
-      const iv = Buffer.from(encryptedData.iv, 'hex');
-      const tag = Buffer.from(encryptedData.tag, 'hex');
       
-      const decipher = crypto.createDecipherGCM(this.algorithm, key, iv);
-      decipher.setAAD(Buffer.from('access_token', 'utf8'));
-      decipher.setAuthTag(tag);
+      const decipher = crypto.createDecipher('aes-256-cbc', key);
       
       let decrypted = decipher.update(encryptedData.encrypted, 'hex', 'utf8');
       decrypted += decipher.final('utf8');

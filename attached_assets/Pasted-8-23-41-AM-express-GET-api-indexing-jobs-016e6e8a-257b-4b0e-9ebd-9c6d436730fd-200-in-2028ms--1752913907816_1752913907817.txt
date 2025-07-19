@@ -1,0 +1,53 @@
+8:23:41 AM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd 200 in 2028ms :: {"…
+📝 Using plain text cached token (will be encrypted on next update)
+
+=== Generating New Token ===
+Reason: Token expired or expiring soon
+
+=== JWT Details ===
+Client Email: indexnow@nexpocket.iam.gserviceaccount.com
+Private Key ID: f176cd36ce2fb0a2b68fbf42b43839ac691a81e1
+Scope: https://www.googleapis.com/auth/indexing
+
+=== Raw Token Response ===
+{
+  access_token: 'ya29.c.c0ASRK0GZ7LRG69u9F69Z1gBLSPFqWWo0jbo7PQT6RIaUAOL7rXOcSKVUEbBubOOsxwDlQKTEffGm6leZFbunQQywbyW3wxZHrM3A-6DlqWEo6NEkPkfJbTXSWmASSXcD-1zVVGNqUHy_Jzuu8_YAwR-IhDEf17xfKTqUe0J1D1PqsXPMoCsBhVMv9IV2ggQi-odGV6fIU3BA0ZwGI0zs3j0sNvIqq6iYyQ8bid7zBUdieLMlpedu6jk-kVgpWo8NiHQLUjdqH8IB_ie-RatBzpf6-I9iToGNtTsev0GLzYTUwgGdzHxBmelQnGxJFUkAI-_H_ExCEF0mZLaD-9drWU0oV10LwhWKhg5LrAoa-yrLNeNua2ScF570E384KkbMccfUO8zUOsklcl0YiOft0eldz4wep52JpIQY9fSYjn65t51FIYRzzptvVfIp7MZikh3dlmU4z0Bk2y3xSqSyj0oexie43WxbioeS8nO60v-R96i0cSYF8JZhs-0WuoRyXR4VaSsJ756d9k95WBV2rUdp1Jcquxae6XZ4Y1-r6aedQpZ1V_QqMc8Sj0y5r7mz26rS4FZqR43lFw7rI4QS_48Sq4rswXzlt1amk0Mx5I6Zu-Ow7Xj1t0ecWmhhveSjgF2ISYF57jyd5f7kw2h3c8dRzkmy_iZ0Z3zZnpWn--ReVbo0Ignp2Vn94vtO1WllY-jOMb7mVweciI6ch3Wy3irJIOSfRpmx4JQB-0geikmm8_lukZr0s3Q8S5RB0l89ivp3hsnM6jRZyY8MvdqimOy_Oa1U4R25w0pijM9jQiQepYZraXv1ISiRa8rvbg_k-z8qOky2Z-6oR9fSB_3JFnSmm2kFV9fMZ3Sb87jnWqaOk0jctnYB8BJq-7uIbdUc3ag9pVo0uvoiaro_YrYUxp1Xl3om4q5oqj0Fi91c34mxq2Ju-bhwIZV_pbFOee6flmf2d1nBrYby5duq0Z-vuv-8M12hk3cUYRjjRyfg8hFqd0SsXwBhkoph',
+  token_type: 'Bearer',
+  expiry_date: 1752917020000,
+  id_token: undefined,
+  refresh_token: 'jwt-placeholder'
+}
+
+=== Auth Result Debug ===
+tokenUpdated: true
+hasNewToken: true
+hasNewExpiry: true
+hasCallback: true
+
+=== Calling Token Update Callback ===
+
+=== Saving Token to Database ===
+Service Account ID: 35a1bdc3-3735-4d2e-a280-d473f84a3461
+Token length: 1024
+Expiry: 2025-07-19T09:23:40.000Z
+Encryption failed: TypeError: crypto.createCipherGCM is not a function
+    at Function.encrypt (/home/runner/workspace/server/services/encryption.ts:32:29)
+    at <anonymous> (/home/runner/workspace/server/services/job-scheduler.ts:383:51)
+    at GoogleIndexingService.submitUrlForIndexing (/home/runner/workspace/server/services/google-indexing.ts:156:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async JobScheduler.processUrlsWithQuota (/home/runner/workspace/server/services/job-scheduler.ts:373:24)
+    at async JobScheduler.executeJob (/home/runner/workspace/server/services/job-scheduler.ts:298:7)
+Failed to encrypt token, saving as plain text: Failed to encrypt token
+Database update result: SUCCESS
+Token update callback completed
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+
+=== Complete API Response ===
+Status Code: 200
+Headers: {}
+Raw Body: {
+  "urlNotificationMetadata": {
+    "url": "https://nexjob.tech/"
+  }
+}
+8:23:42 AM [express] GET /api/indexing-jobs/016e6e8a-257b-4b0e-9ebd-9c6d436730fd/submissions 200 in …
