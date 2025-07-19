@@ -1,6 +1,7 @@
 import { google } from 'googleapis';
 import { JWT } from 'google-auth-library';
 import { ServiceAccount } from '@shared/schema';
+import { EncryptionService } from './encryption';
 
 interface IndexingResult {
   url: string;
@@ -66,8 +67,33 @@ export class GoogleIndexingService {
   }
 
   private async createAuthClient(serviceAccount: ServiceAccount) {
-    // Check if we have a valid cached token
-    if (serviceAccount.accessToken && serviceAccount.tokenExpiresAt) {
+    // Check if we have a valid cached token (try encrypted first, then plain text)
+    let cachedToken = null;
+    
+    // Try to get encrypted token first
+    if (serviceAccount.accessTokenEncrypted && serviceAccount.encryptionIv && serviceAccount.encryptionTag) {
+      try {
+        cachedToken = EncryptionService.decrypt({
+          encrypted: serviceAccount.accessTokenEncrypted,
+          iv: serviceAccount.encryptionIv,
+          tag: serviceAccount.encryptionTag
+        });
+        if (process.env.NODE_ENV === 'development') {
+          console.log('✅ Successfully decrypted cached token');
+        }
+      } catch (error) {
+        console.warn('Failed to decrypt token, falling back to plain text token:', error.message);
+        cachedToken = serviceAccount.accessToken;
+      }
+    } else if (serviceAccount.accessToken) {
+      // Fall back to plain text token for backward compatibility
+      cachedToken = serviceAccount.accessToken;
+      if (process.env.NODE_ENV === 'development') {
+        console.log('📝 Using plain text cached token (will be encrypted on next update)');
+      }
+    }
+    
+    if (cachedToken && serviceAccount.tokenExpiresAt) {
       const expiryTime = new Date(serviceAccount.tokenExpiresAt);
       const now = new Date();
       
@@ -81,7 +107,7 @@ export class GoogleIndexingService {
         
         const auth = new google.auth.OAuth2();
         auth.setCredentials({
-          access_token: serviceAccount.accessToken
+          access_token: cachedToken
         });
         return { auth, tokenUpdated: false, newToken: undefined, newExpiry: undefined };
       }

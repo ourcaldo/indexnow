@@ -59,11 +59,16 @@ export async function addUserRoleToRequest(req: Request, userId: string) {
     
     if (user) {
       (req as any).userRole = user.role;
-      console.log(`Added role '${user.role}' for user ${userId} to request`);
+      // Only log in development mode to reduce noise
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`Added role '${user.role}' for user ${userId} to request`);
+      }
     } else {
       // Default to 'user' role if profile not found
       (req as any).userRole = 'user';
-      console.log(`User profile not found for ${userId}, defaulting to 'user' role`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`User profile not found for ${userId}, defaulting to 'user' role`);
+      }
     }
   } catch (error) {
     console.error('Failed to add user role to request:', error);

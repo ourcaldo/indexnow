@@ -29,7 +29,7 @@ export class EncryptionService {
       const key = this.getEncryptionKey();
       const iv = crypto.randomBytes(16); // 128 bits IV
       
-      const cipher = crypto.createCipher(this.algorithm, key);
+      const cipher = crypto.createCipherGCM(this.algorithm, key, iv);
       cipher.setAAD(Buffer.from('access_token', 'utf8')); // Additional authenticated data
       
       let encrypted = cipher.update(text, 'utf8', 'hex');
@@ -54,7 +54,7 @@ export class EncryptionService {
       const iv = Buffer.from(encryptedData.iv, 'hex');
       const tag = Buffer.from(encryptedData.tag, 'hex');
       
-      const decipher = crypto.createDecipher(this.algorithm, key);
+      const decipher = crypto.createDecipherGCM(this.algorithm, key, iv);
       decipher.setAAD(Buffer.from('access_token', 'utf8'));
       decipher.setAuthTag(tag);
       

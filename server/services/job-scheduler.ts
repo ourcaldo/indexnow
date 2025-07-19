@@ -5,6 +5,7 @@ import { eq, and, gte, lte, isNull, lt, or } from 'drizzle-orm';
 import { googleIndexingService } from './google-indexing';
 import { sitemapParser } from './sitemap-parser';
 import { emailService } from './email-service';
+import { EncryptionService } from './encryption';
 
 interface ScheduledJob {
   id: string;
@@ -376,11 +377,34 @@ export class JobScheduler {
             console.log('Token length:', token.length);
             console.log('Expiry:', expiry.toISOString());
             
-            // Update the service account with the new token
+            // Encrypt the token before saving
+            let encryptedData = null;
+            try {
+              const encrypted = EncryptionService.encrypt(token);
+              encryptedData = {
+                accessTokenEncrypted: encrypted.encrypted,
+                encryptionIv: encrypted.iv,
+                encryptionTag: encrypted.tag,
+                // Clear old plain text token
+                accessToken: null
+              };
+              console.log('🔐 Token encrypted successfully');
+            } catch (error) {
+              console.warn('Failed to encrypt token, saving as plain text:', error.message);
+              encryptedData = {
+                accessToken: token,
+                // Clear encryption fields if encryption fails
+                accessTokenEncrypted: null,
+                encryptionIv: null,
+                encryptionTag: null
+              };
+            }
+            
+            // Update the service account with the encrypted token
             const updateResult = await db
               .update(serviceAccounts)
               .set({ 
-                accessToken: token,
+                ...encryptedData,
                 tokenExpiresAt: expiry,
                 updatedAt: new Date()
               })
@@ -389,8 +413,8 @@ export class JobScheduler {
             
             console.log('Database update result:', updateResult.length > 0 ? 'SUCCESS' : 'FAILED');
             
-            // Update the local account object too so subsequent URLs in the same job can use cached token
-            account.accessToken = token;
+            // Update the local account object with new token data
+            Object.assign(account, encryptedData);
             account.tokenExpiresAt = expiry;
           } catch (error) {
             console.error('Error saving token to database:', error);
