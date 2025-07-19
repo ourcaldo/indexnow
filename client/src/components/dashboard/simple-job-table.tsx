@@ -52,7 +52,7 @@ export default function SimpleJobTable({ limit }: SimpleJobTableProps) {
 
   const { data: jobs = [], isLoading, error } = useQuery<IndexingJob[]>({
     queryKey: ["/api/indexing-jobs"],
-    queryFn: () => apiRequest("GET", "/api/indexing-jobs"),
+    // Use the default queryFn from queryClient
   });
 
   // Client-side pagination with safety checks
@@ -209,10 +209,13 @@ export default function SimpleJobTable({ limit }: SimpleJobTableProps) {
 
   // Debug log
   console.log('SimpleJobTable render:', { 
+    jobsRaw: jobs,
     jobsLength: safeJobs.length, 
     displayJobsLength: displayJobs.length,
     limit,
-    currentPage 
+    currentPage,
+    isLoading,
+    error: error?.message
   });
 
   return (
