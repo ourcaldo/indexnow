@@ -48,9 +48,15 @@ CREATE POLICY "Users can view quota usage for their service accounts" ON indb_qu
     )
   );
 
--- Policy: System can create/update quota usage records (for API usage tracking)
-CREATE POLICY "System can manage quota usage" ON indb_quota_usage
-  FOR INSERT, UPDATE
+-- Policy: System can insert quota usage records (for API usage tracking)
+CREATE POLICY "System can insert quota usage" ON indb_quota_usage
+  FOR INSERT
+  WITH CHECK (true);
+
+-- Policy: System can update quota usage records (for API usage tracking)  
+CREATE POLICY "System can update quota usage" ON indb_quota_usage
+  FOR UPDATE
+  USING (true)
   WITH CHECK (true);
 
 -- Enable RLS on user profiles table

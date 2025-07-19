@@ -238,14 +238,7 @@ export default function JobTable({ limit }: JobTableProps) {
     );
   }
 
-  console.log('JobTable Debug:', { 
-    jobsResponse, 
-    isPaginatedResponse, 
-    jobs: jobs?.length, 
-    totalPages, 
-    limit,
-    currentPage 
-  });
+
 
   return (
     <div className="space-y-4">
