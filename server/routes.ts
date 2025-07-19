@@ -184,8 +184,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Indexing jobs routes
   app.get('/api/indexing-jobs', requireAuth, async (req: any, res) => {
     try {
-      const jobs = await storage.getIndexingJobs(req.user.id);
-      res.json(jobs);
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 20;
+      
+      // Support both paginated and non-paginated requests
+      if (req.query.page || req.query.limit) {
+        const result = await storage.getIndexingJobsWithPagination(req.user.id, page, limit);
+        res.json(result);
+      } else {
+        const jobs = await storage.getIndexingJobs(req.user.id);
+        res.json(jobs);
+      }
     } catch (error) {
       console.error('Error fetching indexing jobs:', error);
       res.status(500).json({ error: 'Failed to fetch indexing jobs' });
@@ -320,6 +329,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error deleting indexing job:', error);
       res.status(500).json({ error: 'Failed to delete indexing job' });
+    }
+  });
+
+  // Bulk delete jobs route
+  app.delete('/api/indexing-jobs/bulk', requireAuth, async (req: any, res) => {
+    try {
+      const { jobIds } = req.body;
+      
+      if (!Array.isArray(jobIds) || jobIds.length === 0) {
+        return res.status(400).json({ error: 'jobIds must be a non-empty array' });
+      }
+      
+      // Unschedule all jobs first
+      jobIds.forEach(id => jobScheduler.unscheduleJob(id));
+      
+      // Delete multiple jobs (with user ownership check)
+      await storage.deleteMultipleIndexingJobs(jobIds, req.user.id);
+      
+      res.status(204).send();
+    } catch (error) {
+      console.error('Error bulk deleting indexing jobs:', error);
+      res.status(500).json({ error: 'Failed to bulk delete indexing jobs' });
     }
   });
 

@@ -1,0 +1,602 @@
+[
+  {
+    "table_name": "dashboard_stats",
+    "column_name": "user_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "dashboard_stats",
+    "column_name": "email",
+    "data_type": "text"
+  },
+  {
+    "table_name": "dashboard_stats",
+    "column_name": "total_service_accounts",
+    "data_type": "bigint"
+  },
+  {
+    "table_name": "dashboard_stats",
+    "column_name": "active_service_accounts",
+    "data_type": "bigint"
+  },
+  {
+    "table_name": "dashboard_stats",
+    "column_name": "total_jobs",
+    "data_type": "bigint"
+  },
+  {
+    "table_name": "dashboard_stats",
+    "column_name": "completed_jobs",
+    "data_type": "bigint"
+  },
+  {
+    "table_name": "dashboard_stats",
+    "column_name": "failed_jobs",
+    "data_type": "bigint"
+  },
+  {
+    "table_name": "dashboard_stats",
+    "column_name": "running_jobs",
+    "data_type": "bigint"
+  },
+  {
+    "table_name": "dashboard_stats",
+    "column_name": "total_successful_urls",
+    "data_type": "bigint"
+  },
+  {
+    "table_name": "dashboard_stats",
+    "column_name": "total_failed_urls",
+    "data_type": "bigint"
+  },
+  {
+    "table_name": "indb_indexing_jobs",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "indb_indexing_jobs",
+    "column_name": "user_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "indb_indexing_jobs",
+    "column_name": "name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "indb_indexing_jobs",
+    "column_name": "schedule",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "indb_indexing_jobs",
+    "column_name": "status",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "indb_indexing_jobs",
+    "column_name": "total_urls",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "indb_indexing_jobs",
+    "column_name": "processed_urls",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "indb_indexing_jobs",
+    "column_name": "successful_urls",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "indb_indexing_jobs",
+    "column_name": "failed_urls",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "indb_indexing_jobs",
+    "column_name": "sitemap_url",
+    "data_type": "text"
+  },
+  {
+    "table_name": "indb_indexing_jobs",
+    "column_name": "manual_urls",
+    "data_type": "ARRAY"
+  },
+  {
+    "table_name": "indb_indexing_jobs",
+    "column_name": "cron_expression",
+    "data_type": "text"
+  },
+  {
+    "table_name": "indb_indexing_jobs",
+    "column_name": "next_run",
+    "data_type": "timestamp without time zone"
+  },
+  {
+    "table_name": "indb_indexing_jobs",
+    "column_name": "last_run",
+    "data_type": "timestamp without time zone"
+  },
+  {
+    "table_name": "indb_indexing_jobs",
+    "column_name": "created_at",
+    "data_type": "timestamp without time zone"
+  },
+  {
+    "table_name": "indb_indexing_jobs",
+    "column_name": "updated_at",
+    "data_type": "timestamp without time zone"
+  },
+  {
+    "table_name": "indb_indexing_jobs",
+    "column_name": "locked_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "indb_indexing_jobs",
+    "column_name": "locked_by",
+    "data_type": "text"
+  },
+  {
+    "table_name": "indb_quota_usage",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "indb_quota_usage",
+    "column_name": "service_account_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "indb_quota_usage",
+    "column_name": "date",
+    "data_type": "date"
+  },
+  {
+    "table_name": "indb_quota_usage",
+    "column_name": "requests_count",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "indb_security_analytics",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "indb_security_analytics",
+    "column_name": "date",
+    "data_type": "date"
+  },
+  {
+    "table_name": "indb_security_analytics",
+    "column_name": "total_events",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "indb_security_analytics",
+    "column_name": "auth_failures",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "indb_security_analytics",
+    "column_name": "suspicious_requests",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "indb_security_analytics",
+    "column_name": "blocked_ips",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "indb_security_analytics",
+    "column_name": "vulnerability_scans",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "indb_security_analytics",
+    "column_name": "brute_force_attempts",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "indb_security_analytics",
+    "column_name": "unique_ips",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "indb_security_analytics",
+    "column_name": "high_risk_events",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "indb_security_analytics",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "indb_security_analytics",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "indb_security_blocked_ips",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "indb_security_blocked_ips",
+    "column_name": "ip_address",
+    "data_type": "inet"
+  },
+  {
+    "table_name": "indb_security_blocked_ips",
+    "column_name": "reason",
+    "data_type": "text"
+  },
+  {
+    "table_name": "indb_security_blocked_ips",
+    "column_name": "blocked_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "indb_security_blocked_ips",
+    "column_name": "blocked_until",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "indb_security_blocked_ips",
+    "column_name": "failed_attempts",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "indb_security_blocked_ips",
+    "column_name": "is_permanent",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "indb_security_blocked_ips",
+    "column_name": "created_by",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "indb_security_blocked_ips",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "indb_security_events",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "indb_security_events",
+    "column_name": "event_type",
+    "data_type": "character varying"
+  },
+  {
+    "table_name": "indb_security_events",
+    "column_name": "severity",
+    "data_type": "character varying"
+  },
+  {
+    "table_name": "indb_security_events",
+    "column_name": "ip_address",
+    "data_type": "inet"
+  },
+  {
+    "table_name": "indb_security_events",
+    "column_name": "user_agent",
+    "data_type": "text"
+  },
+  {
+    "table_name": "indb_security_events",
+    "column_name": "user_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "indb_security_events",
+    "column_name": "request_url",
+    "data_type": "text"
+  },
+  {
+    "table_name": "indb_security_events",
+    "column_name": "request_method",
+    "data_type": "character varying"
+  },
+  {
+    "table_name": "indb_security_events",
+    "column_name": "request_body",
+    "data_type": "jsonb"
+  },
+  {
+    "table_name": "indb_security_events",
+    "column_name": "request_query",
+    "data_type": "jsonb"
+  },
+  {
+    "table_name": "indb_security_events",
+    "column_name": "details",
+    "data_type": "jsonb"
+  },
+  {
+    "table_name": "indb_security_events",
+    "column_name": "timestamp",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "indb_security_events",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "indb_security_failed_auth_attempts",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "indb_security_failed_auth_attempts",
+    "column_name": "ip_address",
+    "data_type": "inet"
+  },
+  {
+    "table_name": "indb_security_failed_auth_attempts",
+    "column_name": "attempted_email",
+    "data_type": "character varying"
+  },
+  {
+    "table_name": "indb_security_failed_auth_attempts",
+    "column_name": "user_agent",
+    "data_type": "text"
+  },
+  {
+    "table_name": "indb_security_failed_auth_attempts",
+    "column_name": "endpoint",
+    "data_type": "character varying"
+  },
+  {
+    "table_name": "indb_security_failed_auth_attempts",
+    "column_name": "failure_reason",
+    "data_type": "text"
+  },
+  {
+    "table_name": "indb_security_failed_auth_attempts",
+    "column_name": "timestamp",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "indb_security_failed_auth_attempts",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "indb_security_suspicious_activities",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "indb_security_suspicious_activities",
+    "column_name": "ip_address",
+    "data_type": "inet"
+  },
+  {
+    "table_name": "indb_security_suspicious_activities",
+    "column_name": "activity_type",
+    "data_type": "character varying"
+  },
+  {
+    "table_name": "indb_security_suspicious_activities",
+    "column_name": "user_agent",
+    "data_type": "text"
+  },
+  {
+    "table_name": "indb_security_suspicious_activities",
+    "column_name": "request_url",
+    "data_type": "text"
+  },
+  {
+    "table_name": "indb_security_suspicious_activities",
+    "column_name": "request_method",
+    "data_type": "character varying"
+  },
+  {
+    "table_name": "indb_security_suspicious_activities",
+    "column_name": "detected_patterns",
+    "data_type": "ARRAY"
+  },
+  {
+    "table_name": "indb_security_suspicious_activities",
+    "column_name": "risk_score",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "indb_security_suspicious_activities",
+    "column_name": "timestamp",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "indb_security_suspicious_activities",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "indb_service_accounts",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "indb_service_accounts",
+    "column_name": "user_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "indb_service_accounts",
+    "column_name": "name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "indb_service_accounts",
+    "column_name": "client_email",
+    "data_type": "text"
+  },
+  {
+    "table_name": "indb_service_accounts",
+    "column_name": "project_id",
+    "data_type": "text"
+  },
+  {
+    "table_name": "indb_service_accounts",
+    "column_name": "is_active",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "indb_service_accounts",
+    "column_name": "daily_quota_limit",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "indb_service_accounts",
+    "column_name": "per_minute_quota_limit",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "indb_service_accounts",
+    "column_name": "created_at",
+    "data_type": "timestamp without time zone"
+  },
+  {
+    "table_name": "indb_service_accounts",
+    "column_name": "updated_at",
+    "data_type": "timestamp without time zone"
+  },
+  {
+    "table_name": "indb_service_accounts",
+    "column_name": "service_account_json",
+    "data_type": "text"
+  },
+  {
+    "table_name": "indb_service_accounts",
+    "column_name": "access_token",
+    "data_type": "text"
+  },
+  {
+    "table_name": "indb_service_accounts",
+    "column_name": "token_expires_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "indb_service_accounts",
+    "column_name": "access_token_encrypted",
+    "data_type": "text"
+  },
+  {
+    "table_name": "indb_service_accounts",
+    "column_name": "encryption_iv",
+    "data_type": "text"
+  },
+  {
+    "table_name": "indb_service_accounts",
+    "column_name": "encryption_tag",
+    "data_type": "text"
+  },
+  {
+    "table_name": "indb_url_submissions",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "indb_url_submissions",
+    "column_name": "job_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "indb_url_submissions",
+    "column_name": "url",
+    "data_type": "text"
+  },
+  {
+    "table_name": "indb_url_submissions",
+    "column_name": "status",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "indb_url_submissions",
+    "column_name": "service_account_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "indb_url_submissions",
+    "column_name": "error_message",
+    "data_type": "text"
+  },
+  {
+    "table_name": "indb_url_submissions",
+    "column_name": "submitted_at",
+    "data_type": "timestamp without time zone"
+  },
+  {
+    "table_name": "indb_url_submissions",
+    "column_name": "created_at",
+    "data_type": "timestamp without time zone"
+  },
+  {
+    "table_name": "indb_url_submissions",
+    "column_name": "updated_at",
+    "data_type": "timestamp without time zone"
+  },
+  {
+    "table_name": "indb_user_profiles",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "indb_user_profiles",
+    "column_name": "email",
+    "data_type": "text"
+  },
+  {
+    "table_name": "indb_user_profiles",
+    "column_name": "full_name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "indb_user_profiles",
+    "column_name": "created_at",
+    "data_type": "timestamp without time zone"
+  },
+  {
+    "table_name": "indb_user_profiles",
+    "column_name": "updated_at",
+    "data_type": "timestamp without time zone"
+  },
+  {
+    "table_name": "indb_user_profiles",
+    "column_name": "role",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "indb_user_profiles",
+    "column_name": "email_job_completion",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "indb_user_profiles",
+    "column_name": "email_job_failures",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "indb_user_profiles",
+    "column_name": "email_daily_reports",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "indb_user_profiles",
+    "column_name": "request_timeout",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "indb_user_profiles",
+    "column_name": "retry_attempts",
+    "data_type": "integer"
+  }
+]

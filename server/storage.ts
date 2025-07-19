@@ -16,7 +16,7 @@ import {
   type InsertUrlSubmission,
   type InsertQuotaUsage
 } from '@shared/schema';
-import { eq, and, desc } from 'drizzle-orm';
+import { eq, and, desc, count, inArray } from 'drizzle-orm';
 
 export interface IStorage {
   // User profiles
@@ -34,9 +34,11 @@ export interface IStorage {
   // Indexing jobs
   createIndexingJob(job: InsertIndexingJob): Promise<IndexingJob>;
   getIndexingJobs(userId: string): Promise<IndexingJob[]>;
+  getIndexingJobsWithPagination(userId: string, page: number, limit: number): Promise<{ jobs: IndexingJob[]; total: number; totalPages: number; }>;
   getIndexingJob(id: string): Promise<IndexingJob | undefined>;
   updateIndexingJob(id: string, job: Partial<IndexingJob>): Promise<IndexingJob>;
   deleteIndexingJob(id: string): Promise<void>;
+  deleteMultipleIndexingJobs(ids: string[], userId: string): Promise<void>;
 
   // URL submissions
   getUrlSubmissions(jobId: string): Promise<UrlSubmission[]>;
@@ -129,6 +131,30 @@ export class SupabaseStorage implements IStorage {
       .orderBy(desc(indexingJobs.createdAt));
   }
 
+  async getIndexingJobsWithPagination(userId: string, page: number, limit: number): Promise<{ jobs: IndexingJob[]; total: number; totalPages: number; }> {
+    const offset = (page - 1) * limit;
+    
+    // Get total count
+    const totalResult = await db
+      .select({ count: count() })
+      .from(indexingJobs)
+      .where(eq(indexingJobs.userId, userId));
+    
+    const total = totalResult[0]?.count || 0;
+    const totalPages = Math.ceil(total / limit);
+    
+    // Get paginated jobs
+    const jobs = await db
+      .select()
+      .from(indexingJobs)
+      .where(eq(indexingJobs.userId, userId))
+      .orderBy(desc(indexingJobs.createdAt))
+      .limit(limit)
+      .offset(offset);
+    
+    return { jobs, total, totalPages };
+  }
+
   async getIndexingJob(id: string): Promise<IndexingJob | undefined> {
     const result = await db.select().from(indexingJobs).where(eq(indexingJobs.id, id)).limit(1);
     return result[0];
@@ -149,6 +175,19 @@ export class SupabaseStorage implements IStorage {
     
     // Then delete the job
     await db.delete(indexingJobs).where(eq(indexingJobs.id, id));
+  }
+
+  async deleteMultipleIndexingJobs(ids: string[], userId: string): Promise<void> {
+    // First, delete all associated URL submissions for these jobs
+    await db.delete(urlSubmissions).where(inArray(urlSubmissions.jobId, ids));
+    
+    // Then delete the jobs, ensuring they belong to the user
+    await db.delete(indexingJobs).where(
+      and(
+        inArray(indexingJobs.id, ids),
+        eq(indexingJobs.userId, userId)
+      )
+    );
   }
 
   async getUrlSubmissions(jobId: string): Promise<UrlSubmission[]> {
