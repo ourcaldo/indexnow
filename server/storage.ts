@@ -5,25 +5,28 @@ import {
   indexingJobs, 
   urlSubmissions, 
   quotaUsage,
+  dashboardNotifications,
   type UserProfile,
   type ServiceAccount,
   type IndexingJob,
   type UrlSubmission,
   type QuotaUsage,
+  type DashboardNotification,
   type InsertUserProfile,
   type InsertServiceAccount,
   type InsertIndexingJob,
   type InsertUrlSubmission,
-  type InsertQuotaUsage
+  type InsertQuotaUsage,
+  type InsertDashboardNotification
 } from '@shared/schema';
-import { eq, and, desc, count, inArray } from 'drizzle-orm';
+import { eq, and, desc, count, inArray, sql } from 'drizzle-orm';
 
 export interface IStorage {
   // User profiles
   createUserProfile(profile: InsertUserProfile): Promise<UserProfile>;
   getUserProfile(id: string): Promise<UserProfile | undefined>;
   updateUserProfile(id: string, profile: Partial<UserProfile>): Promise<UserProfile>;
-  getUserSettings(id: string): Promise<{ emailJobCompletion: boolean; emailJobFailures: boolean; emailDailyReports: boolean; requestTimeout: number; retryAttempts: number; } | undefined>;
+  getUserSettings(id: string): Promise<{ emailJobCompletion: boolean; emailJobFailures: boolean; emailDailyReports: boolean; emailQuotaAlerts: boolean; quotaAlertThreshold: number; dashboardNotifications: boolean; requestTimeout: number; retryAttempts: number; } | undefined>;
 
   // Service accounts
   createServiceAccount(account: Omit<InsertServiceAccount, 'serviceAccountJson'> & { serviceAccountJson: string }): Promise<ServiceAccount>;
@@ -59,6 +62,12 @@ export interface IStorage {
     apiQuotaUsed: number;
     apiQuotaLimit: number;
   }>;
+
+  // Dashboard notifications
+  getDashboardNotifications(userId: string): Promise<DashboardNotification[]>;
+  markNotificationAsRead(notificationId: string, userId: string): Promise<void>;
+  markAllNotificationsAsRead(userId: string): Promise<void>;
+  getUnreadNotificationCount(userId: string): Promise<number>;
 }
 
 export class SupabaseStorage implements IStorage {
@@ -81,12 +90,15 @@ export class SupabaseStorage implements IStorage {
     return result[0];
   }
 
-  async getUserSettings(id: string): Promise<{ emailJobCompletion: boolean; emailJobFailures: boolean; emailDailyReports: boolean; requestTimeout: number; retryAttempts: number; } | undefined> {
+  async getUserSettings(id: string): Promise<{ emailJobCompletion: boolean; emailJobFailures: boolean; emailDailyReports: boolean; emailQuotaAlerts: boolean; quotaAlertThreshold: number; dashboardNotifications: boolean; requestTimeout: number; retryAttempts: number; } | undefined> {
     const result = await db
       .select({
         emailJobCompletion: userProfiles.emailJobCompletion,
         emailJobFailures: userProfiles.emailJobFailures,
         emailDailyReports: userProfiles.emailDailyReports,
+        emailQuotaAlerts: userProfiles.emailQuotaAlerts,
+        quotaAlertThreshold: userProfiles.quotaAlertThreshold,
+        dashboardNotifications: userProfiles.dashboardNotifications,
         requestTimeout: userProfiles.requestTimeout,
         retryAttempts: userProfiles.retryAttempts,
       })
@@ -299,6 +311,50 @@ export class SupabaseStorage implements IStorage {
       apiQuotaUsed,
       apiQuotaLimit
     };
+  }
+
+  async getDashboardNotifications(userId: string): Promise<DashboardNotification[]> {
+    const now = new Date();
+    return db
+      .select()
+      .from(dashboardNotifications)
+      .where(and(
+        eq(dashboardNotifications.userId, userId),
+        eq(dashboardNotifications.isRead, false),
+        sql`(${dashboardNotifications.expiresAt} IS NULL OR ${dashboardNotifications.expiresAt} > ${now})`
+      ))
+      .orderBy(desc(dashboardNotifications.createdAt));
+  }
+
+  async markNotificationAsRead(notificationId: string, userId: string): Promise<void> {
+    await db
+      .update(dashboardNotifications)
+      .set({ isRead: true })
+      .where(and(
+        eq(dashboardNotifications.id, notificationId),
+        eq(dashboardNotifications.userId, userId)
+      ));
+  }
+
+  async markAllNotificationsAsRead(userId: string): Promise<void> {
+    await db
+      .update(dashboardNotifications)
+      .set({ isRead: true })
+      .where(eq(dashboardNotifications.userId, userId));
+  }
+
+  async getUnreadNotificationCount(userId: string): Promise<number> {
+    const now = new Date();
+    const result = await db
+      .select({ count: count() })
+      .from(dashboardNotifications)
+      .where(and(
+        eq(dashboardNotifications.userId, userId),
+        eq(dashboardNotifications.isRead, false),
+        sql`(${dashboardNotifications.expiresAt} IS NULL OR ${dashboardNotifications.expiresAt} > ${now})`
+      ));
+    
+    return result[0]?.count || 0;
   }
 }
 

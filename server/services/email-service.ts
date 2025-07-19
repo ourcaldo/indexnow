@@ -181,6 +181,45 @@ export class EmailService {
     });
   }
 
+  async sendQuotaAlert(
+    userEmail: string, 
+    userName: string, 
+    serviceAccountName: string,
+    currentUsage: number,
+    quotaLimit: number,
+    usagePercentage: number,
+    alertType: 'warning' | 'critical' | 'exhausted',
+    subject: string
+  ): Promise<boolean> {
+    const data = {
+      userName,
+      serviceAccountName,
+      currentUsage,
+      quotaLimit,
+      usagePercentage,
+      alertType,
+      isWarning: alertType === 'warning',
+      isCritical: alertType === 'critical',
+      isExhausted: alertType === 'exhausted',
+      logoUrl: process.env.LOGO_URL || '',
+      siteUrl: process.env.SITE_URL || 'http://localhost:5000',
+      timestamp: new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      })
+    };
+
+    return this.sendEmail({
+      to: userEmail,
+      subject,
+      template: 'quota-alert',
+      data
+    });
+  }
+
   async testConnection(): Promise<boolean> {
     try {
       await this.transporter.verify();

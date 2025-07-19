@@ -16,6 +16,9 @@ export const userProfiles = pgTable("indb_user_profiles", {
   emailJobCompletion: boolean("email_job_completion").default(true),
   emailJobFailures: boolean("email_job_failures").default(false),
   emailDailyReports: boolean("email_daily_reports").default(true),
+  emailQuotaAlerts: boolean("email_quota_alerts").default(true),
+  quotaAlertThreshold: integer("quota_alert_threshold").default(80),
+  dashboardNotifications: boolean("dashboard_notifications").default(true),
   requestTimeout: integer("request_timeout").default(30),
   retryAttempts: integer("retry_attempts").default(3),
   createdAt: timestamp("created_at").defaultNow(),
@@ -81,6 +84,34 @@ export const quotaUsage = pgTable("indb_quota_usage", {
   requestsCount: integer("requests_count").default(0),
 });
 
+export const quotaAlertTypeEnum = pgEnum('quota_alert_type', ['warning', 'critical', 'exhausted']);
+export const notificationTypeEnum = pgEnum('notification_type', ['info', 'warning', 'error', 'success']);
+
+export const quotaAlerts = pgTable("indb_quota_alerts", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id").notNull(),
+  serviceAccountId: uuid("service_account_id").notNull(),
+  alertType: quotaAlertTypeEnum("alert_type").notNull(),
+  thresholdPercentage: integer("threshold_percentage").notNull(),
+  currentUsage: integer("current_usage").notNull(),
+  quotaLimit: integer("quota_limit").notNull(),
+  sentAt: timestamp("sent_at").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const dashboardNotifications = pgTable("indb_dashboard_notifications", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id").notNull(),
+  title: text("title").notNull(),
+  message: text("message").notNull(),
+  type: notificationTypeEnum("type").notNull(),
+  isRead: boolean("is_read").default(false),
+  relatedEntityType: text("related_entity_type"),
+  relatedEntityId: uuid("related_entity_id"),
+  createdAt: timestamp("created_at").defaultNow(),
+  expiresAt: timestamp("expires_at"),
+});
+
 // Insert schemas
 export const insertUserProfileSchema = createInsertSchema(userProfiles).omit({
   id: true,
@@ -94,6 +125,9 @@ export const updateUserSettingsSchema = z.object({
   emailJobCompletion: z.boolean().optional(),
   emailJobFailures: z.boolean().optional(),
   emailDailyReports: z.boolean().optional(),
+  emailQuotaAlerts: z.boolean().optional(),
+  quotaAlertThreshold: z.number().min(50).max(95).optional(),
+  dashboardNotifications: z.boolean().optional(),
   requestTimeout: z.number().min(5).max(300).optional(),
   retryAttempts: z.number().min(0).max(10).optional(),
 });
@@ -145,6 +179,17 @@ export const insertQuotaUsageSchema = createInsertSchema(quotaUsage).omit({
   id: true,
 });
 
+export const insertQuotaAlertSchema = createInsertSchema(quotaAlerts).omit({
+  id: true,
+  createdAt: true,
+  sentAt: true,
+});
+
+export const insertDashboardNotificationSchema = createInsertSchema(dashboardNotifications).omit({
+  id: true,
+  createdAt: true,
+});
+
 // Types
 export type UserProfile = typeof userProfiles.$inferSelect;
 export type InsertUserProfile = z.infer<typeof insertUserProfileSchema>;
@@ -160,6 +205,12 @@ export type InsertUrlSubmission = z.infer<typeof insertUrlSubmissionSchema>;
 
 export type QuotaUsage = typeof quotaUsage.$inferSelect;
 export type InsertQuotaUsage = z.infer<typeof insertQuotaUsageSchema>;
+
+export type QuotaAlert = typeof quotaAlerts.$inferSelect;
+export type InsertQuotaAlert = z.infer<typeof insertQuotaAlertSchema>;
+
+export type DashboardNotification = typeof dashboardNotifications.$inferSelect;
+export type InsertDashboardNotification = z.infer<typeof insertDashboardNotificationSchema>;
 
 export type CreateJobFromSitemap = z.infer<typeof createJobFromSitemapSchema>;
 export type CreateJobFromUrls = z.infer<typeof createJobFromUrlsSchema>;

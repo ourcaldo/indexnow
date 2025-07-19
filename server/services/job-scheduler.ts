@@ -5,6 +5,7 @@ import { eq, and, gte, lte, isNull, lt, or } from 'drizzle-orm';
 import { googleIndexingService } from './google-indexing';
 import { sitemapParser } from './sitemap-parser';
 import { emailService } from './email-service';
+import { quotaMonitoringService } from './quota-monitoring';
 import { EncryptionService } from './encryption';
 
 interface ScheduledJob {
@@ -86,7 +87,26 @@ export class JobScheduler {
       scheduled: true
     });
 
+    // Schedule quota monitoring every 15 minutes
+    cron.schedule('*/15 * * * *', async () => {
+      try {
+        await quotaMonitoringService.checkAndSendQuotaAlerts();
+      } catch (error) {
+        console.error('Error in quota monitoring:', error);
+      }
+    });
+
+    // Schedule cleanup at 2 AM daily
+    cron.schedule('0 2 * * *', async () => {
+      try {
+        await quotaMonitoringService.cleanupOldData();
+      } catch (error) {
+        console.error('Error in data cleanup:', error);
+      }
+    });
+
     console.log('Job monitor started - checking every minute for pending jobs');
+    console.log('Quota monitoring scheduled - checking every 15 minutes');
   }
 
   private async checkPendingJobs() {
@@ -273,13 +293,10 @@ export class JobScheduler {
       }
 
       // Get user's service accounts
-      const accounts = await db
-        .select()
-        .from(serviceAccounts)
-        .where(and(
-          eq(serviceAccounts.userId, jobData.userId),
-          eq(serviceAccounts.isActive, true)
-        ));
+      // Get service accounts sorted by least usage (load balancing)
+      const accounts = await quotaMonitoringService.getServiceAccountsByUsage(jobData.userId);
+
+      console.log(`🔄 Load balancing: Using ${accounts.length} service accounts sorted by usage`);
 
       if (accounts.length === 0) {
         await db
@@ -627,6 +644,45 @@ export class JobScheduler {
     } catch (error) {
       console.error('❌ Error testing daily quota report:', error);
       throw error;
+    }
+  }
+  async testQuotaAlert(testEmail: string, alertType: 'warning' | 'critical' | 'exhausted' = 'warning'): Promise<boolean> {
+    console.log(`🧪 Testing quota alert (${alertType}) for ${testEmail}...`);
+    
+    const testData = {
+      warning: { usage: 165, percentage: 82 },
+      critical: { usage: 192, percentage: 96 },
+      exhausted: { usage: 200, percentage: 100 }
+    };
+    
+    const data = testData[alertType];
+    const serviceAccountName = 'Test Service Account';
+    const quotaLimit = 200;
+    
+    const subjects = {
+      warning: `⚠️ Quota Warning - ${serviceAccountName} (${data.percentage}% used)`,
+      critical: `🚨 Quota Critical - ${serviceAccountName} (${data.percentage}% used)`,
+      exhausted: `🛑 Quota Exhausted - ${serviceAccountName} (${data.percentage}% used)`
+    };
+    
+    console.log(`📊 Test quota alert data: ${data.usage}/${quotaLimit} (${data.percentage}%)`);
+    
+    try {
+      const result = await emailService.sendQuotaAlert(
+        testEmail,
+        'Test User',
+        serviceAccountName,
+        data.usage,
+        quotaLimit,
+        data.percentage,
+        alertType,
+        subjects[alertType]
+      );
+      console.log(`✅ Test quota alert result: ${result}`);
+      return result;
+    } catch (error) {
+      console.error('❌ Test quota alert failed:', error);
+      return false;
     }
   }
 }

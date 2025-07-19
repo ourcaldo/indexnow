@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quota Alert - {{serviceAccountName}}</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8fafc;
+            line-height: 1.6;
+            color: #334155;
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+        }
+        
+        .brand-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+        
+        .content {
+            padding: 40px 30px;
+        }
+        
+        .alert-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+        
+        .alert-warning {
+            background-color: #fef3c7;
+            color: #d97706;
+        }
+        
+        .alert-critical {
+            background-color: #fee2e2;
+            color: #dc2626;
+        }
+        
+        .alert-exhausted {
+            background-color: #f3f4f6;
+            color: #6b7280;
+        }
+        
+        .greeting {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-align: center;
+            color: #1e293b;
+        }
+        
+        .message {
+            font-size: 16px;
+            margin-bottom: 30px;
+            text-align: center;
+            color: #475569;
+        }
+        
+        .quota-info {
+            background-color: #f8fafc;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            border-left: 4px solid #f97316;
+        }
+        
+        .quota-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #1e293b;
+            text-align: center;
+        }
+        
+        .quota-row {
+            display: table;
+            width: 100%;
+            padding: 12px 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+        
+        .quota-row:last-child {
+            border-bottom: none;
+        }
+        
+        .quota-label {
+            display: table-cell;
+            font-weight: 600;
+            color: #1e293b;
+            width: 70%;
+            text-align: left;
+        }
+        
+        .quota-value {
+            display: table-cell;
+            color: #475569;
+            width: 30%;
+            text-align: right;
+            font-weight: 600;
+        }
+        
+        .progress-container {
+            margin: 20px 0;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background-color: #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f97316, #ea580c);
+            border-radius: 6px;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-text {
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-top: 8px;
+        }
+        
+        .cta {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            color: white !important;
+            text-decoration: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: transform 0.2s ease;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-1px);
+        }
+        
+        .footer {
+            background-color: #f8fafc;
+            padding: 25px 30px;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .footer-text {
+            font-size: 14px;
+            color: #64748b;
+            margin: 5px 0;
+        }
+        
+        .footer-links {
+            margin-top: 15px;
+        }
+        
+        .footer-link {
+            color: #f97316;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 14px;
+        }
+        
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <img src="{{logoUrl}}" alt="IndexNow Logo" />
+            </div>
+            <h1 class="brand-title">IndexNow</h1>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Alert Icon -->
+            <div class="alert-icon alert-{{alertType}}">
+                {{#if isWarning}}⚠️{{/if}}
+                {{#if isCritical}}🚨{{/if}}
+                {{#if isExhausted}}🛑{{/if}}
+            </div>
+            
+            <div class="greeting">Hello {{userName}}!</div>
+            
+            <div class="message">
+                {{#if isWarning}}
+                Your service account is approaching its daily quota limit. You may want to monitor usage or add additional service accounts.
+                {{/if}}
+                {{#if isCritical}}
+                Your service account is very close to reaching its daily quota limit. Consider adding more service accounts or reducing indexing volume.
+                {{/if}}
+                {{#if isExhausted}}
+                Your service account has reached its daily quota limit. New indexing requests will be processed using other available service accounts or queued for tomorrow.
+                {{/if}}
+            </div>
+
+            <!-- Quota Information -->
+            <div class="quota-info">
+                <div class="quota-title">Quota Usage Details</div>
+                
+                <div class="quota-row">
+                    <div class="quota-label">Service Account</div>
+                    <div class="quota-value">{{serviceAccountName}}</div>
+                </div>
+                
+                <div class="quota-row">
+                    <div class="quota-label">Current Usage</div>
+                    <div class="quota-value">{{currentUsage}} requests</div>
+                </div>
+                
+                <div class="quota-row">
+                    <div class="quota-label">Daily Limit</div>
+                    <div class="quota-value">{{quotaLimit}} requests</div>
+                </div>
+                
+                <div class="quota-row">
+                    <div class="quota-label">Usage Percentage</div>
+                    <div class="quota-value">{{usagePercentage}}%</div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {{usagePercentage}}%;"></div>
+                    </div>
+                    <div class="progress-text">{{usagePercentage}}% of daily quota used</div>
+                </div>
+            </div>
+
+            <!-- Call to Action -->
+            <div class="cta">
+                <a href="{{siteUrl}}/dashboard" class="cta-button">
+                    View Dashboard
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-text">
+                You're receiving this email because you have quota alerts enabled.
+            </div>
+            <div class="footer-text">
+                This is an automated message from IndexNow.
+            </div>
+            <div class="footer-links">
+                <a href="{{siteUrl}}/settings" class="footer-link">Email Preferences</a>
+                <a href="{{siteUrl}}/dashboard/service-accounts" class="footer-link">Manage Service Accounts</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

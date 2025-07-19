@@ -191,7 +191,17 @@ The application is designed to be scalable and maintainable, with clear separati
 
 ## Recent Changes (July 19, 2025)
 
-### ✅ Daily Quota Report Email Fix (Latest)
+### ✅ Load Balancing & Quota Monitoring Enhancement (Latest)
+✓ **Implemented load balancing** - Service accounts now sorted by least usage first for optimal distribution
+✓ **Added quota monitoring system** - Automated checking every 15 minutes with three alert levels (warning, critical, exhausted)
+✓ **Created quota alert emails** - Professional email templates with progress bars and detailed usage information
+✓ **Added dashboard notifications** - In-app notification system for quota alerts and system updates
+✓ **Enhanced database schema** - New tables for quota alerts and dashboard notifications with proper RLS policies
+✓ **Integrated automatic cleanup** - Daily cleanup of old notifications and alerts at 2 AM
+✓ **Successfully tested all alert types** - Confirmed delivery of warning (82%), critical (96%), and exhausted (100%) alerts to aldodkris@gmail.com
+✓ **Enhanced user preferences** - Added quota alert threshold settings and notification preferences
+
+### ✅ Daily Quota Report Email Fix (Previous)
 ✓ **Fixed placeholder rendering issue** - Daily quota report emails now properly render all placeholders instead of showing raw {{variable}} text
 ✓ **Corrected function parameters** - Fixed missing userName parameter in sendDailyQuotaReport call in job scheduler
 ✓ **Updated email template** - Changed "Detail Payment" to "Account Details" section in daily-quota-report.html template
