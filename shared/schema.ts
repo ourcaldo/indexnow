@@ -36,6 +36,9 @@ export const serviceAccounts = pgTable("indb_service_accounts", {
   serviceAccountJson: text("service_account_json").notNull(),
   accessToken: text("access_token"),
   tokenExpiresAt: timestamp("token_expires_at"),
+  accessTokenEncrypted: text("access_token_encrypted"),
+  encryptionIv: text("encryption_iv"),
+  encryptionTag: text("encryption_tag"),
 });
 
 export const indexingJobs = pgTable("indb_indexing_jobs", {
@@ -53,6 +56,8 @@ export const indexingJobs = pgTable("indb_indexing_jobs", {
   cronExpression: text("cron_expression"),
   nextRun: timestamp("next_run"),
   lastRun: timestamp("last_run"),
+  lockedAt: timestamp("locked_at"),
+  lockedBy: text("locked_by"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
