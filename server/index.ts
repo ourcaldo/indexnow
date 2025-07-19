@@ -136,6 +136,7 @@ app.use((req, res, next) => {
       log("Job scheduler initialized successfully");
       
 
+
     } catch (error) {
       console.error("Failed to initialize job scheduler:", error);
     }

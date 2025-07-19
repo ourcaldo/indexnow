@@ -196,8 +196,9 @@ The application is designed to be scalable and maintainable, with clear separati
 ✓ **Corrected function parameters** - Fixed missing userName parameter in sendDailyQuotaReport call in job scheduler
 ✓ **Updated email template** - Changed "Detail Payment" to "Account Details" section in daily-quota-report.html template
 ✓ **Enhanced data calculation** - Added proper calculation for failed URLs, completed jobs from today, and active service accounts
+✓ **Fixed email layout alignment** - Converted flexbox to table layout for proper left-right alignment in all email clients
 ✓ **Improved logging** - Added comprehensive logging for daily quota report generation and email sending
-✓ **Successfully tested** - Confirmed email delivery to aldodkris@gmail.com with proper data rendering
+✓ **Successfully tested** - Confirmed email delivery to aldodkris@gmail.com with proper data rendering and layout alignment
 
 ### 🔧 Critical Fixes and Feature Enhancements (Previous)
 ✓ **Fixed access token encryption error** - Updated crypto service to use CBC mode instead of deprecated GCM methods
