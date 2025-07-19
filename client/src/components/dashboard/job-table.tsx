@@ -79,14 +79,20 @@ export default function JobTable({ limit }: JobTableProps) {
     },
   });
 
-  // Handle different response types
-  const jobs = Array.isArray(jobsResponse) 
-    ? jobsResponse 
-    : (jobsResponse as PaginatedJobsResponse)?.jobs || [];
+  // Handle different response types - check if response has 'jobs' property (paginated) or is array (non-paginated)
+  const isPaginatedResponse = jobsResponse && !Array.isArray(jobsResponse) && 'jobs' in jobsResponse;
   
-  const totalPages = Array.isArray(jobsResponse) 
-    ? 1 
-    : (jobsResponse as PaginatedJobsResponse)?.totalPages || 1;
+  const jobs = isPaginatedResponse 
+    ? (jobsResponse as PaginatedJobsResponse).jobs
+    : (jobsResponse as IndexingJob[]) || [];
+  
+  const totalPages = isPaginatedResponse 
+    ? (jobsResponse as PaginatedJobsResponse).totalPages
+    : 1;
+  
+  const total = isPaginatedResponse 
+    ? (jobsResponse as PaginatedJobsResponse).total
+    : (Array.isArray(jobsResponse) ? jobsResponse.length : 0);
 
   const updateJobMutation = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
@@ -231,6 +237,15 @@ export default function JobTable({ limit }: JobTableProps) {
       </div>
     );
   }
+
+  console.log('JobTable Debug:', { 
+    jobsResponse, 
+    isPaginatedResponse, 
+    jobs: jobs?.length, 
+    totalPages, 
+    limit,
+    currentPage 
+  });
 
   return (
     <div className="space-y-4">
