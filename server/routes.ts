@@ -184,15 +184,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Indexing jobs routes
   app.get('/api/indexing-jobs', requireAuth, async (req: any, res) => {
     try {
-      const page = parseInt(req.query.page as string) || 1;
-      const limit = parseInt(req.query.limit as string) || 20;
+      const page = parseInt(req.query.page as string);
+      const limit = parseInt(req.query.limit as string);
+      
+      // Clear caching headers to prevent 304 issues
+      res.set({
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      });
       
       // Support both paginated and non-paginated requests
-      if (req.query.page || req.query.limit) {
+      if (page && limit) {
+        console.log(`Fetching paginated jobs: page=${page}, limit=${limit}`);
         const result = await storage.getIndexingJobsWithPagination(req.user.id, page, limit);
+        console.log(`Paginated result: ${result.jobs.length} jobs, ${result.totalPages} pages`);
         res.json(result);
       } else {
+        console.log('Fetching all jobs (non-paginated)');
         const jobs = await storage.getIndexingJobs(req.user.id);
+        console.log(`Non-paginated result: ${jobs.length} jobs`);
         res.json(jobs);
       }
     } catch (error) {

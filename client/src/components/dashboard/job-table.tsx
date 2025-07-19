@@ -66,17 +66,19 @@ export default function JobTable({ limit }: JobTableProps) {
   const pageSize = 20;
 
   // Updated query to support pagination
-  const { data: jobsResponse, isLoading } = useQuery<PaginatedJobsResponse | IndexingJob[]>({
+  const { data: jobsResponse, isLoading, error } = useQuery<PaginatedJobsResponse | IndexingJob[]>({
     queryKey: ["/api/indexing-jobs", { page: limit ? undefined : currentPage, limit: limit ? undefined : pageSize }],
     queryFn: () => {
       if (limit) {
         // For dashboard widget, get all jobs and slice
         return apiRequest("GET", "/api/indexing-jobs");
       } else {
-        // For full page, use pagination
+        // For full page, use pagination  
         return apiRequest("GET", `/api/indexing-jobs?page=${currentPage}&limit=${pageSize}`);
       }
     },
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
   });
 
   // Handle different response types - check if response has 'jobs' property (paginated) or is array (non-paginated)
@@ -93,6 +95,30 @@ export default function JobTable({ limit }: JobTableProps) {
   const total = isPaginatedResponse 
     ? (jobsResponse as PaginatedJobsResponse).total
     : (Array.isArray(jobsResponse) ? jobsResponse.length : 0);
+
+  // Debug logging to understand what's happening
+  if (jobsResponse) {
+    console.log('JobTable Debug:', {
+      responseType: isPaginatedResponse ? 'paginated' : 'array',
+      jobsCount: jobs?.length,
+      totalPages,
+      total,
+      limit,
+      currentPage,
+      hasJobsProperty: 'jobs' in (jobsResponse as any),
+      isArray: Array.isArray(jobsResponse)
+    });
+  }
+
+  // Safety check to prevent render errors
+  if (!jobs || !Array.isArray(jobs)) {
+    console.warn('Jobs is not an array:', jobs);
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="text-slate-600">No jobs data available</div>
+      </div>
+    );
+  }
 
   const updateJobMutation = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
@@ -234,6 +260,15 @@ export default function JobTable({ limit }: JobTableProps) {
     return (
       <div className="flex items-center justify-center p-8">
         <div className="text-slate-600">Loading jobs...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    console.error('JobTable Error:', error);
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="text-red-600">Error loading jobs: {error.message}</div>
       </div>
     );
   }
