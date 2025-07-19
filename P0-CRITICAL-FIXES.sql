@@ -43,7 +43,31 @@ CREATE INDEX IF NOT EXISTS idx_security_events_timestamp ON indb_security_events
 CREATE INDEX IF NOT EXISTS idx_security_events_ip ON indb_security_events(ip_address);
 CREATE INDEX IF NOT EXISTS idx_security_events_user ON indb_security_events(user_id);
 
--- 4. ADD FOREIGN KEY CONSTRAINTS (Data integrity)
+-- 4. CLEAN UP ORPHANED RECORDS BEFORE ADDING CONSTRAINTS
+-- Remove any orphaned records that would violate foreign key constraints
+
+-- Clean up URL submissions with invalid service account references
+DELETE FROM indb_url_submissions 
+WHERE service_account_id IS NOT NULL 
+AND service_account_id NOT IN (SELECT id FROM indb_service_accounts);
+
+-- Clean up URL submissions with invalid job references
+DELETE FROM indb_url_submissions 
+WHERE job_id NOT IN (SELECT id FROM indb_indexing_jobs);
+
+-- Clean up quota usage with invalid service account references
+DELETE FROM indb_quota_usage 
+WHERE service_account_id NOT IN (SELECT id FROM indb_service_accounts);
+
+-- Clean up indexing jobs with invalid user references
+DELETE FROM indb_indexing_jobs 
+WHERE user_id NOT IN (SELECT id FROM indb_user_profiles);
+
+-- Clean up service accounts with invalid user references
+DELETE FROM indb_service_accounts 
+WHERE user_id NOT IN (SELECT id FROM indb_user_profiles);
+
+-- 5. ADD FOREIGN KEY CONSTRAINTS (Data integrity)
 -- These ensure referential integrity and prevent orphaned records
 -- Using DO blocks to handle existing constraints gracefully
 
@@ -102,11 +126,11 @@ BEGIN
     END IF;
 END $$;
 
--- 5. ADD CONNECTION POOL LIMITS (Prevent connection exhaustion)
+-- 6. ADD CONNECTION POOL LIMITS (Prevent connection exhaustion)
 -- Note: This is for information - actual connection pool limits are set in application config
 -- Max connections recommended: 10-20 for development, 50-100 for production
 
--- 6. ADD DATA VALIDATION CONSTRAINTS
+-- 7. ADD DATA VALIDATION CONSTRAINTS
 -- Ensure data quality and prevent invalid data
 DO $$
 BEGIN
@@ -141,7 +165,7 @@ BEGIN
     END IF;
 END $$;
 
--- 7. SECURITY EVENT CLEANUP (Prevent table bloat)
+-- 8. SECURITY EVENT CLEANUP (Prevent table bloat)
 -- Create a function to clean up old security events (older than 90 days)
 CREATE OR REPLACE FUNCTION cleanup_old_security_events()
 RETURNS void AS $$
@@ -160,7 +184,7 @@ $$ LANGUAGE plpgsql;
 -- Schedule cleanup to run daily at 2 AM (you can set this up in Supabase cron extension)
 -- SELECT cron.schedule('cleanup-security-events', '0 2 * * *', 'SELECT cleanup_old_security_events();');
 
--- 8. ADD UNIQUE CONSTRAINTS (Prevent duplicates)
+-- 9. ADD UNIQUE CONSTRAINTS (Prevent duplicates)
 -- Prevent duplicate quota usage entries per service account per day
 DO $$
 BEGIN
@@ -185,7 +209,7 @@ BEGIN
     END IF;
 END $$;
 
--- 9. ADD AUDIT TRIGGERS (Optional - for advanced monitoring)
+-- 10. ADD AUDIT TRIGGERS (Optional - for advanced monitoring)
 -- Create updated_at trigger function
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
@@ -229,7 +253,7 @@ BEGIN
     END IF;
 END $$;
 
--- 10. GRANT PROPER PERMISSIONS (Security)
+-- 11. GRANT PROPER PERMISSIONS (Security)
 -- Ensure authenticated users can only access their own data
 -- Note: Supabase RLS (Row Level Security) should be enabled for these tables
 
