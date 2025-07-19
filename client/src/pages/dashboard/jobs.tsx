@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import JobTable from "@/components/dashboard/job-table";
+import SimpleJobTable from "@/components/dashboard/simple-job-table";
 import { Briefcase } from "lucide-react";
 
 export default function Jobs() {
@@ -22,7 +22,7 @@ export default function Jobs() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <JobTable />
+          <SimpleJobTable />
         </CardContent>
       </Card>
     </div>

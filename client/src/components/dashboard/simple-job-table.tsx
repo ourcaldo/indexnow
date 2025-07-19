@@ -14,13 +14,6 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -40,48 +33,33 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { IndexingJob } from "@shared/schema";
 import { useWebSocket } from "@/hooks/useWebSocket";
-import { Eye, MoreHorizontal, Pause, Play, Trash2, Filter, ChevronLeft, ChevronRight } from "lucide-react";
+import { Eye, MoreHorizontal, Pause, Play, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 
-interface JobTableProps {
+interface SimpleJobTableProps {
   limit?: number;
 }
 
-interface PaginatedJobsResponse {
-  jobs: IndexingJob[];
-  total: number;
-  totalPages: number;
-}
-
-export default function JobTable({ limit }: JobTableProps) {
-  const [statusFilter, setStatusFilter] = useState<string>("all");
+export default function SimpleJobTable({ limit }: SimpleJobTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedJobs, setSelectedJobs] = useState<string[]>([]);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
-  // Initialize WebSocket for real-time updates
   useWebSocket();
 
   const pageSize = 20;
 
-  // Simple approach - get all jobs and handle pagination in frontend
-  const { data: allJobs, isLoading, error } = useQuery<IndexingJob[]>({
+  const { data: jobs = [], isLoading, error } = useQuery<IndexingJob[]>({
     queryKey: ["/api/indexing-jobs"],
     queryFn: () => apiRequest("GET", "/api/indexing-jobs"),
   });
 
-  const jobs = allJobs || [];
-  
   // Client-side pagination
-  const filteredJobs = jobs.filter(job => 
-    statusFilter === "all" || job.status === statusFilter
-  );
-  
-  const totalPages = limit ? 1 : Math.ceil(filteredJobs.length / pageSize);
+  const totalPages = limit ? 1 : Math.ceil(jobs.length / pageSize);
   const startIndex = limit ? 0 : (currentPage - 1) * pageSize;
   const endIndex = limit ? limit : startIndex + pageSize;
-  const displayJobs = filteredJobs.slice(startIndex, endIndex);
+  const displayJobs = jobs.slice(startIndex, endIndex);
 
   const updateJobMutation = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
@@ -146,8 +124,6 @@ export default function JobTable({ limit }: JobTableProps) {
     },
   });
 
-
-
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
       setSelectedJobs(displayJobs.map(job => job.id));
@@ -172,18 +148,16 @@ export default function JobTable({ limit }: JobTableProps) {
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      pending: { variant: "secondary" as const, color: "text-amber-700 bg-amber-100" },
-      running: { variant: "default" as const, color: "text-blue-700 bg-blue-100" },
-      completed: { variant: "default" as const, color: "text-emerald-700 bg-emerald-100" },
-      failed: { variant: "destructive" as const, color: "text-red-700 bg-red-100" },
-      paused: { variant: "secondary" as const, color: "text-slate-700 bg-slate-100" },
-      cancelled: { variant: "secondary" as const, color: "text-slate-700 bg-slate-100" },
+      pending: "text-amber-700 bg-amber-100",
+      running: "text-blue-700 bg-blue-100",
+      completed: "text-emerald-700 bg-emerald-100",
+      failed: "text-red-700 bg-red-100",
+      paused: "text-slate-700 bg-slate-100",
+      cancelled: "text-slate-700 bg-slate-100",
     };
 
-    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.pending;
-    
     return (
-      <Badge className={config.color}>
+      <Badge className={statusConfig[status as keyof typeof statusConfig] || statusConfig.pending}>
         {status.charAt(0).toUpperCase() + status.slice(1)}
       </Badge>
     );
@@ -226,40 +200,16 @@ export default function JobTable({ limit }: JobTableProps) {
   if (error) {
     return (
       <div className="flex items-center justify-center p-8">
-        <div className="text-red-600">Error loading jobs: {error.message}</div>
+        <div className="text-red-600">Error loading jobs</div>
       </div>
     );
   }
 
-
-
   return (
     <div className="space-y-4">
-      {/* Controls */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          {!limit && (
-            <div className="flex items-center space-x-2">
-              <Filter className="h-4 w-4 text-slate-600" />
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-32">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Status</SelectItem>
-                  <SelectItem value="pending">Pending</SelectItem>
-                  <SelectItem value="running">Running</SelectItem>
-                  <SelectItem value="completed">Completed</SelectItem>
-                  <SelectItem value="failed">Failed</SelectItem>
-                  <SelectItem value="paused">Paused</SelectItem>
-                  <SelectItem value="cancelled">Cancelled</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          )}
-        </div>
-        
-        {!limit && selectedJobs.length > 0 && (
+      {/* Bulk Delete Button */}
+      {!limit && selectedJobs.length > 0 && (
+        <div className="flex justify-end">
           <Button 
             variant="destructive" 
             size="sm"
@@ -269,8 +219,8 @@ export default function JobTable({ limit }: JobTableProps) {
             <Trash2 className="h-4 w-4 mr-2" />
             Delete Selected ({selectedJobs.length})
           </Button>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Table */}
       <div className="border rounded-lg overflow-hidden">

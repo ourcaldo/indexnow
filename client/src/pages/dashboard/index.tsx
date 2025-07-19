@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import StatsCard from "@/components/dashboard/stats-card";
-import JobTable from "@/components/dashboard/job-table";
+import SimpleJobTable from "@/components/dashboard/simple-job-table";
 import { 
   TrendingUp, 
   Briefcase, 
@@ -214,7 +214,7 @@ export default function Dashboard() {
           </Link>
         </CardHeader>
         <CardContent>
-          <JobTable limit={5} />
+          <SimpleJobTable limit={5} />
         </CardContent>
       </Card>
     </div>
