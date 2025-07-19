@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthContextProvider } from "@/components/auth/auth-provider";
 import { useAuth } from "@/hooks/use-auth";
+import NavigationWrapper from "@/components/layout/navigation-wrapper";
 import NotFound from "@/pages/not-found";
 import Login from "@/pages/auth/login";
 import Signup from "@/pages/auth/signup";
@@ -24,53 +25,55 @@ function Router() {
   }
 
   return (
-    <Switch>
-      <Route path="/login">
-        {user ? <Redirect to="/dashboard" /> : <Login />}
-      </Route>
-      <Route path="/signup">
-        {user ? <Redirect to="/dashboard" /> : <Signup />}
-      </Route>
-      <Route path="/dashboard">
-        {!user ? <Redirect to="/login" /> : (
-          <DashboardLayout>
-            <Dashboard />
-          </DashboardLayout>
-        )}
-      </Route>
-      <Route path="/dashboard/indexnow">
-        {!user ? <Redirect to="/login" /> : (
-          <DashboardLayout>
-            <NewIndex />
-          </DashboardLayout>
-        )}
-      </Route>
-      <Route path="/dashboard/jobs">
-        {!user ? <Redirect to="/login" /> : (
-          <DashboardLayout>
-            <Jobs />
-          </DashboardLayout>
-        )}
-      </Route>
-      <Route path="/dashboard/jobs/:id">
-        {!user ? <Redirect to="/login" /> : (
-          <DashboardLayout>
-            <JobDetail />
-          </DashboardLayout>
-        )}
-      </Route>
-      <Route path="/dashboard/settings">
-        {!user ? <Redirect to="/login" /> : (
-          <DashboardLayout>
-            <Settings />
-          </DashboardLayout>
-        )}
-      </Route>
-      <Route path="/">
-        {user ? <Redirect to="/dashboard" /> : <Redirect to="/login" />}
-      </Route>
-      <Route component={NotFound} />
-    </Switch>
+    <NavigationWrapper>
+      <Switch>
+        <Route path="/login">
+          {user ? <Redirect to="/dashboard" /> : <Login />}
+        </Route>
+        <Route path="/signup">
+          {user ? <Redirect to="/dashboard" /> : <Signup />}
+        </Route>
+        <Route path="/dashboard">
+          {!user ? <Redirect to="/login" /> : (
+            <DashboardLayout>
+              <Dashboard />
+            </DashboardLayout>
+          )}
+        </Route>
+        <Route path="/dashboard/indexnow">
+          {!user ? <Redirect to="/login" /> : (
+            <DashboardLayout>
+              <NewIndex />
+            </DashboardLayout>
+          )}
+        </Route>
+        <Route path="/dashboard/jobs">
+          {!user ? <Redirect to="/login" /> : (
+            <DashboardLayout>
+              <Jobs />
+            </DashboardLayout>
+          )}
+        </Route>
+        <Route path="/dashboard/jobs/:id">
+          {!user ? <Redirect to="/login" /> : (
+            <DashboardLayout>
+              <JobDetail />
+            </DashboardLayout>
+          )}
+        </Route>
+        <Route path="/dashboard/settings">
+          {!user ? <Redirect to="/login" /> : (
+            <DashboardLayout>
+              <Settings />
+            </DashboardLayout>
+            )}
+        </Route>
+        <Route path="/">
+          {user ? <Redirect to="/dashboard" /> : <Redirect to="/login" />}
+        </Route>
+        <Route component={NotFound} />
+      </Switch>
+    </NavigationWrapper>
   );
 }
 

@@ -53,8 +53,6 @@ export default function SimpleJobTable({ limit }: SimpleJobTableProps) {
   const { data: jobs = [], isLoading, error } = useQuery<IndexingJob[]>({
     queryKey: ["/api/indexing-jobs"],
     queryFn: () => apiRequest("GET", "/api/indexing-jobs"),
-    staleTime: 30000, // Cache for 30 seconds
-    retry: 1,
   });
 
   // Client-side pagination with safety checks
@@ -201,12 +199,21 @@ export default function SimpleJobTable({ limit }: SimpleJobTableProps) {
   }
 
   if (error) {
+    console.error('Job table error:', error);
     return (
       <div className="flex items-center justify-center p-8">
         <div className="text-red-600">Error loading jobs</div>
       </div>
     );
   }
+
+  // Debug log
+  console.log('SimpleJobTable render:', { 
+    jobsLength: safeJobs.length, 
+    displayJobsLength: displayJobs.length,
+    limit,
+    currentPage 
+  });
 
   return (
     <div className="space-y-4">

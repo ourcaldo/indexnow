@@ -42,26 +42,15 @@ export default function IndexNow() {
   const queryClient = useQueryClient();
   const [, setLocation] = useLocation();
 
-  // Fetch existing jobs to generate automatic job names
-  const { data: existingJobs } = useQuery({
-    queryKey: ["/api/indexing-jobs"],
-  });
-
-  // Generate automatic job name if none is provided
+  // Generate automatic job name
   useEffect(() => {
-    if (!jobName && existingJobs) {
-      const jobNumbers = existingJobs
-        .filter((job: any) => job.name.startsWith('#Job-'))
-        .map((job: any) => {
-          const match = job.name.match(/^#Job-(\d+)$/);
-          return match ? parseInt(match[1], 10) : 0;
-        })
-        .sort((a: number, b: number) => b - a);
-      
-      const nextNumber = jobNumbers.length > 0 ? jobNumbers[0] + 1 : 1;
-      setJobName(`#Job-${nextNumber}`);
+    if (!jobName) {
+      // Simple timestamp-based job name to avoid conflicts
+      const timestamp = Date.now();
+      const randomNum = Math.floor(Math.random() * 1000);
+      setJobName(`#Job-${timestamp}-${randomNum}`);
     }
-  }, [existingJobs, jobName]);
+  }, [jobName]);
 
   const createJobFromUrlsMutation = useMutation({
     mutationFn: async (data: {
