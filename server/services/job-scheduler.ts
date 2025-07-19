@@ -529,6 +529,8 @@ export class JobScheduler {
 
   async sendDailyQuotaReports() {
     try {
+      console.log('🔄 Starting daily quota reports...');
+      
       // Get all users who have daily reports enabled
       const users = await db
         .select({
@@ -538,27 +540,93 @@ export class JobScheduler {
         })
         .from(userProfiles)
         .where(eq(userProfiles.emailDailyReports, true));
+      
+      console.log(`📧 Found ${users.length} users with daily reports enabled`);
 
       for (const user of users) {
         // Get dashboard stats for the user
         const storage = await import('../storage');
         const stats = await storage.storage.getDashboardStats(user.id);
         
-        // Send daily quota report
-        await emailService.sendDailyQuotaReport(user.email, {
+        // Get user's full name for email
+        const userProfile = await storage.storage.getUserProfile(user.id);
+        const userName = userProfile?.fullName || userProfile?.email?.split('@')[0] || 'User';
+        
+        // Get additional stats needed for the report
+        const userJobs = await storage.storage.getIndexingJobs(user.id);
+        const userAccounts = await storage.storage.getServiceAccounts(user.id);
+        
+        // Calculate failed URLs (total processed - successful)
+        const totalProcessed = userJobs.reduce((sum, job) => sum + (job.processedUrls || 0), 0);
+        const totalFailedUrls = totalProcessed - stats.totalUrlsIndexed;
+        
+        // Calculate completed jobs from today
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const completedJobs = userJobs.filter(job => 
+          job.status === 'completed' && 
+          job.updatedAt && 
+          new Date(job.updatedAt) >= today
+        ).length;
+        
+        // Calculate active service accounts
+        const activeServiceAccounts = userAccounts.filter(account => account.isActive).length;
+        
+        const reportData = {
           totalSuccessfulUrls: stats.totalUrlsIndexed,
-          totalFailedUrls: 0, // You might want to calculate this
-          completedJobs: 0, // Calculate from today's completed jobs
+          totalFailedUrls: Math.max(0, totalFailedUrls),
+          completedJobs,
           activeJobs: stats.activeJobs,
-          totalServiceAccounts: 1, // Calculate actual count
-          activeServiceAccounts: 1, // Calculate actual count
+          totalServiceAccounts: userAccounts.length,
+          activeServiceAccounts,
           quotaUsed: stats.apiQuotaUsed,
           quotaLimit: stats.apiQuotaLimit,
           quotaPercentage: Math.min(100, (stats.apiQuotaUsed / stats.apiQuotaLimit) * 100)
-        });
+        };
+        
+        console.log(`📊 Sending daily report to ${user.email} with data:`, JSON.stringify(reportData, null, 2));
+        
+        // Send daily quota report
+        const emailResult = await emailService.sendDailyQuotaReport(user.email, userName, reportData);
+        
+        console.log(`✅ Email sent to ${user.email}:`, emailResult);
       }
+      
+      console.log('🎯 Daily quota reports completed successfully');
     } catch (error) {
       console.error('Error sending daily quota reports:', error);
+    }
+  }
+
+  // Test method to send daily quota report to a specific email
+  async testDailyQuotaReport(testEmail: string) {
+    try {
+      console.log(`🧪 Testing daily quota report for ${testEmail}...`);
+      
+      const userName = 'Test User';
+      
+      // Mock stats for testing
+      const mockStats = {
+        totalSuccessfulUrls: 150,
+        totalFailedUrls: 5,
+        completedJobs: 3,
+        activeJobs: 2,
+        totalServiceAccounts: 2,
+        activeServiceAccounts: 1,
+        quotaUsed: 45,
+        quotaLimit: 200,
+        quotaPercentage: 22.5
+      };
+      
+      console.log('📊 Test data for email:', JSON.stringify(mockStats, null, 2));
+      
+      const result = await emailService.sendDailyQuotaReport(testEmail, userName, mockStats);
+      
+      console.log(`✅ Test email result:`, result);
+      return result;
+    } catch (error) {
+      console.error('❌ Error testing daily quota report:', error);
+      throw error;
     }
   }
 }

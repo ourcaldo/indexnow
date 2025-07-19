@@ -518,6 +518,92 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Test daily quota report email endpoint (accessible via GET for browser testing)
+  app.get('/test-daily-email', async (req: any, res) => {
+    try {
+      console.log('🧪 Testing daily quota report email via simple GET...');
+      
+      const testEmail = req.query.email || 'aldodkris@gmail.com';
+      
+      // Use the job scheduler test method
+      const result = await jobScheduler.testDailyQuotaReport(testEmail);
+      
+      res.json({ 
+        success: result,
+        message: result ? `Daily report sent successfully to ${testEmail}` : 'Failed to send daily report',
+        email: testEmail
+      });
+    } catch (error) {
+      console.error('❌ Daily report test error:', error);
+      res.status(500).json({ error: 'Daily report test failed', details: error.message });
+    }
+  });
+
+  // Test daily quota report email endpoint
+  app.post('/api/test-daily-report', requireAuth, async (req: any, res) => {
+    try {
+      console.log('Testing daily quota report email...');
+      
+      // Get user profile for name
+      const userProfile = await storage.getUserProfile(req.user.id);
+      const userName = userProfile?.fullName || userProfile?.email?.split('@')[0] || 'User';
+      
+      // Get actual user stats
+      const stats = await storage.getDashboardStats(req.user.id);
+      const userJobs = await storage.getIndexingJobs(req.user.id);
+      const userAccounts = await storage.getServiceAccounts(req.user.id);
+      
+      // Calculate additional stats
+      const totalProcessed = userJobs.reduce((sum, job) => sum + (job.processedUrls || 0), 0);
+      const totalFailedUrls = Math.max(0, totalProcessed - stats.totalUrlsIndexed);
+      
+      // Calculate completed jobs from today  
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const completedJobs = userJobs.filter(job => 
+        job.status === 'completed' && 
+        job.updatedAt && 
+        new Date(job.updatedAt) >= today
+      ).length;
+      
+      const activeServiceAccounts = userAccounts.filter(account => account.isActive).length;
+      
+      // Use provided email or default to user's email
+      const testEmail = req.body.email || req.user.email;
+      
+      const testResult = await emailService.sendDailyQuotaReport(testEmail, userName, {
+        totalSuccessfulUrls: stats.totalUrlsIndexed,
+        totalFailedUrls,
+        completedJobs,
+        activeJobs: stats.activeJobs,
+        totalServiceAccounts: userAccounts.length,
+        activeServiceAccounts,
+        quotaUsed: stats.apiQuotaUsed,
+        quotaLimit: stats.apiQuotaLimit,
+        quotaPercentage: Math.min(100, (stats.apiQuotaUsed / stats.apiQuotaLimit) * 100)
+      });
+      
+      res.json({ 
+        success: testResult,
+        message: testResult ? `Daily report sent successfully to ${testEmail}` : 'Failed to send daily report',
+        testData: {
+          userName,
+          totalSuccessfulUrls: stats.totalUrlsIndexed,
+          totalFailedUrls,
+          completedJobs,
+          activeJobs: stats.activeJobs,
+          totalServiceAccounts: userAccounts.length,
+          activeServiceAccounts,
+          quotaUsed: stats.apiQuotaUsed,
+          quotaLimit: stats.apiQuotaLimit
+        }
+      });
+    } catch (error) {
+      console.error('Daily report test error:', error);
+      res.status(500).json({ error: 'Daily report test failed', details: error.message });
+    }
+  });
+
   const httpServer = createServer(app);
   
   // Setup WebSocket server for real-time updates
