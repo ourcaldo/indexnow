@@ -191,6 +191,18 @@ export class EmailService {
     alertType: 'warning' | 'critical' | 'exhausted',
     subject: string
   ): Promise<boolean> {
+    const alertIcons = {
+      warning: '⚠️',
+      critical: '🚨',
+      exhausted: '🛑'
+    };
+    
+    const alertMessages = {
+      warning: 'Your service account is approaching its daily quota limit. You may want to monitor usage or add additional service accounts.',
+      critical: 'Your service account is very close to reaching its daily quota limit. Consider adding more service accounts or reducing indexing volume.',
+      exhausted: 'Your service account has reached its daily quota limit. New indexing requests will be processed using other available service accounts or queued for tomorrow.'
+    };
+
     const data = {
       userName,
       serviceAccountName,
@@ -198,9 +210,8 @@ export class EmailService {
       quotaLimit,
       usagePercentage,
       alertType,
-      isWarning: alertType === 'warning',
-      isCritical: alertType === 'critical',
-      isExhausted: alertType === 'exhausted',
+      alertIcon: alertIcons[alertType],
+      alertMessage: alertMessages[alertType],
       logoUrl: process.env.LOGO_URL || '',
       siteUrl: process.env.SITE_URL || 'http://localhost:5000',
       timestamp: new Date().toLocaleDateString('en-US', {
