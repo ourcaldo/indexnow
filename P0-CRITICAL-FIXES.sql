@@ -45,25 +45,62 @@ CREATE INDEX IF NOT EXISTS idx_security_events_user ON indb_security_events(user
 
 -- 4. ADD FOREIGN KEY CONSTRAINTS (Data integrity)
 -- These ensure referential integrity and prevent orphaned records
-ALTER TABLE indb_service_accounts 
-ADD CONSTRAINT IF NOT EXISTS fk_service_accounts_user 
-FOREIGN KEY (user_id) REFERENCES indb_user_profiles(id) ON DELETE CASCADE;
+-- Using DO blocks to handle existing constraints gracefully
 
-ALTER TABLE indb_indexing_jobs 
-ADD CONSTRAINT IF NOT EXISTS fk_indexing_jobs_user 
-FOREIGN KEY (user_id) REFERENCES indb_user_profiles(id) ON DELETE CASCADE;
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.table_constraints 
+                   WHERE constraint_name = 'fk_service_accounts_user' 
+                   AND table_name = 'indb_service_accounts') THEN
+        ALTER TABLE indb_service_accounts 
+        ADD CONSTRAINT fk_service_accounts_user 
+        FOREIGN KEY (user_id) REFERENCES indb_user_profiles(id) ON DELETE CASCADE;
+    END IF;
+END $$;
 
-ALTER TABLE indb_url_submissions 
-ADD CONSTRAINT IF NOT EXISTS fk_url_submissions_job 
-FOREIGN KEY (job_id) REFERENCES indb_indexing_jobs(id) ON DELETE CASCADE;
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.table_constraints 
+                   WHERE constraint_name = 'fk_indexing_jobs_user' 
+                   AND table_name = 'indb_indexing_jobs') THEN
+        ALTER TABLE indb_indexing_jobs 
+        ADD CONSTRAINT fk_indexing_jobs_user 
+        FOREIGN KEY (user_id) REFERENCES indb_user_profiles(id) ON DELETE CASCADE;
+    END IF;
+END $$;
 
-ALTER TABLE indb_url_submissions 
-ADD CONSTRAINT IF NOT EXISTS fk_url_submissions_service_account 
-FOREIGN KEY (service_account_id) REFERENCES indb_service_accounts(id) ON DELETE SET NULL;
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.table_constraints 
+                   WHERE constraint_name = 'fk_url_submissions_job' 
+                   AND table_name = 'indb_url_submissions') THEN
+        ALTER TABLE indb_url_submissions 
+        ADD CONSTRAINT fk_url_submissions_job 
+        FOREIGN KEY (job_id) REFERENCES indb_indexing_jobs(id) ON DELETE CASCADE;
+    END IF;
+END $$;
 
-ALTER TABLE indb_quota_usage 
-ADD CONSTRAINT IF NOT EXISTS fk_quota_usage_service_account 
-FOREIGN KEY (service_account_id) REFERENCES indb_service_accounts(id) ON DELETE CASCADE;
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.table_constraints 
+                   WHERE constraint_name = 'fk_url_submissions_service_account' 
+                   AND table_name = 'indb_url_submissions') THEN
+        ALTER TABLE indb_url_submissions 
+        ADD CONSTRAINT fk_url_submissions_service_account 
+        FOREIGN KEY (service_account_id) REFERENCES indb_service_accounts(id) ON DELETE SET NULL;
+    END IF;
+END $$;
+
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.table_constraints 
+                   WHERE constraint_name = 'fk_quota_usage_service_account' 
+                   AND table_name = 'indb_quota_usage') THEN
+        ALTER TABLE indb_quota_usage 
+        ADD CONSTRAINT fk_quota_usage_service_account 
+        FOREIGN KEY (service_account_id) REFERENCES indb_service_accounts(id) ON DELETE CASCADE;
+    END IF;
+END $$;
 
 -- 5. ADD CONNECTION POOL LIMITS (Prevent connection exhaustion)
 -- Note: This is for information - actual connection pool limits are set in application config
@@ -71,17 +108,38 @@ FOREIGN KEY (service_account_id) REFERENCES indb_service_accounts(id) ON DELETE 
 
 -- 6. ADD DATA VALIDATION CONSTRAINTS
 -- Ensure data quality and prevent invalid data
-ALTER TABLE indb_service_accounts 
-ADD CONSTRAINT IF NOT EXISTS chk_daily_quota_positive 
-CHECK (daily_quota_limit > 0 AND daily_quota_limit <= 1000);
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.table_constraints 
+                   WHERE constraint_name = 'chk_daily_quota_positive' 
+                   AND table_name = 'indb_service_accounts') THEN
+        ALTER TABLE indb_service_accounts 
+        ADD CONSTRAINT chk_daily_quota_positive 
+        CHECK (daily_quota_limit > 0 AND daily_quota_limit <= 1000);
+    END IF;
+END $$;
 
-ALTER TABLE indb_service_accounts 
-ADD CONSTRAINT IF NOT EXISTS chk_minute_quota_positive 
-CHECK (per_minute_quota_limit > 0 AND per_minute_quota_limit <= 600);
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.table_constraints 
+                   WHERE constraint_name = 'chk_minute_quota_positive' 
+                   AND table_name = 'indb_service_accounts') THEN
+        ALTER TABLE indb_service_accounts 
+        ADD CONSTRAINT chk_minute_quota_positive 
+        CHECK (per_minute_quota_limit > 0 AND per_minute_quota_limit <= 600);
+    END IF;
+END $$;
 
-ALTER TABLE indb_quota_usage 
-ADD CONSTRAINT IF NOT EXISTS chk_requests_count_positive 
-CHECK (requests_count >= 0);
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.table_constraints 
+                   WHERE constraint_name = 'chk_requests_count_positive' 
+                   AND table_name = 'indb_quota_usage') THEN
+        ALTER TABLE indb_quota_usage 
+        ADD CONSTRAINT chk_requests_count_positive 
+        CHECK (requests_count >= 0);
+    END IF;
+END $$;
 
 -- 7. SECURITY EVENT CLEANUP (Prevent table bloat)
 -- Create a function to clean up old security events (older than 90 days)
@@ -104,14 +162,28 @@ $$ LANGUAGE plpgsql;
 
 -- 8. ADD UNIQUE CONSTRAINTS (Prevent duplicates)
 -- Prevent duplicate quota usage entries per service account per day
-ALTER TABLE indb_quota_usage 
-ADD CONSTRAINT IF NOT EXISTS uk_quota_usage_service_account_date 
-UNIQUE (service_account_id, date);
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.table_constraints 
+                   WHERE constraint_name = 'uk_quota_usage_service_account_date' 
+                   AND table_name = 'indb_quota_usage') THEN
+        ALTER TABLE indb_quota_usage 
+        ADD CONSTRAINT uk_quota_usage_service_account_date 
+        UNIQUE (service_account_id, date);
+    END IF;
+END $$;
 
 -- Prevent duplicate service account emails per user
-ALTER TABLE indb_service_accounts 
-ADD CONSTRAINT IF NOT EXISTS uk_service_accounts_user_email 
-UNIQUE (user_id, client_email);
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.table_constraints 
+                   WHERE constraint_name = 'uk_service_accounts_user_email' 
+                   AND table_name = 'indb_service_accounts') THEN
+        ALTER TABLE indb_service_accounts 
+        ADD CONSTRAINT uk_service_accounts_user_email 
+        UNIQUE (user_id, client_email);
+    END IF;
+END $$;
 
 -- 9. ADD AUDIT TRIGGERS (Optional - for advanced monitoring)
 -- Create updated_at trigger function
@@ -124,20 +196,38 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Apply triggers to tables that need automatic updated_at updates
-CREATE TRIGGER IF NOT EXISTS trigger_update_service_accounts_updated_at
-    BEFORE UPDATE ON indb_service_accounts
-    FOR EACH ROW
-    EXECUTE FUNCTION update_updated_at_column();
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.triggers 
+                   WHERE trigger_name = 'trigger_update_service_accounts_updated_at') THEN
+        CREATE TRIGGER trigger_update_service_accounts_updated_at
+            BEFORE UPDATE ON indb_service_accounts
+            FOR EACH ROW
+            EXECUTE FUNCTION update_updated_at_column();
+    END IF;
+END $$;
 
-CREATE TRIGGER IF NOT EXISTS trigger_update_indexing_jobs_updated_at
-    BEFORE UPDATE ON indb_indexing_jobs
-    FOR EACH ROW
-    EXECUTE FUNCTION update_updated_at_column();
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.triggers 
+                   WHERE trigger_name = 'trigger_update_indexing_jobs_updated_at') THEN
+        CREATE TRIGGER trigger_update_indexing_jobs_updated_at
+            BEFORE UPDATE ON indb_indexing_jobs
+            FOR EACH ROW
+            EXECUTE FUNCTION update_updated_at_column();
+    END IF;
+END $$;
 
-CREATE TRIGGER IF NOT EXISTS trigger_update_user_profiles_updated_at
-    BEFORE UPDATE ON indb_user_profiles
-    FOR EACH ROW
-    EXECUTE FUNCTION update_updated_at_column();
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.triggers 
+                   WHERE trigger_name = 'trigger_update_user_profiles_updated_at') THEN
+        CREATE TRIGGER trigger_update_user_profiles_updated_at
+            BEFORE UPDATE ON indb_user_profiles
+            FOR EACH ROW
+            EXECUTE FUNCTION update_updated_at_column();
+    END IF;
+END $$;
 
 -- 10. GRANT PROPER PERMISSIONS (Security)
 -- Ensure authenticated users can only access their own data
