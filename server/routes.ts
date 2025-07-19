@@ -20,7 +20,7 @@ import { assetConfig } from "./services/asset-config";
 import { emailService } from "./services/email-service";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Authentication middleware
+  // Authentication middleware with role population
   const requireAuth = async (req: any, res: any, next: any) => {
     try {
       const authHeader = req.headers.authorization;
@@ -32,6 +32,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const token = authHeader.substring(7);
       const user = await verifyAuth(token);
       req.user = user;
+      
+      // Add user role to request for role-based authorization
+      const { addUserRoleToRequest } = await import('./middleware/role-authorization');
+      await addUserRoleToRequest(req, user.id);
+      
       next();
     } catch (error) {
       SecureLogger.logSecurityEvent('AUTH_INVALID_TOKEN', { ip: req.ip, userAgent: req.get('User-Agent'), error: error.message }, req);

@@ -14,14 +14,17 @@ export function securityHeaders(req: Request, res: Response, next: NextFunction)
   // Referrer policy for privacy
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   
-  // Content Security Policy (basic for SPA)
+  // Content Security Policy (basic for SPA) - using environment variable
+  const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
+  const supabaseDomain = supabaseUrl ? new URL(supabaseUrl).origin : 'https://supabase.co';
+  
   res.setHeader('Content-Security-Policy', 
     "default-src 'self'; " +
     "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
     "style-src 'self' 'unsafe-inline'; " +
     "img-src 'self' data: https:; " +
     "font-src 'self' data:; " +
-    "connect-src 'self' https://bwkasvyrzbzhcdtvsbyg.supabase.co wss://bwkasvyrzbzhcdtvsbyg.supabase.co; " +
+    `connect-src 'self' ${supabaseDomain} ${supabaseDomain.replace('https:', 'wss:')}; ` +
     "frame-ancestors 'none';"
   );
   
@@ -31,8 +34,18 @@ export function securityHeaders(req: Request, res: Response, next: NextFunction)
   next();
 }
 
-// Rate limiting for API endpoints
+// Rate limiting for API endpoints with cleanup
 const apiCallCounts = new Map<string, { count: number; resetTime: number }>();
+
+// Cleanup expired entries every 5 minutes to prevent memory leaks
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, data] of apiCallCounts.entries()) {
+    if (now > data.resetTime) {
+      apiCallCounts.delete(key);
+    }
+  }
+}, 5 * 60 * 1000);
 
 export function rateLimit(maxRequests: number = 100, windowMs: number = 15 * 60 * 1000) {
   return (req: Request, res: Response, next: NextFunction) => {
@@ -71,6 +84,13 @@ export function validateEnvironment(): void {
     'FAVICON_URL'
   ];
 
+  const recommendedEnvVars = [
+    'ENCRYPTION_KEY',
+    'MAX_DB_CONNECTIONS',
+    'DB_CONNECTION_TIMEOUT',
+    'ADMIN_EMAILS'
+  ];
+
   const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
   
   if (missingVars.length > 0) {
@@ -102,6 +122,15 @@ export function validateEnvironment(): void {
   }
   
   console.log('✅ All required environment variables are present and valid');
+  
+  // Check for recommended security variables
+  const missingRecommended = recommendedEnvVars.filter(varName => !process.env[varName]);
+  if (missingRecommended.length > 0) {
+    console.warn('⚠️  Missing recommended security environment variables:', missingRecommended);
+    console.warn('   These are required for P0 security fixes. Add them to your .env file.');
+  } else {
+    console.log('✅ All recommended security environment variables are present');
+  }
 }
 
 function isValidUrl(string: string): boolean {

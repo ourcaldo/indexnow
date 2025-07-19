@@ -54,15 +54,20 @@ export function requireSuperAdmin() {
  */
 export async function addUserRoleToRequest(req: Request, userId: string) {
   try {
-    // This will be implemented when we add role checking to auth middleware
-    // For now, this is a placeholder structure
+    const { storage } = await import('../storage');
+    const user = await storage.getUserProfile(userId);
     
-    // Example implementation:
-    // const user = await getUserById(userId);
-    // req.userRole = user.role;
-    
-    console.log(`Adding role for user ${userId} to request`);
+    if (user) {
+      (req as any).userRole = user.role;
+      console.log(`Added role '${user.role}' for user ${userId} to request`);
+    } else {
+      // Default to 'user' role if profile not found
+      (req as any).userRole = 'user';
+      console.log(`User profile not found for ${userId}, defaulting to 'user' role`);
+    }
   } catch (error) {
     console.error('Failed to add user role to request:', error);
+    // Default to 'user' role on error to prevent authorization bypass
+    (req as any).userRole = 'user';
   }
 }

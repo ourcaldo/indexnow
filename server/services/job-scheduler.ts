@@ -1,7 +1,7 @@
 import cron from 'node-cron';
 import { db } from './supabase';
 import { indexingJobs, urlSubmissions, serviceAccounts, quotaUsage, userProfiles } from '@shared/schema';
-import { eq, and, gte, lte } from 'drizzle-orm';
+import { eq, and, gte, lte, isNull, lt, or } from 'drizzle-orm';
 import { googleIndexingService } from './google-indexing';
 import { sitemapParser } from './sitemap-parser';
 import { emailService } from './email-service';
@@ -194,6 +194,27 @@ export class JobScheduler {
     try {
       console.log(`Executing job ${jobId}`);
 
+      // Implement job locking to prevent race conditions
+      const lockResult = await db
+        .update(indexingJobs)
+        .set({ 
+          lockedAt: new Date(),
+          lockedBy: 'job-scheduler'
+        })
+        .where(and(
+          eq(indexingJobs.id, jobId),
+          or(
+            isNull(indexingJobs.lockedAt),
+            lt(indexingJobs.lockedAt, new Date(Date.now() - 5 * 60 * 1000)) // Lock expired (5 minutes)
+          )
+        ))
+        .returning();
+
+      if (!lockResult.length) {
+        console.log(`Job ${jobId} is already locked or being processed`);
+        return;
+      }
+
       // Get job details
       const job = await db
         .select()
@@ -203,6 +224,11 @@ export class JobScheduler {
 
       if (!job.length) {
         console.error(`Job ${jobId} not found`);
+        // Release lock
+        await db
+          .update(indexingJobs)
+          .set({ lockedAt: null, lockedBy: null })
+          .where(eq(indexingJobs.id, jobId));
         return;
       }
 

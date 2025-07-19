@@ -68,6 +68,16 @@ export function requireAdmin(req: any, res: Response, next: NextFunction) {
 // Rate limiting per user
 const userRateLimits = new Map<string, { count: number; resetTime: number }>();
 
+// Cleanup expired user rate limit entries every 5 minutes to prevent memory leaks
+setInterval(() => {
+  const now = Date.now();
+  for (const [userId, data] of userRateLimits.entries()) {
+    if (now > data.resetTime) {
+      userRateLimits.delete(userId);
+    }
+  }
+}, 5 * 60 * 1000);
+
 export function rateLimitPerUser(maxRequests: number = 50, windowMs: number = 15 * 60 * 1000) {
   return (req: any, res: Response, next: NextFunction) => {
     const userId = req.user?.id;
