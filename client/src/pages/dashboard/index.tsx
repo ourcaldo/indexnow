@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import StatsCard from "@/components/dashboard/stats-card";
 import SimpleJobTable from "@/components/dashboard/simple-job-table";
+import ErrorBoundary from "@/components/ui/error-boundary";
 import { 
   TrendingUp, 
   Briefcase, 
@@ -214,7 +215,9 @@ export default function Dashboard() {
           </Link>
         </CardHeader>
         <CardContent>
-          <SimpleJobTable limit={5} />
+          <ErrorBoundary>
+            <SimpleJobTable limit={5} />
+          </ErrorBoundary>
         </CardContent>
       </Card>
     </div>

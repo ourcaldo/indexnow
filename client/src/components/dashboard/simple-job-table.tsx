@@ -53,13 +53,16 @@ export default function SimpleJobTable({ limit }: SimpleJobTableProps) {
   const { data: jobs = [], isLoading, error } = useQuery<IndexingJob[]>({
     queryKey: ["/api/indexing-jobs"],
     queryFn: () => apiRequest("GET", "/api/indexing-jobs"),
+    staleTime: 30000, // Cache for 30 seconds
+    retry: 1,
   });
 
-  // Client-side pagination
-  const totalPages = limit ? 1 : Math.ceil(jobs.length / pageSize);
+  // Client-side pagination with safety checks
+  const safeJobs = Array.isArray(jobs) ? jobs : [];
+  const totalPages = limit ? 1 : Math.ceil(safeJobs.length / pageSize);
   const startIndex = limit ? 0 : (currentPage - 1) * pageSize;
   const endIndex = limit ? limit : startIndex + pageSize;
-  const displayJobs = jobs.slice(startIndex, endIndex);
+  const displayJobs = safeJobs.slice(startIndex, endIndex);
 
   const updateJobMutation = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
@@ -125,7 +128,7 @@ export default function SimpleJobTable({ limit }: SimpleJobTableProps) {
   });
 
   const handleSelectAll = (checked: boolean) => {
-    if (checked) {
+    if (checked && displayJobs?.length > 0) {
       setSelectedJobs(displayJobs.map(job => job.id));
     } else {
       setSelectedJobs([]);
@@ -180,8 +183,8 @@ export default function SimpleJobTable({ limit }: SimpleJobTableProps) {
   };
 
   const getProgress = (job: IndexingJob) => {
-    if (job.totalUrls === 0) return 0;
-    return Math.round((job.processedUrls / job.totalUrls) * 100);
+    if (!job.totalUrls || job.totalUrls === 0) return 0;
+    return Math.round(((job.processedUrls || 0) / job.totalUrls) * 100);
   };
 
   const formatDate = (date: string | null) => {
@@ -252,8 +255,8 @@ export default function SimpleJobTable({ limit }: SimpleJobTableProps) {
                 </TableCell>
               </TableRow>
             ) : (
-              displayJobs.map((job) => (
-                <TableRow key={job.id}>
+              displayJobs.map((job, index) => (
+                <TableRow key={`${job.id}-${index}`}>
                   {!limit && (
                     <TableCell>
                       <Checkbox
@@ -262,23 +265,23 @@ export default function SimpleJobTable({ limit }: SimpleJobTableProps) {
                       />
                     </TableCell>
                   )}
-                  <TableCell className="font-medium">{job.name}</TableCell>
+                  <TableCell className="font-medium">{job.name || 'Untitled Job'}</TableCell>
                   <TableCell>{formatDate(job.createdAt)}</TableCell>
-                  <TableCell>{getScheduleBadge(job.schedule)}</TableCell>
+                  <TableCell>{getScheduleBadge(job.schedule || 'one-time')}</TableCell>
                   <TableCell>
                     <div className="text-sm">
-                      <div>{job.totalUrls} total</div>
+                      <div>{job.totalUrls || 0} total</div>
                       <div className="text-slate-500">
-                        {job.successfulUrls} success, {job.failedUrls} failed
+                        {job.successfulUrls || 0} success, {job.failedUrls || 0} failed
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell>{getStatusBadge(job.status)}</TableCell>
+                  <TableCell>{getStatusBadge(job.status || 'pending')}</TableCell>
                   <TableCell>
                     <div className="space-y-1">
                       <Progress value={getProgress(job)} className="h-2" />
                       <div className="text-xs text-slate-500">
-                        {job.processedUrls}/{job.totalUrls} processed
+                        {job.processedUrls || 0}/{job.totalUrls || 0} processed
                       </div>
                     </div>
                   </TableCell>
