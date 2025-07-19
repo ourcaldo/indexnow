@@ -65,60 +65,23 @@ export default function JobTable({ limit }: JobTableProps) {
 
   const pageSize = 20;
 
-  // Updated query to support pagination
-  const { data: jobsResponse, isLoading, error } = useQuery<PaginatedJobsResponse | IndexingJob[]>({
-    queryKey: ["/api/indexing-jobs", { page: limit ? undefined : currentPage, limit: limit ? undefined : pageSize }],
-    queryFn: () => {
-      if (limit) {
-        // For dashboard widget, get all jobs and slice
-        return apiRequest("GET", "/api/indexing-jobs");
-      } else {
-        // For full page, use pagination  
-        return apiRequest("GET", `/api/indexing-jobs?page=${currentPage}&limit=${pageSize}`);
-      }
-    },
-    refetchOnMount: true,
-    refetchOnWindowFocus: false,
+  // Simple approach - get all jobs and handle pagination in frontend
+  const { data: allJobs, isLoading, error } = useQuery<IndexingJob[]>({
+    queryKey: ["/api/indexing-jobs"],
+    queryFn: () => apiRequest("GET", "/api/indexing-jobs"),
   });
 
-  // Handle different response types - check if response has 'jobs' property (paginated) or is array (non-paginated)
-  const isPaginatedResponse = jobsResponse && !Array.isArray(jobsResponse) && 'jobs' in jobsResponse;
+  const jobs = allJobs || [];
   
-  const jobs = isPaginatedResponse 
-    ? (jobsResponse as PaginatedJobsResponse).jobs
-    : (jobsResponse as IndexingJob[]) || [];
+  // Client-side pagination
+  const filteredJobs = jobs.filter(job => 
+    statusFilter === "all" || job.status === statusFilter
+  );
   
-  const totalPages = isPaginatedResponse 
-    ? (jobsResponse as PaginatedJobsResponse).totalPages
-    : 1;
-  
-  const total = isPaginatedResponse 
-    ? (jobsResponse as PaginatedJobsResponse).total
-    : (Array.isArray(jobsResponse) ? jobsResponse.length : 0);
-
-  // Debug logging to understand what's happening
-  if (jobsResponse) {
-    console.log('JobTable Debug:', {
-      responseType: isPaginatedResponse ? 'paginated' : 'array',
-      jobsCount: jobs?.length,
-      totalPages,
-      total,
-      limit,
-      currentPage,
-      hasJobsProperty: 'jobs' in (jobsResponse as any),
-      isArray: Array.isArray(jobsResponse)
-    });
-  }
-
-  // Safety check to prevent render errors
-  if (!jobs || !Array.isArray(jobs)) {
-    console.warn('Jobs is not an array:', jobs);
-    return (
-      <div className="flex items-center justify-center p-8">
-        <div className="text-slate-600">No jobs data available</div>
-      </div>
-    );
-  }
+  const totalPages = limit ? 1 : Math.ceil(filteredJobs.length / pageSize);
+  const startIndex = limit ? 0 : (currentPage - 1) * pageSize;
+  const endIndex = limit ? limit : startIndex + pageSize;
+  const displayJobs = filteredJobs.slice(startIndex, endIndex);
 
   const updateJobMutation = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
@@ -183,11 +146,7 @@ export default function JobTable({ limit }: JobTableProps) {
     },
   });
 
-  const filteredJobs = jobs?.filter(job => 
-    statusFilter === "all" || job.status === statusFilter
-  ) || [];
 
-  const displayJobs = limit ? filteredJobs.slice(0, limit) : filteredJobs;
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
@@ -265,7 +224,6 @@ export default function JobTable({ limit }: JobTableProps) {
   }
 
   if (error) {
-    console.error('JobTable Error:', error);
     return (
       <div className="flex items-center justify-center p-8">
         <div className="text-red-600">Error loading jobs: {error.message}</div>
