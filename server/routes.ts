@@ -13,6 +13,7 @@ import { verifyAuth } from "./services/supabase";
 import { googleIndexingService } from "./services/google-indexing";
 import { sitemapParser } from "./services/sitemap-parser";
 import { jobScheduler } from "./services/job-scheduler";
+import { quotaPauseManager } from "./services/quota-pause-manager";
 import { requireOwnership, rateLimitPerUser } from "./middleware/authorization";
 import { validateUuid, validateServiceAccountJson } from "./middleware/input-validation";
 import { SecureLogger } from "./middleware/secure-logging";
@@ -374,6 +375,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error re-running indexing job:', error);
       res.status(500).json({ error: 'Failed to re-run indexing job' });
+    }
+  });
+
+  // Resume paused job endpoint
+  app.post('/api/indexing-jobs/:id/resume', requireAuth, async (req: any, res) => {
+    try {
+      const job = await storage.getIndexingJob(req.params.id);
+      if (!job) {
+        return res.status(404).json({ error: 'Job not found' });
+      }
+
+      if (!job.pausedDueToQuota) {
+        return res.status(400).json({ error: 'Job is not paused due to quota limits' });
+      }
+
+      // Check if quota is now available
+      const quotaCheck = await quotaPauseManager.checkQuotaAvailability(job.userId);
+      
+      if (quotaCheck.hasAvailableQuota) {
+        // Resume the job
+        const updatedJob = await storage.updateIndexingJob(req.params.id, {
+          status: 'pending',
+          pausedDueToQuota: false,
+          pausedAt: null,
+          pauseReason: null,
+          resumeAfter: null
+        });
+
+        // Execute the job immediately
+        setImmediate(() => {
+          jobScheduler.executeJob(req.params.id);
+        });
+
+        res.json({ 
+          success: true, 
+          message: 'Job resumed successfully',
+          job: updatedJob 
+        });
+      } else {
+        res.json({ 
+          success: false, 
+          message: quotaCheck.pauseReason || 'Quota still not available',
+          availableAccounts: quotaCheck.availableAccounts.length,
+          exhaustedAccounts: quotaCheck.exhaustedAccounts.length
+        });
+      }
+    } catch (error) {
+      console.error('Error resuming indexing job:', error);
+      res.status(500).json({ error: 'Failed to resume indexing job' });
     }
   });
 

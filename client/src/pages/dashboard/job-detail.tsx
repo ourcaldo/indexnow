@@ -17,6 +17,7 @@ import { IndexingJob, UrlSubmission } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { useWebSocket } from "@/hooks/useWebSocket";
+import { QuotaPauseNotice } from "@/components/dashboard/quota-pause-notice";
 import { 
   ArrowLeft, 
   Calendar, 
@@ -97,6 +98,28 @@ export default function JobDetail() {
     },
   });
 
+  const resumeJobMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest("POST", `/api/indexing-jobs/${jobId}/resume`);
+      return await response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/indexing-jobs", jobId] });
+      queryClient.invalidateQueries({ queryKey: ["/api/indexing-jobs"] });
+      toast({
+        title: "Success",
+        description: "Job resume attempt completed",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
   const deleteJobMutation = useMutation({
     mutationFn: async () => {
       const response = await apiRequest("DELETE", `/api/indexing-jobs/${jobId}`);
@@ -135,6 +158,10 @@ export default function JobDetail() {
 
   const handleRerunJob = () => {
     rerunJobMutation.mutate();
+  };
+
+  const handleResumeJob = () => {
+    resumeJobMutation.mutate();
   };
 
   const handleDeleteJob = () => {
@@ -309,6 +336,9 @@ export default function JobDetail() {
           )}
         </div>
       </div>
+
+      {/* Quota Pause Notice */}
+      <QuotaPauseNotice job={job} onResumeJob={handleResumeJob} />
 
       {/* Job Overview */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

@@ -6,6 +6,7 @@ import { googleIndexingService } from './google-indexing';
 import { sitemapParser } from './sitemap-parser';
 import { emailService } from './email-service';
 import { quotaMonitoringService } from './quota-monitoring';
+import { quotaPauseManager } from './quota-pause-manager';
 import { EncryptionService } from './encryption';
 
 interface ScheduledJob {
@@ -102,6 +103,15 @@ export class JobScheduler {
         await quotaMonitoringService.cleanupOldData();
       } catch (error) {
         console.error('Error in data cleanup:', error);
+      }
+    });
+
+    // Schedule quota-paused job resume check every hour
+    cron.schedule('0 * * * *', async () => {
+      try {
+        await quotaPauseManager.resumePausedJobs();
+      } catch (error) {
+        console.error('Error in resuming paused jobs:', error);
       }
     });
 
@@ -314,7 +324,7 @@ export class JobScheduler {
       // Process URLs with quota management
       await this.processUrlsWithQuota(jobId, urls, accounts);
 
-      // Update job completion
+      // Update job completion - check if job was paused
       const submissions = await db
         .select()
         .from(urlSubmissions)
@@ -322,28 +332,43 @@ export class JobScheduler {
 
       const successful = submissions.filter(s => s.status === 'success').length;
       const failed = submissions.filter(s => s.status === 'error').length;
+      const quotaExceeded = submissions.filter(s => s.status === 'quota_exceeded').length;
 
-      await db
-        .update(indexingJobs)
-        .set({
-          status: 'completed',
+      // Check current job status to see if it was paused
+      const currentJob = await db
+        .select()
+        .from(indexingJobs)
+        .where(eq(indexingJobs.id, jobId))
+        .limit(1);
+
+      if (currentJob.length > 0 && currentJob[0].status !== 'paused') {
+        // Only mark as completed if not paused due to quota
+        await db
+          .update(indexingJobs)
+          .set({
+            status: 'completed',
+            processedUrls: submissions.length,
+            successfulUrls: successful,
+            failedUrls: failed,
+            updatedAt: new Date()
+          })
+          .where(eq(indexingJobs.id, jobId));
+
+        console.log(`Job ${jobId} completed: ${successful} successful, ${failed} failed, ${quotaExceeded} quota exceeded`);
+        
+        // Send email notification for job completion
+        await this.sendJobCompletionEmail(jobData.userId, jobData.name, successful, failed, submissions.length);
+
+        // Broadcast job completion
+        this.broadcastJobUpdate(jobId, 'completed', {
           processedUrls: submissions.length,
           successfulUrls: successful,
-          failedUrls: failed
-        })
-        .where(eq(indexingJobs.id, jobId));
-
-      console.log(`Job ${jobId} completed: ${successful} successful, ${failed} failed`);
-
-      // Send email notification for job completion
-      await this.sendJobCompletionEmail(jobData.userId, jobData.name, successful, failed, submissions.length);
-
-      // Broadcast job completion
-      this.broadcastJobUpdate(jobId, 'completed', {
-        processedUrls: submissions.length,
-        successfulUrls: successful,
-        failedUrls: failed
-      });
+          failedUrls: failed,
+          quotaExceededUrls: quotaExceeded
+        });
+      } else if (currentJob.length > 0 && currentJob[0].status === 'paused') {
+        console.log(`Job ${jobId} paused due to quota limits: ${successful} successful, ${failed} failed, ${quotaExceeded} quota exceeded`);
+      }
 
     } catch (error) {
       console.error(`Error executing job ${jobId}:`, error);
@@ -365,12 +390,44 @@ export class JobScheduler {
 
   private async processUrlsWithQuota(jobId: string, urls: string[], accounts: any[]) {
     const today = new Date().toISOString().split('T')[0];
+    let urlIndex = 0;
     
     for (const url of urls) {
+      urlIndex++;
       let processed = false;
 
-      for (const account of accounts) {
-        // Check quota usage for today
+      // Update real-time progress
+      await db
+        .update(indexingJobs)
+        .set({
+          processedUrls: urlIndex - 1,
+          updatedAt: new Date()
+        })
+        .where(eq(indexingJobs.id, jobId));
+
+      // Broadcast real-time progress
+      this.broadcastJobUpdate(jobId, 'running', { 
+        progress: { 
+          current: urlIndex - 1, 
+          total: urls.length,
+          currentUrl: url
+        }
+      });
+
+      // Check quota availability before processing each URL
+      const job = await db.select().from(indexingJobs).where(eq(indexingJobs.id, jobId)).limit(1);
+      if (job.length === 0) break;
+
+      const quotaCheck = await quotaPauseManager.checkQuotaAvailability(job[0].userId);
+      
+      if (quotaCheck.shouldPauseJob) {
+        console.log(`🚫 Pausing job ${jobId} - no available quota`);
+        await quotaPauseManager.pauseJobDueToQuota(jobId, quotaCheck.pauseReason!, quotaCheck.resumeAfter);
+        return; // Exit processing
+      }
+
+      for (const account of quotaCheck.availableAccounts) {
+        // Double-check current usage
         const usage = await db
           .select()
           .from(quotaUsage)
@@ -386,7 +443,7 @@ export class JobScheduler {
           continue; // Try next account
         }
 
-        // Submit URL for indexing with token caching
+        // Submit URL for indexing with token caching and quota handling
         const result = await googleIndexingService.submitUrlForIndexing(url, account, async (token: string, expiry: Date) => {
           try {
             console.log('\n=== Saving Token to Database ===');
@@ -438,18 +495,18 @@ export class JobScheduler {
           }
         });
 
-        // Create URL submission record
-        await db.insert(urlSubmissions).values({
-          jobId,
-          url,
-          status: result.success ? 'success' : 'error',
-          serviceAccountId: account.id,
-          errorMessage: result.error,
-          submittedAt: new Date()
-        });
-
-        // Update quota usage only if the request was successful
+        // Handle different response types
         if (result.success) {
+          // Success case
+          await db.insert(urlSubmissions).values({
+            jobId,
+            url,
+            status: 'success',
+            serviceAccountId: account.id,
+            submittedAt: new Date()
+          });
+
+          // Update quota usage
           if (usage.length) {
             await db
               .update(quotaUsage)
@@ -462,6 +519,46 @@ export class JobScheduler {
               requestsCount: 1
             });
           }
+
+          // Update real-time successful count
+          await db
+            .update(indexingJobs)
+            .set({
+              successfulUrls: sql`${indexingJobs.successfulUrls} + 1`,
+              updatedAt: new Date()
+            })
+            .where(eq(indexingJobs.id, jobId));
+
+        } else if (result.isQuotaExceeded) {
+          // Quota exceeded case - handle with pause manager
+          const jobPaused = await quotaPauseManager.handleQuotaExceededResponse(jobId, url, account.id);
+          
+          if (jobPaused) {
+            console.log(`🚫 Job ${jobId} paused due to quota exhaustion`);
+            return; // Exit URL processing
+          }
+          // If not paused, continue with next account
+          continue;
+          
+        } else {
+          // Regular error case
+          await db.insert(urlSubmissions).values({
+            jobId,
+            url,
+            status: 'error',
+            serviceAccountId: account.id,
+            errorMessage: result.error,
+            submittedAt: new Date()
+          });
+
+          // Update real-time failed count
+          await db
+            .update(indexingJobs)
+            .set({
+              failedUrls: sql`${indexingJobs.failedUrls} + 1`,
+              updatedAt: new Date()
+            })
+            .where(eq(indexingJobs.id, jobId));
         }
 
         processed = true;
@@ -469,13 +566,16 @@ export class JobScheduler {
       }
 
       if (!processed) {
-        // All accounts exceeded quota
-        await db.insert(urlSubmissions).values({
-          jobId,
-          url,
-          status: 'quota_exceeded',
-          errorMessage: 'All service accounts exceeded daily quota'
-        });
+        // All accounts exceeded quota - pause the job
+        console.log(`🚫 All accounts exhausted for URL: ${url}`);
+        const job = await db.select().from(indexingJobs).where(eq(indexingJobs.id, jobId)).limit(1);
+        if (job.length > 0) {
+          const quotaCheck = await quotaPauseManager.checkQuotaAvailability(job[0].userId);
+          if (quotaCheck.shouldPauseJob) {
+            await quotaPauseManager.pauseJobDueToQuota(jobId, quotaCheck.pauseReason!, quotaCheck.resumeAfter);
+            return; // Exit processing
+          }
+        }
       }
     }
   }

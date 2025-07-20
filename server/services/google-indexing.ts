@@ -7,6 +7,7 @@ interface IndexingResult {
   url: string;
   success: boolean;
   error?: string;
+  isQuotaExceeded?: boolean;
 }
 
 interface TokenResponse {
@@ -196,10 +197,17 @@ export class GoogleIndexingService {
         console.error(`Indexing failed for URL: ${url} - ${error.message}`);
       }
       
+      // Detect quota exceeded responses
+      const errorMessage = error.response?.data?.error?.message || error.message || 'Unknown error occurred';
+      const isQuotaExceeded = errorMessage.toLowerCase().includes('quota') || 
+                             errorMessage.toLowerCase().includes('limit') ||
+                             error.response?.status === 429;
+
       return {
         url,
         success: false,
-        error: error.response?.data?.error?.message || error.message || 'Unknown error occurred',
+        error: errorMessage,
+        isQuotaExceeded
       };
     }
   }
