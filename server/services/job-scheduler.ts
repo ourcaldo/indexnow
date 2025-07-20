@@ -373,6 +373,12 @@ export class JobScheduler {
     } catch (error) {
       console.error(`Error executing job ${jobId}:`, error);
       
+      // Check if this is a quota pause error - don't mark as failed
+      if (error.message && (error.message.includes('JOB_PAUSED_QUOTA_EXCEEDED') || error.message.includes('JOB_PAUSED_ALL_QUOTA_EXCEEDED'))) {
+        console.log(`Job ${jobId} paused due to quota exhaustion - not marking as failed`);
+        return; // Exit without marking as failed
+      }
+      
       await db
         .update(indexingJobs)
         .set({ status: 'failed' })
@@ -531,13 +537,26 @@ export class JobScheduler {
 
         } else if (result.isQuotaExceeded) {
           // Quota exceeded case - handle with pause manager
+          console.log(`🚫 QUOTA EXCEEDED - Pausing job ${jobId} immediately`);
+          
           const jobPaused = await quotaPauseManager.handleQuotaExceededResponse(jobId, url, account.id);
           
           if (jobPaused) {
-            console.log(`🚫 Job ${jobId} paused due to quota exhaustion`);
-            return; // Exit URL processing
+            console.log(`🚫 Job ${jobId} paused due to quota exhaustion - STOPPING ALL PROCESSING`);
+            throw new Error('JOB_PAUSED_QUOTA_EXCEEDED'); // Force exit from job processing
           }
-          // If not paused, continue with next account
+          
+          // Mark this URL as quota exceeded for tracking
+          await db.insert(urlSubmissions).values({
+            jobId,
+            url,
+            status: 'quota_exceeded',
+            serviceAccountId: account.id,
+            errorMessage: result.error,
+            submittedAt: new Date()
+          });
+          
+          // Continue with next account
           continue;
           
         } else {
@@ -567,15 +586,23 @@ export class JobScheduler {
 
       if (!processed) {
         // All accounts exceeded quota - pause the job
-        console.log(`🚫 All accounts exhausted for URL: ${url}`);
+        console.log(`🚫 ALL ACCOUNTS EXHAUSTED - Pausing job ${jobId}`);
         const job = await db.select().from(indexingJobs).where(eq(indexingJobs.id, jobId)).limit(1);
         if (job.length > 0) {
           const quotaCheck = await quotaPauseManager.checkQuotaAvailability(job[0].userId);
           if (quotaCheck.shouldPauseJob) {
             await quotaPauseManager.pauseJobDueToQuota(jobId, quotaCheck.pauseReason!, quotaCheck.resumeAfter);
-            return; // Exit processing
+            throw new Error('JOB_PAUSED_ALL_QUOTA_EXCEEDED'); // Force exit from job processing
           }
         }
+        
+        // If not pausing, record as quota exceeded
+        await db.insert(urlSubmissions).values({
+          jobId,
+          url,
+          status: 'quota_exceeded',
+          errorMessage: 'All service accounts exceeded daily quota'
+        });
       }
     }
   }
