@@ -16,7 +16,11 @@ export function securityHeaders(req: Request, res: Response, next: NextFunction)
   
   // Content Security Policy (basic for SPA) - using environment variable
   const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
-  const supabaseDomain = supabaseUrl ? new URL(supabaseUrl).origin : 'https://supabase.co';
+  if (!supabaseUrl) {
+    throw new Error('SUPABASE_URL or VITE_SUPABASE_URL must be set');
+  }
+  const supabaseDomain = new URL(supabaseUrl).origin;
+  const additionalDomains = 'https://supabase.co';
   
   res.setHeader('Content-Security-Policy', 
     "default-src 'self'; " +
@@ -24,7 +28,7 @@ export function securityHeaders(req: Request, res: Response, next: NextFunction)
     "style-src 'self' 'unsafe-inline'; " +
     "img-src 'self' data: https:; " +
     "font-src 'self' data:; " +
-    `connect-src 'self' ${supabaseDomain} ${supabaseDomain.replace('https:', 'wss:')}; ` +
+    `connect-src 'self' ${supabaseDomain} ${supabaseDomain.replace('https:', 'wss:')} ${additionalDomains}; ` +
     "frame-ancestors 'none';"
   );
   
@@ -37,7 +41,8 @@ export function securityHeaders(req: Request, res: Response, next: NextFunction)
 // Rate limiting for API endpoints with cleanup
 const apiCallCounts = new Map<string, { count: number; resetTime: number }>();
 
-// Cleanup expired entries every 5 minutes to prevent memory leaks
+// Cleanup expired entries to prevent memory leaks
+const cleanupInterval = parseInt(process.env.RATE_LIMIT_CLEANUP_INTERVAL_MINUTES!) * 60 * 1000;
 setInterval(() => {
   const now = Date.now();
   for (const [key, data] of apiCallCounts.entries()) {
@@ -45,9 +50,14 @@ setInterval(() => {
       apiCallCounts.delete(key);
     }
   }
-}, 5 * 60 * 1000);
+}, cleanupInterval);
 
-export function rateLimit(maxRequests: number = 100, windowMs: number = 15 * 60 * 1000) {
+export function rateLimit(maxRequests?: number, windowMs?: number) {
+  const defaultMaxRequests = parseInt(process.env.RATE_LIMIT_MAX_REQUESTS!);
+  const defaultWindowMs = parseInt(process.env.RATE_LIMIT_WINDOW_MINUTES!) * 60 * 1000;
+  
+  maxRequests = maxRequests ?? defaultMaxRequests;
+  windowMs = windowMs ?? defaultWindowMs;
   return (req: Request, res: Response, next: NextFunction) => {
     const clientIp = req.ip || req.connection.remoteAddress || 'unknown';
     const now = Date.now();
@@ -81,7 +91,14 @@ export function validateEnvironment(): void {
     'VITE_SUPABASE_ANON_KEY',
     'LOGO_URL',
     'ICON_URL',
-    'FAVICON_URL'
+    'FAVICON_URL',
+    'SITE_URL',
+    'PORT',
+    'ALLOWED_ORIGINS',
+    'JOB_LOCK_TIMEOUT_MINUTES',
+    'RATE_LIMIT_CLEANUP_INTERVAL_MINUTES',
+    'RATE_LIMIT_MAX_REQUESTS',
+    'RATE_LIMIT_WINDOW_MINUTES'
   ];
 
   const recommendedEnvVars = [

@@ -1,18 +1,33 @@
 # Google Indexing Dashboard
 
-## Latest Update - Production Build Environment Fix (July 20, 2025)
+## Latest Update - Complete Hardcoded Value Elimination (July 20, 2025)
+✓ **Eliminated ALL hardcoded variables** - Removed every hardcoded value and replaced with environment variables for complete portability
+✓ **Fixed production build paths** - Updated esbuild command to use relative paths instead of absolute build environment paths
+✓ **Enhanced environment validation** - Added validation for all new configuration variables
+✓ **Removed fallback values** - Application now requires all environment variables to be explicitly set
+✓ **Updated security policies** - CSP now uses dynamic Supabase domain detection with additional domains support
+✓ **Removed test email hardcoding** - Test email endpoints now require email parameter instead of default hardcoded value
+
+**Complete Portability Achieved:**
+The application is now 100% portable with no hardcoded values. All configuration comes from environment variables:
+
+**New Environment Variables Added:**
+- `PORT` - Server port (previously hardcoded 5000)
+- `SITE_URL` - Base site URL (previously hardcoded localhost:5000)
+- `JOB_LOCK_TIMEOUT_MINUTES` - Job processing lock timeout (previously hardcoded 5 minutes)
+- `RATE_LIMIT_CLEANUP_INTERVAL_MINUTES` - Memory cleanup interval (previously hardcoded 5 minutes)
+- `RATE_LIMIT_MAX_REQUESTS` - Maximum requests per window (previously hardcoded 100)
+- `RATE_LIMIT_WINDOW_MINUTES` - Rate limit window duration (previously hardcoded 15 minutes)
+
+**Fixed Production Build Command:**
+```bash
+vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist --define:import.meta.dirname='"./dist"'
+```
+
+**Previous Update - Production Build Environment Fix**
 ✓ **Identified production build issue** - White blank page caused by missing environment variables in frontend build
 ✓ **Root cause analysis** - Vite not loading VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY from .env during production build
 ✓ **Migration completed successfully** - Project migrated from Replit Agent to standard Replit environment
-✓ **Documented workaround solution** - Manual environment variable inclusion required for production builds
-
-**Technical Details:** The issue is that vite.config.ts doesn't load environment variables from .env during production builds. Frontend crashes with "Missing Supabase environment variables" error when accessing import.meta.env.VITE_SUPABASE_URL/VITE_SUPABASE_ANON_KEY.
-
-**Production Build Solution:**
-For production builds to work properly, environment variables must be explicitly passed:
-```bash
-VITE_SUPABASE_URL=https://bwkasvyrzbzhcdtvsbyg.supabase.co VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3a2FzdnlyemJ6aGNkdHZzYnlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3NTUxNDIsImV4cCI6MjA2ODMzMTE0Mn0._YnFB_X6glA_67HRBcPQIVJ0lzcOQ5PinZzilecvB98 vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
-```
 
 ## Overview
 

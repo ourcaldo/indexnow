@@ -226,7 +226,7 @@ export class JobScheduler {
           eq(indexingJobs.id, jobId),
           or(
             isNull(indexingJobs.lockedAt),
-            lt(indexingJobs.lockedAt, new Date(Date.now() - 5 * 60 * 1000)) // Lock expired (5 minutes)
+            lt(indexingJobs.lockedAt, new Date(Date.now() - parseInt(process.env.JOB_LOCK_TIMEOUT_MINUTES!) * 60 * 1000)) // Lock expired
           )
         ))
         .returning();

@@ -14,7 +14,7 @@ export class AssetConfigService {
   }
 
   private validateAndLoadConfig(): AssetConfig {
-    const required = ['LOGO_URL', 'ICON_URL', 'FAVICON_URL'];
+    const required = ['LOGO_URL', 'ICON_URL', 'FAVICON_URL', 'SITE_URL', 'ALLOWED_ORIGINS'];
     const missing = required.filter(key => !process.env[key]);
     
     if (missing.length > 0) {
@@ -25,8 +25,8 @@ export class AssetConfigService {
       logoUrl: process.env.LOGO_URL!,
       iconUrl: process.env.ICON_URL!,
       faviconUrl: process.env.FAVICON_URL!,
-      siteUrl: process.env.SITE_URL || 'http://localhost:5000',
-      allowedOrigins: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:5000']
+      siteUrl: process.env.SITE_URL!,
+      allowedOrigins: process.env.ALLOWED_ORIGINS!.split(',')
     };
   }
 

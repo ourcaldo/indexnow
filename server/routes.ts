@@ -523,7 +523,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       console.log('🧪 Testing daily quota report email via simple GET...');
       
-      const testEmail = req.query.email || 'aldodkris@gmail.com';
+      const testEmail = req.query.email;
+      if (!testEmail) {
+        return res.status(400).json({ error: 'Email parameter is required' });
+      }
       
       // Use the job scheduler test method
       const result = await jobScheduler.testDailyQuotaReport(testEmail);

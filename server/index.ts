@@ -35,7 +35,7 @@ app.use(csrfProtection);
 app.use(validateFileUpload());
 
 // Rate limiting for API routes
-app.use('/api/', rateLimit(100, 15 * 60 * 1000)); // 100 requests per 15 minutes
+app.use('/api/', rateLimit()); // Uses values from environment variables
 
 // CORS middleware with environment-based origins
 app.use((req, res, next) => {
@@ -119,10 +119,8 @@ app.use((req, res, next) => {
   }
 
   // ALWAYS serve the app on the port specified in the environment variable PORT
-  // Other ports are firewalled. Default to 5000 if not specified.
   // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = parseInt(process.env.PORT || '5000', 10);
+  const port = parseInt(process.env.PORT!, 10);
   server.listen({
     port,
     host: "0.0.0.0",

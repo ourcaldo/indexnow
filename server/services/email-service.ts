@@ -118,8 +118,8 @@ export class EmailService {
       failedUrls,
       totalUrls,
       completionRate: Math.round((successUrls / totalUrls) * 100),
-      logoUrl: process.env.LOGO_URL || '',
-      siteUrl: process.env.SITE_URL || 'http://localhost:5000',
+      logoUrl: process.env.LOGO_URL!,
+      siteUrl: process.env.SITE_URL!,
       timestamp: new Date().toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
@@ -142,8 +142,8 @@ export class EmailService {
       userName,
       jobName,
       errorMessage,
-      logoUrl: process.env.LOGO_URL || '',
-      siteUrl: process.env.SITE_URL || 'http://localhost:5000',
+      logoUrl: process.env.LOGO_URL!,
+      siteUrl: process.env.SITE_URL!,
       timestamp: new Date().toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
@@ -165,7 +165,8 @@ export class EmailService {
     const data = {
       userName,
       ...stats,
-      logoUrl: process.env.LOGO_URL || '',
+      logoUrl: process.env.LOGO_URL!,
+      siteUrl: process.env.SITE_URL!,
       reportDate: new Date().toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
@@ -212,8 +213,8 @@ export class EmailService {
       alertType,
       alertIcon: alertIcons[alertType],
       alertMessage: alertMessages[alertType],
-      logoUrl: process.env.LOGO_URL || '',
-      siteUrl: process.env.SITE_URL || 'http://localhost:5000',
+      logoUrl: process.env.LOGO_URL!,
+      siteUrl: process.env.SITE_URL!,
       timestamp: new Date().toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
