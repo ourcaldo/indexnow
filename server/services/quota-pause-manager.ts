@@ -182,13 +182,24 @@ export class QuotaPauseManager {
   async handleQuotaExceededResponse(jobId: string, url: string, serviceAccountId: string): Promise<boolean> {
     console.log(`⚠️ Quota exceeded for URL: ${url} on account: ${serviceAccountId}`);
     
+    // IMMEDIATELY PAUSE THE JOB - NO QUOTA CHECK NEEDED
+    // If we get a quota exceeded response, it means ALL accounts are exhausted
+    console.log(`🚫 QUOTA EXCEEDED DETECTED - PAUSING JOB ${jobId} IMMEDIATELY`);
+    
+    const pauseReason = "Daily quota exhausted - all service accounts reached Google API limits";
+    const tomorrow = new Date();
+    tomorrow.setUTCHours(0, 0, 0, 0);
+    tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
+    
+    await this.pauseJobDueToQuota(jobId, pauseReason, tomorrow);
+    
     // Mark URL as quota exceeded
     await db.insert(urlSubmissions).values({
       jobId,
       url,
       status: 'quota_exceeded',
       serviceAccountId,
-      errorMessage: 'Daily quota limit exceeded',
+      errorMessage: 'Daily quota limit exceeded - job paused',
       submittedAt: new Date()
     });
 
@@ -201,24 +212,7 @@ export class QuotaPauseManager {
       })
       .where(eq(indexingJobs.id, jobId));
 
-    // Get job details to check user
-    const job = await db
-      .select()
-      .from(indexingJobs)
-      .where(eq(indexingJobs.id, jobId))
-      .limit(1);
-
-    if (job.length === 0) return false;
-
-    // Check if we should pause the job
-    const quotaCheck = await this.checkQuotaAvailability(job[0].userId);
-    
-    if (quotaCheck.shouldPauseJob) {
-      await this.pauseJobDueToQuota(jobId, quotaCheck.pauseReason!, quotaCheck.resumeAfter);
-      return true; // Job was paused
-    }
-
-    return false; // Job can continue with other accounts
+    return true; // Job was paused immediately
   }
 
   /**

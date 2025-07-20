@@ -1,0 +1,726 @@
+          "quota_limit_value": "200",
+          "service": "indexing.googleapis.com",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+🚫 QUOTA EXCEEDED - Pausing job deebf3f6-e59d-4402-9dde-9c1074832e57 immediately
+⚠️ Quota exceeded for URL: https://nexjob.tech/lowongan-kerja/project-control-project-leader-pt-graha-permata-sentosa-depok/ on account: 35a1bdc3-3735-4d2e-a280-d473f84a3461
+3:32:21 PM [express] GET /api/indexing-jobs/deebf3f6-e59d-4402-9dde-9c1074832e57 200 in 1588ms :: {"…
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+3:32:22 PM [express] GET /api/indexing-jobs/deebf3f6-e59d-4402-9dde-9c1074832e57/submissions 200 in …
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+🚫 ALL ACCOUNTS EXHAUSTED - Pausing job deebf3f6-e59d-4402-9dde-9c1074832e57
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+3:32:23 PM [express] GET /api/indexing-jobs/deebf3f6-e59d-4402-9dde-9c1074832e57 200 in 1593ms :: {"…
+3:32:24 PM [express] GET /api/indexing-jobs/deebf3f6-e59d-4402-9dde-9c1074832e57/submissions 200 in …
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+
+=== Generating New Token ===
+Reason: No cached token
+
+=== JWT Details ===
+Client Email: indexnow@nexpocket.iam.gserviceaccount.com
+Private Key ID: f176cd36ce2fb0a2b68fbf42b43839ac691a81e1
+Scope: https://www.googleapis.com/auth/indexing
+
+=== Raw Token Response ===
+{
+  access_token: 'ya29.c.c0ASRK0GagZsnEsS-yqnCMxc96UJZaX9W1TuBU2ZThlvz68XwybLXhCs84QPuKs6DOKd5uPuIAnhSAhZ5m6fT3ztviMntYE2pEKod-jhFaZzCSQo_W5UaFkkuxqP92cR3Aj5UTUcQJC1IGXSZ4GfDtH_xFMqHbt20LrcK__lhRKmi-JFXWzQoi0_TUAtpowr4aCWevXh-zQCGstoo7s8yj_k5EyRZ_JOJv3ajnRmCQdTs3u1o9qyIhooRpZYNJ8JdVKgiJjuc_-53RuTkbeklUb0yNLXrgK9mbq_x8hsgMGrNcYNuhIb9Wy6el_RogfXlRvMO1XxOyx3kdal8QpOb2RY4nhOkEtFC3c6n2dsql-AN0YIbBChME-hKz6QG387Pa8Ua9R6Z2dQlq3_86ZzqjzzU2nB3yezfltce6lx9uRl5-chYB17jqXf5dlyXvv8QhrU66f-z5JMlhmn8XeIU56m9q3tU4aydW14VO_u5xUn9a5lnsFd7XUun2nq-_Xccu0vbWZigB2-nSXw4avle9-9J0a8J6R6YO84Wzdgn65tqZrmF0qISambhoposIIobR5Z96WegJrrFxhuS2uls3BtXY4xouIJ1t7RkzMXzJRh3onqnQnWce4_u1e9Xtkdj1h4B0XxQImMWU5O1vIju2hWx0nzYenrtdo0I9V_3rb4bM9bkuVfzQi1unixX7avyr250dJF6sbh5MWO2brhai2ZzW9x43XwS3iF0aWoaBR2kRSbOb_ahtWoSWxaJV-SebsBzOhQBk6jOF1-_puIqbwZ6jwj0XM3jX6WgduXBSqhvMu8FRuRjVfgYah3VYdlpki21ggpOmvr7UpzY9wSxx8_cb-q-_tdSsItyoaxj01axbV4iyng4_bjfIgF0mM305jmxFOwlhbjJ1MwifWQ_c2RZc9ZkllruIgQkIFnXuFooQn5e1o9tMw6jFVdnxacnvcqOthuO69dJ70dn2MJ-Zj63trnhRObU1c2mQ26cQtskm1UIRdzdc61p',
+  token_type: 'Bearer',
+  expiry_date: 1753029145000,
+  id_token: undefined,
+  refresh_token: 'jwt-placeholder'
+}
+
+=== Auth Result Debug ===
+tokenUpdated: true
+hasNewToken: true
+hasNewExpiry: true
+hasCallback: true
+
+=== Calling Token Update Callback ===
+
+=== Saving Token to Database ===
+Service Account ID: 35a1bdc3-3735-4d2e-a280-d473f84a3461
+Token length: 1024
+Expiry: 2025-07-20T16:32:25.000Z
+🔐 Token encrypted successfully
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+Database update result: SUCCESS
+Token update callback completed
+
+=== Indexing Failed ===
+URL: https://nexjob.tech/lowongan-kerja/sales-marketing-pt-scorpio-jaya-adi-wisesa-balikpapan/
+Error: Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:61286730027'.
+Status: 429
+Headers: {}
+Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:61286730027'.",
+    "errors": [
+      {
+        "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:61286730027'.",
+        "domain": "global",
+        "reason": "rateLimitExceeded"
+      }
+    ],
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_limit_value": "200",
+          "service": "indexing.googleapis.com",
+          "quota_location": "global",
+          "quota_unit": "1/d/{project}",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "consumer": "projects/61286730027"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+🚫 QUOTA EXCEEDED - Pausing job deebf3f6-e59d-4402-9dde-9c1074832e57 immediately
+⚠️ Quota exceeded for URL: https://nexjob.tech/lowongan-kerja/sales-marketing-pt-scorpio-jaya-adi-wisesa-balikpapan/ on account: 35a1bdc3-3735-4d2e-a280-d473f84a3461
+3:32:26 PM [express] GET /api/indexing-jobs/deebf3f6-e59d-4402-9dde-9c1074832e57 200 in 1578ms :: {"…
+3:32:27 PM [express] GET /api/indexing-jobs/deebf3f6-e59d-4402-9dde-9c1074832e57/submissions 200 in …
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+3:32:28 PM [express] GET /api/indexing-jobs/deebf3f6-e59d-4402-9dde-9c1074832e57 200 in 1585ms :: {"…
+3:32:28 PM [express] GET /api/indexing-jobs/deebf3f6-e59d-4402-9dde-9c1074832e57/submissions 200 in …
+🚫 ALL ACCOUNTS EXHAUSTED - Pausing job deebf3f6-e59d-4402-9dde-9c1074832e57
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+3:32:30 PM [express] GET /api/indexing-jobs/deebf3f6-e59d-4402-9dde-9c1074832e57/submissions 200 in …
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+
+=== Generating New Token ===
+Reason: No cached token
+
+=== JWT Details ===
+Client Email: indexnow@nexpocket.iam.gserviceaccount.com
+Private Key ID: f176cd36ce2fb0a2b68fbf42b43839ac691a81e1
+Scope: https://www.googleapis.com/auth/indexing
+
+=== Raw Token Response ===
+{
+  access_token: 'ya29.c.c0ASRK0GZFqFyUK1WO0QSm-U_GoOtG3QTBsBZAGdm4ZScuKOWskEqW2h31XxLmuYtQIRT3II3wMDU4mDpj83vtJ0doC4kKCkc49YubRWhJbQqOdyO_y8_iEBjnIMqWYUgITuPtRN9CsdfK753MDt4kyBS1o9xpc13UTOzyT0vcwmm-Rb-49D5SUywbgzXWWGtzh-CqUEeEccpsmROnf1vmpbjrHs25v8NvdXY3WpxvYJ-S3CtcHl9Hc7WSen0W9xwl8g8AQZVBZEJSPU3YuOuHzQ5qHAJ9WzHFXSlOaNasovXZrywR_-3iGiBAA_JTfsigwrC5EW0FNgeYEGT1c-r67Ed2S01gwJ9oYr4hYd82JdmBXXs24804-gUE384DU185p5dsZIp9ow1M3laSmvgbw1rzJXyx6WZjZWoj3yFdO045g1RXo0-8tryryYRe8q0d5nlV5Q3XoS_weyz9F4RV1dp5gi3wbXi3wln3_xf6OWoFWX48_d7ZhXQS98mYloz8wigIuc9BF5U_v90QnZyaSg6q6ZtIBXghvrix7I-aMzBev08rbl8XSgBZhcX2j3fSq2r03lIbJFhokJaSkb8Vku9XXmesq9lQl0iWhs98jOkpJVn9z5e_aRIhYr7UXfFwM3lwh31Rnglslvj53Ii36lFVrQ84OXlo0ShcvwmcRl75yOudss6Z1bzj3hkeQ-Z-7eVS_h80FfFqmh-XdVvfoZd1wivy38VaivFdqm-Jy4W-c5UZ-bWvFlm8oZiV7-SJ3bvV77vWokbuS6-UV3sfuerlV24npn4loy7b6VF-7IQS-rsv5_5IxmIX5bz4FFiYhe2_rnnWmOeF_35Ipa6nFcfiUtSFxWlyXpRbq1uYho471FFIsFnu63bWSx41Si3OzJ_yU0nmS720-UuVF0muX7nhoFye29e9pxdkRlJ83uavQqW2Zvs-5rsi3F05lXaJ-Oql_3S3bbsXa20nkst9z5UhilzU1gviWR6oO1y8hsumj8ekq2uo9Us',
+  token_type: 'Bearer',
+  expiry_date: 1753029151000,
+  id_token: undefined,
+  refresh_token: 'jwt-placeholder'
+}
+
+=== Auth Result Debug ===
+tokenUpdated: true
+hasNewToken: true
+hasNewExpiry: true
+hasCallback: true
+
+=== Calling Token Update Callback ===
+
+=== Saving Token to Database ===
+Service Account ID: 35a1bdc3-3735-4d2e-a280-d473f84a3461
+Token length: 1024
+Expiry: 2025-07-20T16:32:31.000Z
+🔐 Token encrypted successfully
+Database update result: SUCCESS
+Token update callback completed
+
+=== Indexing Failed ===
+URL: https://nexjob.tech/lowongan-kerja/teknisi-mep-interior-unknown-company-unknown-location/
+Error: Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:61286730027'.
+Status: 429
+Headers: {}
+Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:61286730027'.",
+    "errors": [
+      {
+        "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:61286730027'.",
+        "domain": "global",
+        "reason": "rateLimitExceeded"
+      }
+    ],
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_limit_value": "200",
+          "service": "indexing.googleapis.com",
+          "quota_unit": "1/d/{project}",
+          "quota_location": "global",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "consumer": "projects/61286730027"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+🚫 QUOTA EXCEEDED - Pausing job deebf3f6-e59d-4402-9dde-9c1074832e57 immediately
+⚠️ Quota exceeded for URL: https://nexjob.tech/lowongan-kerja/teknisi-mep-interior-unknown-company-unknown-location/ on account: 35a1bdc3-3735-4d2e-a280-d473f84a3461
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+3:32:32 PM [express] GET /api/indexing-jobs/deebf3f6-e59d-4402-9dde-9c1074832e57 200 in 1575ms :: {"…
+3:32:33 PM [express] GET /api/indexing-jobs/deebf3f6-e59d-4402-9dde-9c1074832e57/submissions 200 in …
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+Client disconnected from WebSocket
+🚫 ALL ACCOUNTS EXHAUSTED - Pausing job deebf3f6-e59d-4402-9dde-9c1074832e57
+
+=== Generating New Token ===
+Reason: No cached token
+
+=== JWT Details ===
+Client Email: indexnow@nexpocket.iam.gserviceaccount.com
+Private Key ID: f176cd36ce2fb0a2b68fbf42b43839ac691a81e1
+Scope: https://www.googleapis.com/auth/indexing
+
+=== Raw Token Response ===
+{
+  access_token: 'ya29.c.c0ASRK0GaEnVdJjze8WQ6ix9RVO8qMA6eUlJPAcjEQQQQfgf4uAdHE7tWbO5Optp9FwtDav2XkYXlw6046PlFXx7yoAmgLzZcbWX086TMd_3Y4kdo8IsVJH5zoU-lXqBpA8lZAJpADH5hUpmeO_HXGHzTXWDTAJND1xJ18-tbdQfqJTtZADGaoQkV3hpO8rFwTGT9ysfYzIiXvum98H5uC-YoaKY43GG7NBsITjq_11XXJrqg-T3X-kbN8_M_cgc8SkTK7NIxsr3uYPDRw8NwgRzCd8rFfJG1y5btgkQvl2SxCmbmlMmtRddSN7NrNFUsv4YVVlPJee1exZSkbANOGQPtj0_3Rxev_-3lap7lOyizcRyIR3esbjcUH384Ag523Oj07uSgj-um-9m77j2FdfZ2trtWMytUrgds1BJO9Qh_QnqOd8hrZQ9Zxwgafa044zk80w5SeSnVezh85w41MJYVwbYFadpvXcmvhmO4t9_4awvWZn-Qioc_n7aRt5tBSRcrq3spgivadecYhg1jv6Brwbgsiawuk0Xq040vazrpXijWaQkuMgqobFYzfoBVy4jXsS75RMF73RWa35Oms9BfgZhz82idRpyF82zlJh6znhdRpzt3hpuq10tzirWft4c4pjFjRIytQU8950MbI32pe7zUhlqbmWUVaV-Z_wutVMBkWvuwcOB46zb_fZwrgyijFjQk8MeSJ3zikBzqlhXQ_7nZbxVYM9p1ho-Vi9qlMm8grc0FU81z-ixhsglxk-c9g_UuQ0UJXJW1hegBtffW-vcbkb6ey5fQ-_ednSZRyjttr-pM2imf8th3Vd2fYWRUOR_udO3bFtxcneRk6iqIyit_fq8469599OJ0J1qafUabqXkOSQ5s7foRMz5fWYO6IdQIpI5z89Y42nW8qogk6jzn9wXItzfun776Yxjw3iUBv6y5Jz8pig_3nB2X_WWge5veuzWxqun_SVs1Q_2RsMqfISdOoUVWroooteeVr87x0rlbh-Ug',
+  token_type: 'Bearer',
+  expiry_date: 1753029156000,
+  id_token: undefined,
+  refresh_token: 'jwt-placeholder'
+}
+
+=== Auth Result Debug ===
+tokenUpdated: true
+hasNewToken: true
+hasNewExpiry: true
+hasCallback: true
+
+=== Calling Token Update Callback ===
+
+=== Saving Token to Database ===
+Service Account ID: 35a1bdc3-3735-4d2e-a280-d473f84a3461
+Token length: 1024
+Expiry: 2025-07-20T16:32:36.000Z
+🔐 Token encrypted successfully
+Database update result: SUCCESS
+Token update callback completed
+
+=== Indexing Failed ===
+URL: https://nexjob.tech/lowongan-kerja/operator-wwtp-pt-procon-djaya-agung-palembang/
+Error: Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:61286730027'.
+Status: 429
+Headers: {}
+Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:61286730027'.",
+    "errors": [
+      {
+        "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:61286730027'.",
+        "domain": "global",
+        "reason": "rateLimitExceeded"
+      }
+    ],
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "service": "indexing.googleapis.com",
+          "quota_location": "global",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_limit_value": "200",
+          "consumer": "projects/61286730027",
+          "quota_unit": "1/d/{project}"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+🚫 QUOTA EXCEEDED - Pausing job deebf3f6-e59d-4402-9dde-9c1074832e57 immediately
+⚠️ Quota exceeded for URL: https://nexjob.tech/lowongan-kerja/operator-wwtp-pt-procon-djaya-agung-palembang/ on account: 35a1bdc3-3735-4d2e-a280-d473f84a3461
+🚫 ALL ACCOUNTS EXHAUSTED - Pausing job deebf3f6-e59d-4402-9dde-9c1074832e57
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+Client connected to WebSocket
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+3:32:42 PM [express] GET /api/indexing-jobs/deebf3f6-e59d-4402-9dde-9c1074832e57 200 in 1629ms :: {"…
+3:32:43 PM [express] GET /api/indexing-jobs/deebf3f6-e59d-4402-9dde-9c1074832e57/submissions 200 in …
+
+=== Generating New Token ===
+Reason: No cached token
+
+=== JWT Details ===
+Client Email: indexnow@nexpocket.iam.gserviceaccount.com
+Private Key ID: f176cd36ce2fb0a2b68fbf42b43839ac691a81e1
+Scope: https://www.googleapis.com/auth/indexing
+
+=== Raw Token Response ===
+{
+  access_token: 'ya29.c.c0ASRK0GYMGoDMq8gvISsDOjWaN1MZKeq4sWOsfzHg8F8X6tYNDZSDSgn98VoXI2mqQz1chepIkp84Iq0sOIa-Yo4SckWARmm6xRndTuq5Of2i-bLV-CmJEehoCgtKMX5XPVAN7uVslzrLV8ZKuNLFZ6_N9Ifr_j-hXpDASZP_rraDQq96ZtfHhMtAZjCOPoIi4GsbOkGBMUNn0xa32AWjN13tn7TDz5CiU_hD9WQuKK4To0ychT0kDGBJOwk3Pdk95JDnCBs0pyiTC8j6uOcCQRsrOsEc8rCa3xpMLiJ80av4k-OOdWmYEIK1LHvsozF3PV1WZyG874HKb9NNhejNEuoOwISzoWh0upjUKhGypFViTgA62T63X1rqN385DXI8uWaQWtjto_b815Xdt-Qh3dygSxllRbYrjV3oIYMqn-gs2I7sqs20MaFsks-Ms9WQ_Bq5_V8lq0IXv4_-nQgfonv1lMkd0goOR_g8QpJlmh-pOUBozVnB9_qnSsZrQM7rI9j3ds0Z7MakpY17tdjf8sjB6v9o59RxpawwhV5Rgh8qpl4fWhUlonahemihZpp7yZr7md48MFJURM8zZ3pn3Yi3p7o0zhxoqblgY_lxUlVhXjphfqWB47Yxdecchf1z_nw61oSclUjwcQRI7JV15Vu4dYe5WB6j2zgBx1UYwS5U6ynndXXl1j1WbjoZUgYyjzIc97xl6t_ofyIguh3yhsawo0Mqssz3VhiZUfY3o5n-5Fd9WXZFmeUgSx9z5psdvodRsaz3s7jpZ7B95MR75k0kg5yS4Yau4Wotm_B4JQqkwhY4J6YlBvmadYfjng4hxg-woRhtiat4xv9dlet1w4V0wjZJoUr24-lzjocqgzb730X4IXkOOp3txn6e_U8WFRokleYB0__72OzrvZc5i78dyxIcx7qo3_JccwJ8pjuljMS3cmzby_ora8JpMJrqvQrad6UO-R80Y1eY2k06lRZy0kdybzirgnBgup_SI29-iYezbxMsXnx',
+  token_type: 'Bearer',
+  expiry_date: 1753029162000,
+  id_token: undefined,
+  refresh_token: 'jwt-placeholder'
+}
+
+=== Auth Result Debug ===
+tokenUpdated: true
+hasNewToken: true
+hasNewExpiry: true
+hasCallback: true
+
+=== Calling Token Update Callback ===
+
+=== Saving Token to Database ===
+Service Account ID: 35a1bdc3-3735-4d2e-a280-d473f84a3461
+Token length: 1024
+Expiry: 2025-07-20T16:32:42.000Z
+🔐 Token encrypted successfully
+Database update result: SUCCESS
+Token update callback completed
+
+=== Indexing Failed ===
+URL: https://nexjob.tech/lowongan-kerja/sales-lapangan-myrepublic-ciamis-ciamis/
+Error: Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:61286730027'.
+Status: 429
+Headers: {}
+Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:61286730027'.",
+    "errors": [
+      {
+        "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:61286730027'.",
+        "domain": "global",
+        "reason": "rateLimitExceeded"
+      }
+    ],
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_unit": "1/d/{project}",
+          "quota_limit_value": "200",
+          "quota_location": "global",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "service": "indexing.googleapis.com",
+          "consumer": "projects/61286730027",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+🚫 QUOTA EXCEEDED - Pausing job deebf3f6-e59d-4402-9dde-9c1074832e57 immediately
+⚠️ Quota exceeded for URL: https://nexjob.tech/lowongan-kerja/sales-lapangan-myrepublic-ciamis-ciamis/ on account: 35a1bdc3-3735-4d2e-a280-d473f84a3461
+🚫 ALL ACCOUNTS EXHAUSTED - Pausing job deebf3f6-e59d-4402-9dde-9c1074832e57
+
+=== Generating New Token ===
+Reason: No cached token
+
+=== JWT Details ===
+Client Email: indexnow@nexpocket.iam.gserviceaccount.com
+Private Key ID: f176cd36ce2fb0a2b68fbf42b43839ac691a81e1
+Scope: https://www.googleapis.com/auth/indexing
+
+=== Raw Token Response ===
+{
+  access_token: 'ya29.c.c0ASRK0GbLdu6ZFANqDOZQ6VzOJQCwY9H7l1kMWUXJVbFvoJ-aTPFBCsazU854Q8bNzo5pFK7gBDFP-oPtakmCK6ZqQdoPQRq-KTe_yGuqk1Zmc27BQmvnABOG17YT5JOl0y36amaQRz8LJ_X1w2hiZ0QekekwjuitYUO847wVzVwZsae6g8h7phP07WICUQbmpVfzgAwxCArRk4AY6HuznD2NCton6R1Ped0GYfiMdRGnPYaKj_m2g8Dh72Rum9wBWxDrQ7AEGzFvcwZFeakzbqXyZUOKsrVNpCvW3ZlUzDZl0aNpnMnckl6E4V6cAVSZz2qBrnQB9zpwMAowcL6T18uEOAcTMkk5_82Fh9d9Di9hIacDe3urqUEZG385AlBhcr-224lZf-OJlfUQ6lbMi4Fumq23_4vR_pbJVwXrtZmlBgpMvQ1B4o-ge65ef5s--SRuB455bWoMxZJ0MBaRkOgwMtQq-pfX-3FZcVzpwWfg-rnWqdofbaBYWfYeg72bO_t_S2sw4a_eqIOhs5Xne2J-smVFvM-2l3ml2s4ZOvf8URtxBjQ3Xmt79p3Zr2Ykp9kt_4WUvqsp0gsmnntjUXbFV3rR6lgM8ZUx-bhMMg42p19pI_I_ySUVJgjIoOrYSo3rdXxtdQX7Zebnaf0d-Onh1fXzh0ldh56V6objV_p02B7hXYsMxwgyZitX7X7fRbdeUF1SWk_Yy5_cF62-7bfdYvqn1fBWn4JhJ3SSavRim00-MX-bzujXwsOiZ-1pq2auSilxBfR1fQXj7OhYcZ7SyURJfhhjRyeYzgVgp_wgdbw9yRR9k39_BcB0q-f7faRSnBiqM_F97jyBBbzZemS21Qzf4-faUVdQBa5Zai0sMby8wnRzjrtvapIeUMwJZSsMlMF1rwFwIzX_Y0WSuM_xUnnxrbnlreJoU7MItIWm8ZZhuwJJ7f6tRdxFZ8p7kR9-1B2w7Rc5k_WZ_J1y6rzx0rfrxsZ--9OtVldbFV5ss-2ji13SYJ-',
+  token_type: 'Bearer',
+  expiry_date: 1753029168000,
+  id_token: undefined,
+  refresh_token: 'jwt-placeholder'
+}
+
+=== Auth Result Debug ===
+tokenUpdated: true
+hasNewToken: true
+hasNewExpiry: true
+hasCallback: true
+
+=== Calling Token Update Callback ===
+
+=== Saving Token to Database ===
+Service Account ID: 35a1bdc3-3735-4d2e-a280-d473f84a3461
+Token length: 1024
+Expiry: 2025-07-20T16:32:48.000Z
+🔐 Token encrypted successfully
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+Database update result: SUCCESS
+Token update callback completed
+
+=== Indexing Failed ===
+URL: https://nexjob.tech/lowongan-kerja/perangkai-bunga-vivere-florist-jakarta-barat/
+Error: Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:61286730027'.
+Status: 429
+Headers: {}
+Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:61286730027'.",
+    "errors": [
+      {
+        "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:61286730027'.",
+        "domain": "global",
+        "reason": "rateLimitExceeded"
+      }
+    ],
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_unit": "1/d/{project}",
+          "service": "indexing.googleapis.com",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "consumer": "projects/61286730027",
+          "quota_limit_value": "200",
+          "quota_location": "global"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+🚫 QUOTA EXCEEDED - Pausing job deebf3f6-e59d-4402-9dde-9c1074832e57 immediately
+⚠️ Quota exceeded for URL: https://nexjob.tech/lowongan-kerja/perangkai-bunga-vivere-florist-jakarta-barat/ on account: 35a1bdc3-3735-4d2e-a280-d473f84a3461
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+3:32:50 PM [express] GET /api/indexing-jobs/deebf3f6-e59d-4402-9dde-9c1074832e57/submissions 200 in …
+3:32:51 PM [express] GET /api/indexing-jobs/deebf3f6-e59d-4402-9dde-9c1074832e57 200 in 2109ms :: {"…
+🚫 ALL ACCOUNTS EXHAUSTED - Pausing job deebf3f6-e59d-4402-9dde-9c1074832e57
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+3:32:52 PM [express] GET /api/indexing-jobs/deebf3f6-e59d-4402-9dde-9c1074832e57/submissions 200 in …
+3:32:53 PM [express] GET /api/indexing-jobs/deebf3f6-e59d-4402-9dde-9c1074832e57 304 in 1589ms :: {"…
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+3:32:54 PM [express] GET /api/indexing-jobs/deebf3f6-e59d-4402-9dde-9c1074832e57/submissions 200 in …
+
+=== Generating New Token ===
+Reason: No cached token
+
+=== JWT Details ===
+Client Email: indexnow@nexpocket.iam.gserviceaccount.com
+Private Key ID: f176cd36ce2fb0a2b68fbf42b43839ac691a81e1
+Scope: https://www.googleapis.com/auth/indexing
+
+=== Raw Token Response ===
+{
+  access_token: 'ya29.c.c0ASRK0GYZObIYTv4qSToxGTlJd3PpdcH6D9QVf0-LSGrF4tKciasj-SGr5Pwfn4CGg1htj9_6RrhwOtgY5s596iLiC8a8qXxk6gJq-XZ1_-Ka22jXlKdfWMLv3TQJnsy9nzbBRHLt-FhMdz1oCl4MPcVHvU-yGHuLOgnBJZk0ZrH0nI6ORyKyx3dt2bXKNfmqJjER4qOD-I3akV6YPSL0Wg3fmcfcikglnLA1uL8MIDZhdMFdfT-epnYoHUV1cKSEkXt_OD7a_e20zRkMHlGmOeFjWhGlgRc15xshY2QLEHC8Vb4TwYZk19BuRj2jIvgn4E3VeDNfy8z45_XU5QdljctN2hkfl4GwCi5RvcBI1CbLJI7VotHyw7aPE385DWkJeiaeoXM4edq9aafFXary_sioXi7OOUoVaRIY3J4myrl33jnhrMOchXQ95z6JJI4y0a83JZ4WxBnlUWeMxupmzQYtI2r2jssFiW9rnlsnt3h9xsZzOd395Jtl1cow0rkqqfk71ei-Rq1u1ylri8ecel6mvte66gxd8_6gXoRY1bonwQiMyS9pd_p3d6SWUoRUiYrZ8yrXajR7gBVB-p_j2ucnVsr7tzlXtp1lJQiqezx5biczg3rFpWZZ9IpS56V6xS8UIB6SJh3jgi5padu0Oar5nUZyB0mvfRpdtlIxI0-1OBqcbpppaSWXg-VpWfdm56mXtYdqUhe0hZROo4e4ir8SZl-U0_MBFx7Xrufsjgz5ZQB7SIigv4WV5-OQ8magnv7X1OIrjfMh4yv4gxSsrcbBsewrMhz5zgfQs3ugvx0k8j8e20_p4Fh1pkm62Mw21dnVgwfJOcMm2Xpn1-SWBVsSF6Oe62xmFtlWylxrp94k82h9xOrvfgwBIjUnfc87uZ8B-mUZqU2QU1gyihuQdkYeezIFRa2xQotxUwenvf9o66v0hmfBgU2_WQv7FQWFs2MbZ6yBZsn7QYMRa1xRgl94SdteMli7yjlkRXbJ5pIXj1hu1j-6sa2',
+  token_type: 'Bearer',
+  expiry_date: 1753029174000,
+  id_token: undefined,
+  refresh_token: 'jwt-placeholder'
+}
+
+=== Auth Result Debug ===
+tokenUpdated: true
+hasNewToken: true
+hasNewExpiry: true
+hasCallback: true
+
+=== Calling Token Update Callback ===
+
+=== Saving Token to Database ===
+Service Account ID: 35a1bdc3-3735-4d2e-a280-d473f84a3461
+Token length: 1024
+Expiry: 2025-07-20T16:32:54.000Z
+🔐 Token encrypted successfully
+Database update result: SUCCESS
+Token update callback completed
+
+=== Indexing Failed ===
+URL: https://nexjob.tech/lowongan-kerja/sales-filter-air-purwo-cv-jembatan-emas-suryajaya-tangerang-selatan/
+Error: Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:61286730027'.
+Status: 429
+Headers: {}
+Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:61286730027'.",
+    "errors": [
+      {
+        "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:61286730027'.",
+        "domain": "global",
+        "reason": "rateLimitExceeded"
+      }
+    ],
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "service": "indexing.googleapis.com",
+          "quota_unit": "1/d/{project}",
+          "quota_location": "global",
+          "quota_limit_value": "200",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "consumer": "projects/61286730027"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+🚫 QUOTA EXCEEDED - Pausing job deebf3f6-e59d-4402-9dde-9c1074832e57 immediately
+⚠️ Quota exceeded for URL: https://nexjob.tech/lowongan-kerja/sales-filter-air-purwo-cv-jembatan-emas-suryajaya-tangerang-selatan/ on account: 35a1bdc3-3735-4d2e-a280-d473f84a3461
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+3:32:56 PM [express] GET /api/indexing-jobs/deebf3f6-e59d-4402-9dde-9c1074832e57/submissions 200 in …
+3:32:56 PM [express] GET /api/indexing-jobs/deebf3f6-e59d-4402-9dde-9c1074832e57 200 in 2044ms :: {"…
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+🚫 ALL ACCOUNTS EXHAUSTED - Pausing job deebf3f6-e59d-4402-9dde-9c1074832e57
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+3:32:58 PM [express] GET /api/indexing-jobs/deebf3f6-e59d-4402-9dde-9c1074832e57 304 in 1607ms :: {"…
+3:32:58 PM [express] GET /api/indexing-jobs/deebf3f6-e59d-4402-9dde-9c1074832e57/submissions 200 in …
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+3:33:00 PM [express] GET /api/indexing-jobs/deebf3f6-e59d-4402-9dde-9c1074832e57/submissions 200 in …
+
+=== Generating New Token ===
+Reason: No cached token
+
+=== JWT Details ===
+Client Email: indexnow@nexpocket.iam.gserviceaccount.com
+Private Key ID: f176cd36ce2fb0a2b68fbf42b43839ac691a81e1
+Scope: https://www.googleapis.com/auth/indexing
+
+=== Raw Token Response ===
+{
+  access_token: 'ya29.c.c0ASRK0GZo6QK9lCPgfCWFcuJ3ppARc91qYLfKeMiS5Pkai_EjsakBddCKV6yuCXpBsFeleQjKrNXZOBYnTmsBwtVYcnhw20z8v4EBYMTysw1ArT2BDMrEjsh9tVLViXo_0oI7-4vxa5QX1_hM4De85FOPUJF1pM-eSwIQvWMKEWK8TzAp9aHAgXdCKp90YK-4dizW89gDJIo9CwEFFobKPA2v75Vc-yebBpnh2p4ERsWUMNj8XqMUIyYewtjBWtd6UUPb564ClYct-GU7FvnDBmkntBkq4uEAGuuWKADXOwgaawi-KZZvHIcNomJYL3_80rimhO_wUTIQg_jATBWGGX7iITfTXkN6Xj4PWwQByMp8mJBuL5iBpVxSN385D82jn38VMviicwQ1iRwQ39_lzq9bnvxzzJ0BFJU9acruBf4u9m_YeuBuZOygfFYOeJvdUOsqU9OSffFeRRO3sbnZxjZUViRymheB10l4X53n6hyUpZuyn3VR75h378qco2ecVIexeyXMjUmco4b9kIX6a3JV-V49imt1idaRy3eqq0xaRSowF2Ztdwp7Un3FyRy9OtQy0eb5hgc442VwXv1n4kBtqyIpm_kS03Jp0ux8fuJnaIYRa0FSQVk7lMBi_c-c0qgt2197wwtuQ_mzI9FXh3nx7W91RJopdO8Yy50lfJitqXvF-F9vgYl4z9ORb46ps84c0gOSpf7sk6aUV1RJ9kWdw3sXOO4-klBXxkugQllU4FsScdezXF70d-ZbMueopbhF3iRpl9e_fJ0beXUOB4RB25loJ94zk2ujJJfqjzOnqrnIB_9UyZno90h0-aS_Q6M8sQF55QeYzy2wpaRUUVpX1f0q0oxyVyt5R8MV3whfFrvkIqvw4hk-uu4_6p6cekhYW-jYvntFb8in8akQg8FcaU6-uxj4S9tnd7whf4_WYnd079pbIyeYJcn1XSlYbWdMpwxcSFWkJ_euqoy3ztS_Y7I-Oz6kFSv-odcdk-rRRqh2o6sY1dh',
+  token_type: 'Bearer',
+  expiry_date: 1753029179000,
+  id_token: undefined,
+  refresh_token: 'jwt-placeholder'
+}
+
+=== Auth Result Debug ===
+tokenUpdated: true
+hasNewToken: true
+hasNewExpiry: true
+hasCallback: true
+
+=== Calling Token Update Callback ===
+
+=== Saving Token to Database ===
+Service Account ID: 35a1bdc3-3735-4d2e-a280-d473f84a3461
+Token length: 1024
+Expiry: 2025-07-20T16:32:59.000Z
+🔐 Token encrypted successfully
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+Database update result: SUCCESS
+Token update callback completed
+
+=== Indexing Failed ===
+URL: https://nexjob.tech/lowongan-kerja/customer-service-marketplaceonline-shop-ptdigital-solid-technology-jakarta-utara/
+Error: Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:61286730027'.
+Status: 429
+Headers: {}
+Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:61286730027'.",
+    "errors": [
+      {
+        "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:61286730027'.",
+        "domain": "global",
+        "reason": "rateLimitExceeded"
+      }
+    ],
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_unit": "1/d/{project}",
+          "service": "indexing.googleapis.com",
+          "consumer": "projects/61286730027",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_location": "global",
+          "quota_limit_value": "200",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+🚫 QUOTA EXCEEDED - Pausing job deebf3f6-e59d-4402-9dde-9c1074832e57 immediately
+⚠️ Quota exceeded for URL: https://nexjob.tech/lowongan-kerja/customer-service-marketplaceonline-shop-ptdigital-solid-technology-jakarta-utara/ on account: 35a1bdc3-3735-4d2e-a280-d473f84a3461
+3:33:01 PM [express] GET /api/indexing-jobs/deebf3f6-e59d-4402-9dde-9c1074832e57 200 in 2038ms :: {"…
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+3:33:02 PM [express] GET /api/indexing-jobs/deebf3f6-e59d-4402-9dde-9c1074832e57/submissions 200 in …
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+🚫 ALL ACCOUNTS EXHAUSTED - Pausing job deebf3f6-e59d-4402-9dde-9c1074832e57
+3:33:04 PM [express] GET /api/indexing-jobs/deebf3f6-e59d-4402-9dde-9c1074832e57 200 in 2039ms :: {"…
+3:33:04 PM [express] GET /api/indexing-jobs/deebf3f6-e59d-4402-9dde-9c1074832e57/submissions 200 in …
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+3:33:06 PM [express] GET /api/indexing-jobs/deebf3f6-e59d-4402-9dde-9c1074832e57/submissions 200 in …
+
+=== Generating New Token ===
+Reason: No cached token
+
+=== JWT Details ===
+Client Email: indexnow@nexpocket.iam.gserviceaccount.com
+Private Key ID: f176cd36ce2fb0a2b68fbf42b43839ac691a81e1
+Scope: https://www.googleapis.com/auth/indexing
+
+=== Raw Token Response ===
+{
+  access_token: 'ya29.c.c0ASRK0GauNW4RkbzBot5Ht-WZ0s682t33fiWYlfpBohuy4MQCdK8MRW-gPAzJegV6ge_9ikavTTcgbwSx4wMZI-0AMLN_1myzHHJXX7S4ZXu48YNPH58JT9DMYj2K4ARwVoGH9aLIiMlD7sdQ1EtQu0bHxsE75LXE979WDLUzQUQPNBrKCkfOQMKkUCqBxuC-984f_yOshcYoaV91kAl_8Hm-LcWcla0gMw6N2AoQqzk2T1uEIOMWF_XoXweWwigdC328m7eyYSNWb2tVlD-FlT7vjsO7ucfS4UGwmXN2zgn5hlorVzVtOY106IfAK66XyypuPp-4La5Hrm9V5TC4mVSyIOOPDxrpWqs9ChQlNh6eyHLpNwAeVYEE384C-wM16jmr_o2QVVJpj9bXyaSvYRyk421zV5YhMB7Xf9ia-1VMRu4JMmvRw4xcdZe8-jSRIx-Xipt5twcabBaldZM3Rawcej0la9e0ugbi1Wp50Vc8Ws4Qeqo93kJSpe_UIXurnFJ67hmnuozIksfkb2h3OnsQWe9nh9tY4SSMw84-IYZUbVkiti50QwBfRtt2UzOYxttlSV0RxjQB6d2gbJxMfBydBRB8fvle3Wl0c9l5_5MS7ziWJk0rBWa4vqz12tV4OxFXvpjesqX_xBrqgjbo9bvsdk629ShbQksW2qdV174jksSrY5xjShvFzey5ndUgmy4RYlXw2un-f69x1I_bw3XbOYeJUdQ2l2sfMkI8Is5B5YqM3noXZY3S8R3l-cjennUUaQJ4y2iySesum5YdIMmQ9okY8_eFt5Bekf5j9ia5UXzna9-y_tazsnpJn_45gYBeS0mI6QOypYJwRe-RU5sSQMI7RyatdYeevh8ZUgR_54gkZMO3rdQ90Bxfep0-fVuQ-ft9Qll5m07sJju0Mn6aMjSgteuef213Spm3iXv247Zil88zbxjdpe891ycYw4QmiWXRz2ObaryhyrpJoV6huydj7jpVpqFlbg0Qp5qV_9ckoW8hojM',
+  token_type: 'Bearer',
+  expiry_date: 1753029185000,
+  id_token: undefined,
+  refresh_token: 'jwt-placeholder'
+}
+
+=== Auth Result Debug ===
+tokenUpdated: true
+hasNewToken: true
+hasNewExpiry: true
+hasCallback: true
+
+=== Calling Token Update Callback ===
+
+=== Saving Token to Database ===
+Service Account ID: 35a1bdc3-3735-4d2e-a280-d473f84a3461
+Token length: 1024
+Expiry: 2025-07-20T16:33:05.000Z
+🔐 Token encrypted successfully
+Database update result: SUCCESS
+Token update callback completed
+
+=== Indexing Failed ===
+URL: https://nexjob.tech/lowongan-kerja/online-marketing-pt-berjaya-sejahtera-abadi-tangerang/
+Error: Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:61286730027'.
+Status: 429
+Headers: {}
+Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:61286730027'.",
+    "errors": [
+      {
+        "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:61286730027'.",
+        "domain": "global",
+        "reason": "rateLimitExceeded"
+      }
+    ],
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_unit": "1/d/{project}",
+          "quota_location": "global",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "service": "indexing.googleapis.com",
+          "consumer": "projects/61286730027",
+          "quota_limit_value": "200"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+🚫 QUOTA EXCEEDED - Pausing job deebf3f6-e59d-4402-9dde-9c1074832e57 immediately
+⚠️ Quota exceeded for URL: https://nexjob.tech/lowongan-kerja/online-marketing-pt-berjaya-sejahtera-abadi-tangerang/ on account: 35a1bdc3-3735-4d2e-a280-d473f84a3461
+🚫 ALL ACCOUNTS EXHAUSTED - Pausing job deebf3f6-e59d-4402-9dde-9c1074832e57
