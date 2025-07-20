@@ -1,13 +1,18 @@
 # Google Indexing Dashboard
 
-## Latest Update - Production Build Fix (July 19, 2025)
-✓ **Fixed production build error** - Resolved TypeError with import.meta.dirname being undefined in bundled production code
-✓ **Created custom build script** - Added build.js with proper esbuild configuration to handle import.meta.dirname
-✓ **Added production build helper** - Created build-production.sh script for easy production builds
-✓ **Verified production deployment** - Confirmed server starts correctly and serves static files in production mode
-✓ **Migration completed successfully** - All checklist items completed, project ready for deployment
+## Latest Update - Production Build Environment Fix (July 20, 2025)
+✓ **Identified production build issue** - White blank page caused by missing environment variables in frontend build
+✓ **Root cause analysis** - Vite not loading VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY from .env during production build
+✓ **Migration completed successfully** - Project migrated from Replit Agent to standard Replit environment
+✓ **Documented workaround solution** - Manual environment variable inclusion required for production builds
 
-**Technical Details:** Issue was `import.meta.dirname` becomes `undefined` when bundled with esbuild, causing path resolution errors. Solution used esbuild's `--define` flag to replace `import.meta.dirname` with correct path in production builds.
+**Technical Details:** The issue is that vite.config.ts doesn't load environment variables from .env during production builds. Frontend crashes with "Missing Supabase environment variables" error when accessing import.meta.env.VITE_SUPABASE_URL/VITE_SUPABASE_ANON_KEY.
+
+**Production Build Solution:**
+For production builds to work properly, environment variables must be explicitly passed:
+```bash
+VITE_SUPABASE_URL=https://bwkasvyrzbzhcdtvsbyg.supabase.co VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3a2FzdnlyemJ6aGNkdHZzYnlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3NTUxNDIsImV4cCI6MjA2ODMzMTE0Mn0._YnFB_X6glA_67HRBcPQIVJ0lzcOQ5PinZzilecvB98 vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+```
 
 ## Overview
 
