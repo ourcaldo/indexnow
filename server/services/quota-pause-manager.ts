@@ -83,17 +83,39 @@ export class QuotaPauseManager {
   async pauseJobDueToQuota(jobId: string, reason: string, resumeAfter?: Date): Promise<void> {
     console.log(`🚫 Pausing job ${jobId} due to quota: ${reason}`);
     
-    await db
-      .update(indexingJobs)
-      .set({
-        status: 'paused',
-        pausedDueToQuota: true,
-        pausedAt: new Date(),
-        pauseReason: reason,
-        resumeAfter: resumeAfter || null,
-        updatedAt: new Date()
-      })
-      .where(eq(indexingJobs.id, jobId));
+    try {
+      await db
+        .update(indexingJobs)
+        .set({
+          status: 'paused',
+          pausedDueToQuota: true,
+          pausedAt: new Date(),
+          pauseReason: reason,
+          resumeAfter: resumeAfter || null,
+          updatedAt: new Date()
+        })
+        .where(eq(indexingJobs.id, jobId));
+      
+      console.log(`✅ Successfully paused job ${jobId} in database`);
+    } catch (error) {
+      console.error(`❌ Failed to pause job ${jobId}:`, error);
+      console.error('This likely means the quota management columns do not exist yet');
+      console.error('Please run the FINAL_MIGRATION_TO_RUN.sql file in Supabase SQL Editor');
+      
+      // Fallback: just pause without quota-specific fields
+      try {
+        await db
+          .update(indexingJobs)
+          .set({
+            status: 'paused',
+            updatedAt: new Date()
+          })
+          .where(eq(indexingJobs.id, jobId));
+        console.log(`✅ Job ${jobId} paused with basic status (quota columns missing)`);
+      } catch (fallbackError) {
+        console.error(`❌ Even basic pause failed:`, fallbackError);
+      }
+    }
 
     // Create dashboard notification
     const job = await db
