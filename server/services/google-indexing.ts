@@ -71,6 +71,16 @@ export class GoogleIndexingService {
     // Check if we have a valid cached token (try encrypted first, then plain text)
     let cachedToken = null;
     
+    if (process.env.NODE_ENV === 'development') {
+      console.log('\n=== Service Account Debug ===');
+      console.log('Service Account ID:', serviceAccount.id);
+      console.log('Has accessTokenEncrypted:', !!serviceAccount.accessTokenEncrypted);
+      console.log('Has encryptionIv:', !!serviceAccount.encryptionIv);
+      console.log('Has encryptionTag:', !!serviceAccount.encryptionTag);
+      console.log('Has plain accessToken:', !!serviceAccount.accessToken);
+      console.log('Token expires at:', serviceAccount.tokenExpiresAt);
+    }
+    
     // Try to get encrypted token first
     if (serviceAccount.accessTokenEncrypted && serviceAccount.encryptionIv && serviceAccount.encryptionTag) {
       try {
@@ -83,7 +93,7 @@ export class GoogleIndexingService {
           console.log('✅ Successfully decrypted cached token');
         }
       } catch (error) {
-        console.warn('Failed to decrypt token, falling back to plain text token:', error.message);
+        console.warn('❌ Failed to decrypt token, falling back to plain text token:', error.message);
         cachedToken = serviceAccount.accessToken;
       }
     } else if (serviceAccount.accessToken) {
@@ -91,6 +101,10 @@ export class GoogleIndexingService {
       cachedToken = serviceAccount.accessToken;
       if (process.env.NODE_ENV === 'development') {
         console.log('📝 Using plain text cached token (will be encrypted on next update)');
+      }
+    } else {
+      if (process.env.NODE_ENV === 'development') {
+        console.log('⚠️ NO CACHED TOKEN FOUND - will generate new token');
       }
     }
     
