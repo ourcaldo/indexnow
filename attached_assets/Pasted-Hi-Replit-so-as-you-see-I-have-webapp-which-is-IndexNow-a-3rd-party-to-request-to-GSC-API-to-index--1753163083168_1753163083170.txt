@@ -1,0 +1,118 @@
+Hi Replit, so as you see I have webapp which is IndexNow a 3rd party to request to GSC API to index a link. This webapp is same and inspirated by Instant Indexing wordpress plugin by RankMath.
+
+So, as this webapp is on development stage and for personal use only. I need you to focus to enhance and fix some problem in dashboard and panel.
+
+Before you do make the changes, I need you to do a deep dive into the codebase, so you do have better understanding about this webapp, the current stage and feature and the obstacles.
+
+Before we more in-deepth about this project. Please take time to read all information in replit.md because there's a lot important things that you should know.
+
+After you fully understand, please focus on the pause function of the jobs. At the moment, the jobs have function to re-run, pause and auto pause, right? The auto pause will be happen if the service account is exhausted (daily limit reached).
+
+But, when it's paused, the submission history of that jobs is missing, this is also happen when I rerun a jobs, pause then start again, the history of previous submission is missing.
+
+So, fix it, I don't want to delete or not show the submission history. Don't add fucking like attempt 1,2,3, which is not fucking need it. Just fucking when we re-run it then we fucking do submission again while the history is normal bcs each link already have their submission date.
+
+Before, you ask me to run SQL queries which add attempt numbering, which I don't fucking ask that. So, make another queries to delete the column:
+-- =====================================================
+-- CRITICAL: SUBMISSION HISTORY PRESERVATION MIGRATION
+-- =====================================================
+-- Run this entire script in your Supabase SQL Editor
+-- This adds submission attempt tracking to preserve history
+
+-- Step 1: Add new columns to indb_url_submissions table
+ALTER TABLE indb_url_submissions 
+ADD COLUMN IF NOT EXISTS attempt_number INTEGER DEFAULT 1,
+ADD COLUMN IF NOT EXISTS previous_attempts TEXT[];
+
+-- Step 2: Update existing submissions to have the new fields with default values
+UPDATE indb_url_submissions 
+SET attempt_number = 1
+WHERE attempt_number IS NULL;
+
+UPDATE indb_url_submissions 
+SET previous_attempts = ARRAY[]::TEXT[]
+WHERE previous_attempts IS NULL;
+
+-- Step 3: Add comments for documentation
+COMMENT ON COLUMN indb_url_submissions.attempt_number IS 'Current attempt number for this URL submission';
+COMMENT ON COLUMN indb_url_submissions.previous_attempts IS 'Array of previous attempt results for this URL';
+
+-- Step 4: Create index for efficient querying by job and URL combination
+CREATE INDEX IF NOT EXISTS idx_url_submissions_job_url 
+ON indb_url_submissions (job_id, url);
+
+-- Step 5: Create index for attempt tracking
+CREATE INDEX IF NOT EXISTS idx_url_submissions_attempt 
+ON indb_url_submissions (attempt_number);
+
+-- Step 6: Create helpful view for submission history
+CREATE OR REPLACE VIEW submission_history AS
+SELECT 
+    us.id,
+    us.job_id,
+    us.url,
+    us.status,
+    us.attempt_number,
+    us.previous_attempts,
+    us.error_message,
+    us.submitted_at,
+    us.created_at,
+    us.updated_at,
+    ij.name as job_name,
+    ij.user_id,
+    CASE 
+        WHEN array_length(us.previous_attempts, 1) > 0 
+        THEN TRUE 
+        ELSE FALSE 
+    END as has_previous_attempts,
+    array_length(us.previous_attempts, 1) as total_attempts
+FROM indb_url_submissions us
+JOIN indb_indexing_jobs ij ON us.job_id = ij.id
+ORDER BY us.updated_at DESC;
+
+-- Grant access to the view
+GRANT SELECT ON submission_history TO authenticated;
+
+-- Step 7: Create function to get submission attempt summary
+CREATE OR REPLACE FUNCTION get_submission_attempt_summary(p_job_id UUID)
+RETURNS TABLE(
+    total_urls INTEGER,
+    first_attempt_urls INTEGER,
+    retry_attempt_urls INTEGER,
+    max_attempts INTEGER,
+    avg_attempts NUMERIC
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        COUNT(*)::INTEGER as total_urls,
+        COUNT(CASE WHEN us.attempt_number = 1 THEN 1 END)::INTEGER as first_attempt_urls,
+        COUNT(CASE WHEN us.attempt_number > 1 THEN 1 END)::INTEGER as retry_attempt_urls,
+        MAX(us.attempt_number)::INTEGER as max_attempts,
+        ROUND(AVG(us.attempt_number), 2) as avg_attempts
+    FROM indb_url_submissions us
+    WHERE us.job_id = p_job_id;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Grant execute permission on the function
+GRANT EXECUTE ON FUNCTION get_submission_attempt_summary(UUID) TO authenticated;
+
+-- Step 8: Verification queries to ensure migration was successful
+-- Check that new columns exist
+SELECT column_name, data_type, is_nullable, column_default
+FROM information_schema.columns
+WHERE table_name = 'indb_url_submissions' 
+AND column_name IN ('attempt_number', 'previous_attempts')
+ORDER BY column_name;
+
+-- Show some sample data
+SELECT id, job_id, url, status, attempt_number, previous_attempts
+FROM indb_url_submissions 
+LIMIT 5;
+
+-- Success message
+SELECT 'Submission History Migration Completed Successfully! 🎉' as status;
+
+AGAIN, I JUST FUCKING WANT YOU TO FUCKING FIX THESE THING WITHOUT FUCKING BROKE MY CODE, BCS BEFORE YOU FUCKING ADD SOMETHING THAT I DIDN'T ASK, BROKEN MY CODE WITH A FUNCTION THAT YOU FUCKING DELETE, AND FUCKING OTHER IMPORTANT THING THAT YOU FUCKING NOT INCLUDE IT.
+SO, MY REQUEST IS FUCKING SO SIMPLE, WHEN THE FUCKING JOBS IS RE-RUN, DON'T FUCKING RESET THE HISTORY.

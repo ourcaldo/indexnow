@@ -265,8 +265,8 @@ export class JobScheduler {
 
       const jobData = job[0];
 
-      // Clear any existing URL submissions for this job to ensure fresh start
-      await db.delete(urlSubmissions).where(eq(urlSubmissions.jobId, jobId));
+      // DO NOT clear existing URL submissions - preserve submission history
+      // Duplicate submissions will be handled by checking existing URLs before processing
 
       // Update job status to running
       await db
@@ -398,9 +398,48 @@ export class JobScheduler {
     const today = new Date().toISOString().split('T')[0];
     let urlIndex = 0;
     
+    // Get existing submissions to check for already successfully processed URLs
+    const existingSubmissions = await db
+      .select()
+      .from(urlSubmissions)
+      .where(eq(urlSubmissions.jobId, jobId));
+    
+    const successfulUrls = new Set(
+      existingSubmissions
+        .filter(sub => sub.status === 'success')
+        .map(sub => sub.url)
+    );
+    
     for (const url of urls) {
       urlIndex++;
       let processed = false;
+
+      // Skip URLs that have already been successfully processed to preserve history
+      if (successfulUrls.has(url)) {
+        console.log(`⏭️ Skipping ${url} - already successfully processed`);
+        processed = true; // Mark as processed to continue with progress tracking
+        
+        // Update real-time progress without reprocessing
+        await db
+          .update(indexingJobs)
+          .set({
+            processedUrls: urlIndex,
+            updatedAt: new Date()
+          })
+          .where(eq(indexingJobs.id, jobId));
+
+        // Broadcast real-time progress
+        this.broadcastJobUpdate(jobId, 'running', { 
+          progress: { 
+            current: urlIndex, 
+            total: urls.length,
+            currentUrl: url,
+            skipped: true
+          }
+        });
+        
+        continue; // Skip to next URL
+      }
 
       // Update real-time progress
       await db

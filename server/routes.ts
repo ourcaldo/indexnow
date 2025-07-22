@@ -353,8 +353,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: 'Job not found' });
       }
 
-      // Delete old URL submissions to avoid accumulation
-      await storage.deleteUrlSubmissionsForJob(req.params.id);
+      // DO NOT delete URL submissions - preserve submission history
+      // The job scheduler will handle duplicate URLs appropriately during processing
 
       // Reset job status and counters for re-run
       const updatedJob = await storage.updateIndexingJob(req.params.id, {
@@ -363,7 +363,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         successfulUrls: 0,
         failedUrls: 0,
         lastRun: null,
-        nextRun: new Date()
+        nextRun: new Date(),
+        pausedDueToQuota: false,  // Reset quota pause status
+        pausedAt: null,
+        pauseReason: null
       });
 
       // Execute the job immediately
