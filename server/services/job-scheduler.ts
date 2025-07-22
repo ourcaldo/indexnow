@@ -225,15 +225,37 @@ export class JobScheduler {
     try {
       console.log(`Executing job ${jobId}`);
 
-      // Implement job locking to prevent race conditions
+      // Get job details FIRST without locking
+      const job = await db
+        .select()
+        .from(indexingJobs)
+        .where(eq(indexingJobs.id, jobId))
+        .limit(1);
+
+      if (!job.length) {
+        console.error(`Job ${jobId} not found`);
+        return;
+      }
+
+      const jobData = job[0];
+
+      // Check if job should be processed (only pending jobs)
+      if (jobData.status !== 'pending') {
+        console.log(`Job ${jobId} is not pending (status: ${jobData.status}) - skipping execution`);
+        return;
+      }
+
+      // NOW implement job locking ONLY when actually processing
       const lockResult = await db
         .update(indexingJobs)
         .set({ 
           lockedAt: new Date(),
-          lockedBy: 'job-scheduler'
+          lockedBy: 'job-scheduler',
+          status: 'running' // Set to running immediately when locked
         })
         .where(and(
           eq(indexingJobs.id, jobId),
+          eq(indexingJobs.status, 'pending'), // Only lock pending jobs
           or(
             isNull(indexingJobs.lockedAt),
             lt(indexingJobs.lockedAt, new Date(Date.now() - parseInt(process.env.JOB_LOCK_TIMEOUT_MINUTES!) * 60 * 1000)) // Lock expired
@@ -246,33 +268,13 @@ export class JobScheduler {
         return;
       }
 
-      // Get job details
-      const job = await db
-        .select()
-        .from(indexingJobs)
-        .where(eq(indexingJobs.id, jobId))
-        .limit(1);
-
-      if (!job.length) {
-        console.error(`Job ${jobId} not found`);
-        // Release lock
-        await db
-          .update(indexingJobs)
-          .set({ lockedAt: null, lockedBy: null })
-          .where(eq(indexingJobs.id, jobId));
-        return;
-      }
-
-      const jobData = job[0];
-
       // DO NOT clear existing URL submissions - preserve submission history
       // Duplicate submissions will be handled by checking existing URLs before processing
 
-      // Update job status to running
+      // Update last run time (status already set to 'running' when locked)
       await db
         .update(indexingJobs)
         .set({ 
-          status: 'running',
           lastRun: new Date()
         })
         .where(eq(indexingJobs.id, jobId));
@@ -292,7 +294,12 @@ export class JobScheduler {
       if (urls.length === 0) {
         await db
           .update(indexingJobs)
-          .set({ status: 'failed' })
+          .set({ 
+            status: 'failed',
+            // CRITICAL: Release lock when job fails
+            lockedAt: null,
+            lockedBy: null
+          })
           .where(eq(indexingJobs.id, jobId));
         
         // Send email notification for job failure
@@ -311,7 +318,12 @@ export class JobScheduler {
       if (accounts.length === 0) {
         await db
           .update(indexingJobs)
-          .set({ status: 'failed' })
+          .set({ 
+            status: 'failed',
+            // CRITICAL: Release lock when job fails
+            lockedAt: null,
+            lockedBy: null
+          })
           .where(eq(indexingJobs.id, jobId));
         
         // Send email notification for job failure
@@ -350,7 +362,10 @@ export class JobScheduler {
             processedUrls: submissions.length,
             successfulUrls: successful,
             failedUrls: failed,
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            // CRITICAL: Release lock when job completes
+            lockedAt: null,
+            lockedBy: null
           })
           .where(eq(indexingJobs.id, jobId));
 
@@ -381,7 +396,12 @@ export class JobScheduler {
       
       await db
         .update(indexingJobs)
-        .set({ status: 'failed' })
+        .set({ 
+          status: 'failed',
+          // CRITICAL: Release lock when job fails
+          lockedAt: null,
+          lockedBy: null
+        })
         .where(eq(indexingJobs.id, jobId));
       
       // Send email notification for job failure

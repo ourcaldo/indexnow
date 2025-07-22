@@ -366,8 +366,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
         nextRun: new Date(),
         pausedDueToQuota: false,  // Reset quota pause status
         pausedAt: null,
-        pauseReason: null
+        pauseReason: null,
+        // CRITICAL: Release any existing locks
+        lockedAt: null,
+        lockedBy: null
       });
+
+      // IMMEDIATE real-time update via WebSocket
+      if (wss) {
+        wss.clients.forEach((client) => {
+          if (client.readyState === WebSocket.OPEN) {
+            client.send(JSON.stringify({
+              type: 'job_updated',
+              jobId: req.params.id,
+              status: 'pending',
+              data: updatedJob
+            }));
+          }
+        });
+      }
 
       // Execute the job immediately
       setImmediate(() => {
