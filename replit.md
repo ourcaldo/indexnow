@@ -157,11 +157,11 @@
 
 ## YOU CAN UPDATE A CHANGES/LOG AFTER THIS ##
 
-## Latest Update - CRITICAL RERUN FUNCTIONALITY FIX (July 22, 2025)
-✅ **FIXED RERUN SKIPPING URLS** - Removed the URL skipping logic in job scheduler that was preventing rerun from reprocessing URLs
-✅ **FIXED RERUN STATUS NOT CHANGING** - Added proper WebSocket broadcasting to update UI immediately when rerun is triggered
-✅ **FIXED EXCESSIVE FRONTEND REQUESTS** - Limited WebSocket query invalidations to prevent spam requests to /submissions endpoint
-✅ **PRESERVED SUBMISSION HISTORY** - Rerun now preserves existing submission history and adds new submissions (e.g., 10 becomes 20, not replaced)
+## Latest Update - CRITICAL TOKEN ENCRYPTION FIX (July 22, 2025)
+✅ **FIXED ENCRYPTED TOKEN USAGE** - System now properly uses encrypted access tokens from database instead of generating new ones
+✅ **FIXED ENCRYPTION TAG ISSUE** - Removed encryptionTag requirement for CBC mode encryption to allow proper token decryption
+✅ **FIXED RERUN FUNCTIONALITY** - All rerun issues resolved: status changes, preserves history, limited excessive requests
+✅ **SECURITY ENHANCED** - Access tokens are now properly encrypted and decrypted using .env encryption key
 
 **Key Technical Changes:**
 - Removed URL skipping logic from `processUrlsWithQuota()` method in job scheduler (lines 421-463)

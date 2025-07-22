@@ -81,8 +81,8 @@ export class GoogleIndexingService {
       console.log('Token expires at:', serviceAccount.tokenExpiresAt);
     }
     
-    // Try to get encrypted token first
-    if (serviceAccount.accessTokenEncrypted && serviceAccount.encryptionIv && serviceAccount.encryptionTag) {
+    // Try to get encrypted token first - check for encrypted token and IV (tag can be empty for CBC mode)
+    if (serviceAccount.accessTokenEncrypted && serviceAccount.encryptionIv) {
       try {
         cachedToken = EncryptionService.decrypt({
           encrypted: serviceAccount.accessTokenEncrypted,
@@ -93,8 +93,9 @@ export class GoogleIndexingService {
           console.log('✅ Successfully decrypted cached token');
         }
       } catch (error) {
-        console.warn('❌ Failed to decrypt token, falling back to plain text token:', error.message);
-        cachedToken = serviceAccount.accessToken;
+        console.warn('❌ Failed to decrypt token:', error.message);
+        console.warn('❌ This means encryptionTag is missing or corrupted - will generate new token');
+        cachedToken = null; // Force new token generation instead of falling back to plain text
       }
     } else if (serviceAccount.accessToken) {
       // Fall back to plain text token for backward compatibility

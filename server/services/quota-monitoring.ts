@@ -255,7 +255,7 @@ export class QuotaMonitoringService {
   async getServiceAccountsByUsage(userId: string): Promise<ServiceAccount[]> {
     const today = new Date().toISOString().split('T')[0];
     
-    // Get service accounts with their current usage
+    // Get service accounts with their current usage - ENSURE WE GET ALL FIELDS INCLUDING ENCRYPTED TOKENS
     const accountsWithUsage = await db
       .select({
         account: serviceAccounts,
@@ -275,7 +275,23 @@ export class QuotaMonitoringService {
       ))
       .orderBy(sql`current_usage ASC`); // Least used first
 
-    return accountsWithUsage.map(row => row.account);
+    const accounts = accountsWithUsage.map(row => row.account);
+    
+    // DEBUG: Check if encrypted token fields are present
+    if (process.env.NODE_ENV === 'development' && accounts.length > 0) {
+      console.log(`\n=== SERVICE ACCOUNTS DEBUG ===`);
+      console.log(`Retrieved ${accounts.length} service accounts for user ${userId}`);
+      accounts.forEach((account, index) => {
+        console.log(`Account ${index + 1}: ${account.name}`);
+        console.log(`  - Has accessTokenEncrypted: ${!!account.accessTokenEncrypted}`);
+        console.log(`  - Has encryptionIv: ${!!account.encryptionIv}`);
+        console.log(`  - Has encryptionTag: ${!!account.encryptionTag}`);
+        console.log(`  - Has plain accessToken: ${!!account.accessToken}`);
+        console.log(`  - tokenExpiresAt: ${account.tokenExpiresAt}`);
+      });
+    }
+
+    return accounts;
   }
 
   // Clean up old notifications and alerts
