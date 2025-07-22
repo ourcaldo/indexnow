@@ -81,9 +81,10 @@ export default function JobDetail() {
       const response = await apiRequest("POST", `/api/indexing-jobs/${jobId}/rerun`);
       return await response.json();
     },
-    onSuccess: () => {
-      // Don't invalidate queries on rerun - WebSocket will handle real-time updates
-      // This prevents excessive requests to /submissions endpoint
+    onSuccess: (data) => {
+      // Immediately update the job status in the cache
+      queryClient.setQueryData(["/api/indexing-jobs", jobId], data);
+      
       toast({
         title: "Success", 
         description: "Job re-run started successfully",

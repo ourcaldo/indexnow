@@ -159,23 +159,24 @@
 
 ## Latest Update - CRITICAL RERUN FUNCTIONALITY FIX (July 22, 2025)
 ✅ **FIXED RERUN SKIPPING URLS** - Removed the URL skipping logic in job scheduler that was preventing rerun from reprocessing URLs
-✅ **FIXED RERUN STATUS NOT CHANGING** - Modified rerun endpoint to properly delete existing submissions and reset all counters
-✅ **FIXED EXCESSIVE FRONTEND REQUESTS** - Removed unnecessary query invalidations on rerun to prevent spam requests to /submissions endpoint
-✅ **PROPER RERUN BEHAVIOR** - Rerun now deletes all previous submissions and processes ALL URLs again from scratch
+✅ **FIXED RERUN STATUS NOT CHANGING** - Added proper WebSocket broadcasting to update UI immediately when rerun is triggered
+✅ **FIXED EXCESSIVE FRONTEND REQUESTS** - Limited WebSocket query invalidations to prevent spam requests to /submissions endpoint
+✅ **PRESERVED SUBMISSION HISTORY** - Rerun now preserves existing submission history and adds new submissions (e.g., 10 becomes 20, not replaced)
 
 **Key Technical Changes:**
-- Modified `/api/indexing-jobs/:id/rerun` endpoint to call `deleteUrlSubmissionsForJob()` before rerun
-- Removed URL skipping logic from `processUrlsWithQuota()` method in job scheduler
-- Reset `quotaExceededUrls` counter along with other counters during rerun
-- Removed query invalidations from frontend rerun mutation to prevent excessive API calls
-- WebSocket real-time updates now handle status changes instead of query refetching
+- Removed URL skipping logic from `processUrlsWithQuota()` method in job scheduler (lines 421-463)
+- Added immediate WebSocket broadcasting in `/api/indexing-jobs/:id/rerun` endpoint for real-time status updates
+- Modified frontend rerun mutation to use `setQueryData` for immediate cache updates
+- Limited WebSocket invalidations to specific job queries and only invalidate submissions when job is running/completed
+- Preserved submission history - rerun does NOT delete existing submissions but processes URLs again
 
 **What RERUN now does correctly:**
-1. Deletes ALL existing URL submissions for the job
-2. Resets ALL job counters (processed, successful, failed, quota exceeded)
-3. Sets job status to 'pending' and triggers immediate execution
-4. Processes ALL URLs again regardless of previous status
-5. No more skipping of "already processed" URLs
+1. Preserves ALL existing URL submission history
+2. Resets job counters (processed, successful, failed, quota exceeded) to 0
+3. Sets job status to 'pending' and immediately broadcasts via WebSocket
+4. Processes ALL URLs again regardless of previous status - adds new submissions
+5. No more skipping of "already processed" URLs during rerun operations
+6. Frontend immediately shows status change without excessive API requests
 
 ## Latest Update - ACTUAL Submission History Preservation Fix (July 22, 2025)
 ✅ **CRITICAL FIX COMPLETED: Submission History Preservation** - Fixed the root cause where job rerun operations were destroying URL submission history

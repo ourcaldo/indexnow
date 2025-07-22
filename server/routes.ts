@@ -359,10 +359,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log(`📋 Current job status: ${job.status}`);
       console.log(`📋 Job name: ${job.name}`);
 
-      // RERUN OPERATION: Delete existing URL submissions to start fresh
-      // This is what rerun means - process everything again from scratch
-      await storage.deleteUrlSubmissionsForJob(req.params.id);
-      console.log(`🗑️ Deleted existing URL submissions for rerun of job ${req.params.id}`);
+      // RERUN OPERATION: DO NOT delete existing submissions
+      // Rerun means run again, keeping the history and adding new submissions
+      console.log(`🔄 Keeping existing submission history for rerun of job ${req.params.id}`);
 
       // Reset job status and counters for re-run
       const updatedJob = await storage.updateIndexingJob(req.params.id, {
@@ -381,23 +380,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
         lockedBy: null
       });
 
-      // IMMEDIATE real-time update via WebSocket
+      // Broadcast the status change immediately
       const wss = (global as any).wss;
       if (wss) {
         console.log(`🔄 Broadcasting rerun status to ${wss.clients.size} WebSocket clients`);
         wss.clients.forEach((client: any) => {
           if (client.readyState === 1) { // WebSocket.OPEN
             client.send(JSON.stringify({
-              type: 'job_updated',
+              type: 'jobUpdate',
               jobId: req.params.id,
               status: 'pending',
               data: updatedJob
             }));
           }
         });
-      } else {
-        console.warn('⚠️ WebSocket server not available for broadcasting');
       }
+
+      console.log(`✅ RERUN SUCCESS - Job ${req.params.id} reset to pending status`);
 
       // Execute the job immediately as a rerun (process all URLs)
       console.log(`⚡ Triggering immediate RERUN execution for ${req.params.id}`);
@@ -405,7 +404,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         jobScheduler.executeJob(req.params.id);
       });
 
-      console.log(`✅ RERUN SUCCESS - Job ${req.params.id} reset to pending status`);
       res.json(updatedJob);
     } catch (error) {
       console.error('Error re-running indexing job:', error);
