@@ -203,7 +203,9 @@ export class SupabaseStorage implements IStorage {
   }
 
   async getUrlSubmissions(jobId: string): Promise<UrlSubmission[]> {
-    return db.select().from(urlSubmissions).where(eq(urlSubmissions.jobId, jobId));
+    return db.select().from(urlSubmissions)
+      .where(eq(urlSubmissions.jobId, jobId))
+      .orderBy(desc(urlSubmissions.submittedAt));
   }
 
   async deleteUrlSubmissionsForJob(jobId: string): Promise<void> {

@@ -140,8 +140,6 @@
 | indb_url_submissions                | submitted_at            | timestamp without time zone |
 | indb_url_submissions                | created_at              | timestamp without time zone |
 | indb_url_submissions                | updated_at              | timestamp without time zone |
-| indb_url_submissions                | attempt_number          | integer                     |
-| indb_url_submissions                | previous_attempts       | ARRAY                       |
 | indb_user_profiles                  | id                      | uuid                        |
 | indb_user_profiles                  | email                   | text                        |
 | indb_user_profiles                  | full_name               | text                        |
@@ -156,20 +154,6 @@
 | indb_user_profiles                  | email_quota_alerts      | boolean                     |
 | indb_user_profiles                  | quota_alert_threshold   | integer                     |
 | indb_user_profiles                  | dashboard_notifications | boolean                     |
-| submission_history                  | id                      | uuid                        |
-| submission_history                  | job_id                  | uuid                        |
-| submission_history                  | url                     | text                        |
-| submission_history                  | status                  | USER-DEFINED                |
-| submission_history                  | attempt_number          | integer                     |
-| submission_history                  | previous_attempts       | ARRAY                       |
-| submission_history                  | error_message           | text                        |
-| submission_history                  | submitted_at            | timestamp without time zone |
-| submission_history                  | created_at              | timestamp without time zone |
-| submission_history                  | updated_at              | timestamp without time zone |
-| submission_history                  | job_name                | text                        |
-| submission_history                  | user_id                 | uuid                        |
-| submission_history                  | has_previous_attempts   | boolean                     |
-| submission_history                  | total_attempts          | integer                     |
 
 ## YOU CAN UPDATE A CHANGES/LOG AFTER THIS ##
 
