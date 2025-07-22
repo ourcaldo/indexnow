@@ -223,7 +223,7 @@ export class JobScheduler {
 
   async executeJob(jobId: string) {
     try {
-      console.log(`Executing job ${jobId}`);
+      console.log(`🚀 ===== EXECUTING JOB ${jobId} =====`);
 
       // Get job details FIRST without locking
       const job = await db
@@ -233,11 +233,12 @@ export class JobScheduler {
         .limit(1);
 
       if (!job.length) {
-        console.error(`Job ${jobId} not found`);
+        console.error(`❌ Job ${jobId} not found`);
         return;
       }
 
       const jobData = job[0];
+      console.log(`📋 Job details: Name="${jobData.name}", Status="${jobData.status}", Total URLs=${jobData.totalUrls}`);
 
       // Check if job should be processed (only pending jobs)
       if (jobData.status !== 'pending') {

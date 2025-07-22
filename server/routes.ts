@@ -400,8 +400,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Execute the job immediately as a rerun (process all URLs)
       console.log(`⚡ Triggering immediate RERUN execution for ${req.params.id}`);
-      setImmediate(() => {
-        jobScheduler.executeJob(req.params.id);
+      setImmediate(async () => {
+        console.log(`🔄 RERUN STARTED - About to execute job ${req.params.id}`);
+        await jobScheduler.executeJob(req.params.id);
+        console.log(`✅ RERUN COMPLETED - Job ${req.params.id} execution finished`);
       });
 
       res.json(updatedJob);
