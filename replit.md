@@ -1,6 +1,196 @@
 # Google Indexing Dashboard
 
-## Latest Update - Quota Management System Implementation (July 20, 2025)
+## Read everything in this section carefully, this is important things about this project ##
+- In this project, we're using Supabase for the database, auth management, and cloud storage. So, DO NOT install PostgreSQL locally and push any database locally. Give the SQL queries if you need to push/updates a database related.
+- All variables like key, endpoint or anything that related to it, must be placed in .env file. DO NOT hardcoded any variables key in the code file.
+
+## Current Database Mapping ##
+| table_name                          | column_name             | data_type                   |
+| ----------------------------------- | ----------------------- | --------------------------- |
+| dashboard_stats                     | user_id                 | uuid                        |
+| dashboard_stats                     | email                   | text                        |
+| dashboard_stats                     | total_service_accounts  | bigint                      |
+| dashboard_stats                     | active_service_accounts | bigint                      |
+| dashboard_stats                     | total_jobs              | bigint                      |
+| dashboard_stats                     | completed_jobs          | bigint                      |
+| dashboard_stats                     | failed_jobs             | bigint                      |
+| dashboard_stats                     | running_jobs            | bigint                      |
+| dashboard_stats                     | total_successful_urls   | bigint                      |
+| dashboard_stats                     | total_failed_urls       | bigint                      |
+| indb_dashboard_notifications        | id                      | uuid                        |
+| indb_dashboard_notifications        | user_id                 | uuid                        |
+| indb_dashboard_notifications        | title                   | text                        |
+| indb_dashboard_notifications        | message                 | text                        |
+| indb_dashboard_notifications        | type                    | text                        |
+| indb_dashboard_notifications        | is_read                 | boolean                     |
+| indb_dashboard_notifications        | related_entity_type     | text                        |
+| indb_dashboard_notifications        | related_entity_id       | uuid                        |
+| indb_dashboard_notifications        | created_at              | timestamp without time zone |
+| indb_dashboard_notifications        | expires_at              | timestamp without time zone |
+| indb_indexing_jobs                  | id                      | uuid                        |
+| indb_indexing_jobs                  | user_id                 | uuid                        |
+| indb_indexing_jobs                  | name                    | text                        |
+| indb_indexing_jobs                  | schedule                | USER-DEFINED                |
+| indb_indexing_jobs                  | status                  | USER-DEFINED                |
+| indb_indexing_jobs                  | total_urls              | integer                     |
+| indb_indexing_jobs                  | processed_urls          | integer                     |
+| indb_indexing_jobs                  | successful_urls         | integer                     |
+| indb_indexing_jobs                  | failed_urls             | integer                     |
+| indb_indexing_jobs                  | sitemap_url             | text                        |
+| indb_indexing_jobs                  | manual_urls             | ARRAY                       |
+| indb_indexing_jobs                  | cron_expression         | text                        |
+| indb_indexing_jobs                  | next_run                | timestamp without time zone |
+| indb_indexing_jobs                  | last_run                | timestamp without time zone |
+| indb_indexing_jobs                  | created_at              | timestamp without time zone |
+| indb_indexing_jobs                  | updated_at              | timestamp without time zone |
+| indb_indexing_jobs                  | locked_at               | timestamp with time zone    |
+| indb_indexing_jobs                  | locked_by               | text                        |
+| indb_indexing_jobs                  | quota_exceeded_urls     | integer                     |
+| indb_indexing_jobs                  | paused_due_to_quota     | boolean                     |
+| indb_indexing_jobs                  | paused_at               | timestamp with time zone    |
+| indb_indexing_jobs                  | pause_reason            | text                        |
+| indb_indexing_jobs                  | resume_after            | timestamp with time zone    |
+| indb_quota_alerts                   | id                      | uuid                        |
+| indb_quota_alerts                   | user_id                 | uuid                        |
+| indb_quota_alerts                   | service_account_id      | uuid                        |
+| indb_quota_alerts                   | alert_type              | text                        |
+| indb_quota_alerts                   | threshold_percentage    | integer                     |
+| indb_quota_alerts                   | current_usage           | integer                     |
+| indb_quota_alerts                   | quota_limit             | integer                     |
+| indb_quota_alerts                   | sent_at                 | timestamp without time zone |
+| indb_quota_alerts                   | created_at              | timestamp without time zone |
+| indb_quota_usage                    | id                      | uuid                        |
+| indb_quota_usage                    | service_account_id      | uuid                        |
+| indb_quota_usage                    | date                    | date                        |
+| indb_quota_usage                    | requests_count          | integer                     |
+| indb_security_analytics             | id                      | uuid                        |
+| indb_security_analytics             | date                    | date                        |
+| indb_security_analytics             | total_events            | integer                     |
+| indb_security_analytics             | auth_failures           | integer                     |
+| indb_security_analytics             | suspicious_requests     | integer                     |
+| indb_security_analytics             | blocked_ips             | integer                     |
+| indb_security_analytics             | vulnerability_scans     | integer                     |
+| indb_security_analytics             | brute_force_attempts    | integer                     |
+| indb_security_analytics             | unique_ips              | integer                     |
+| indb_security_analytics             | high_risk_events        | integer                     |
+| indb_security_analytics             | created_at              | timestamp with time zone    |
+| indb_security_analytics             | updated_at              | timestamp with time zone    |
+| indb_security_blocked_ips           | id                      | uuid                        |
+| indb_security_blocked_ips           | ip_address              | inet                        |
+| indb_security_blocked_ips           | reason                  | text                        |
+| indb_security_blocked_ips           | blocked_at              | timestamp with time zone    |
+| indb_security_blocked_ips           | blocked_until           | timestamp with time zone    |
+| indb_security_blocked_ips           | failed_attempts         | integer                     |
+| indb_security_blocked_ips           | is_permanent            | boolean                     |
+| indb_security_blocked_ips           | created_by              | uuid                        |
+| indb_security_blocked_ips           | created_at              | timestamp with time zone    |
+| indb_security_events                | id                      | uuid                        |
+| indb_security_events                | event_type              | character varying           |
+| indb_security_events                | severity                | character varying           |
+| indb_security_events                | ip_address              | inet                        |
+| indb_security_events                | user_agent              | text                        |
+| indb_security_events                | user_id                 | uuid                        |
+| indb_security_events                | request_url             | text                        |
+| indb_security_events                | request_method          | character varying           |
+| indb_security_events                | request_body            | jsonb                       |
+| indb_security_events                | request_query           | jsonb                       |
+| indb_security_events                | details                 | jsonb                       |
+| indb_security_events                | timestamp               | timestamp with time zone    |
+| indb_security_events                | created_at              | timestamp with time zone    |
+| indb_security_failed_auth_attempts  | id                      | uuid                        |
+| indb_security_failed_auth_attempts  | ip_address              | inet                        |
+| indb_security_failed_auth_attempts  | attempted_email         | character varying           |
+| indb_security_failed_auth_attempts  | user_agent              | text                        |
+| indb_security_failed_auth_attempts  | endpoint                | character varying           |
+| indb_security_failed_auth_attempts  | failure_reason          | text                        |
+| indb_security_failed_auth_attempts  | timestamp               | timestamp with time zone    |
+| indb_security_failed_auth_attempts  | created_at              | timestamp with time zone    |
+| indb_security_suspicious_activities | id                      | uuid                        |
+| indb_security_suspicious_activities | ip_address              | inet                        |
+| indb_security_suspicious_activities | activity_type           | character varying           |
+| indb_security_suspicious_activities | user_agent              | text                        |
+| indb_security_suspicious_activities | request_url             | text                        |
+| indb_security_suspicious_activities | request_method          | character varying           |
+| indb_security_suspicious_activities | detected_patterns       | ARRAY                       |
+| indb_security_suspicious_activities | risk_score              | integer                     |
+| indb_security_suspicious_activities | timestamp               | timestamp with time zone    |
+| indb_security_suspicious_activities | created_at              | timestamp with time zone    |
+| indb_service_accounts               | id                      | uuid                        |
+| indb_service_accounts               | user_id                 | uuid                        |
+| indb_service_accounts               | name                    | text                        |
+| indb_service_accounts               | client_email            | text                        |
+| indb_service_accounts               | project_id              | text                        |
+| indb_service_accounts               | is_active               | boolean                     |
+| indb_service_accounts               | daily_quota_limit       | integer                     |
+| indb_service_accounts               | per_minute_quota_limit  | integer                     |
+| indb_service_accounts               | created_at              | timestamp without time zone |
+| indb_service_accounts               | updated_at              | timestamp without time zone |
+| indb_service_accounts               | service_account_json    | text                        |
+| indb_service_accounts               | access_token            | text                        |
+| indb_service_accounts               | token_expires_at        | timestamp with time zone    |
+| indb_service_accounts               | access_token_encrypted  | text                        |
+| indb_service_accounts               | encryption_iv           | text                        |
+| indb_service_accounts               | encryption_tag          | text                        |
+| indb_url_submissions                | id                      | uuid                        |
+| indb_url_submissions                | job_id                  | uuid                        |
+| indb_url_submissions                | url                     | text                        |
+| indb_url_submissions                | status                  | USER-DEFINED                |
+| indb_url_submissions                | service_account_id      | uuid                        |
+| indb_url_submissions                | error_message           | text                        |
+| indb_url_submissions                | submitted_at            | timestamp without time zone |
+| indb_url_submissions                | created_at              | timestamp without time zone |
+| indb_url_submissions                | updated_at              | timestamp without time zone |
+| indb_url_submissions                | attempt_number          | integer                     |
+| indb_url_submissions                | previous_attempts       | ARRAY                       |
+| indb_user_profiles                  | id                      | uuid                        |
+| indb_user_profiles                  | email                   | text                        |
+| indb_user_profiles                  | full_name               | text                        |
+| indb_user_profiles                  | created_at              | timestamp without time zone |
+| indb_user_profiles                  | updated_at              | timestamp without time zone |
+| indb_user_profiles                  | role                    | USER-DEFINED                |
+| indb_user_profiles                  | email_job_completion    | boolean                     |
+| indb_user_profiles                  | email_job_failures      | boolean                     |
+| indb_user_profiles                  | email_daily_reports     | boolean                     |
+| indb_user_profiles                  | request_timeout         | integer                     |
+| indb_user_profiles                  | retry_attempts          | integer                     |
+| indb_user_profiles                  | email_quota_alerts      | boolean                     |
+| indb_user_profiles                  | quota_alert_threshold   | integer                     |
+| indb_user_profiles                  | dashboard_notifications | boolean                     |
+| submission_history                  | id                      | uuid                        |
+| submission_history                  | job_id                  | uuid                        |
+| submission_history                  | url                     | text                        |
+| submission_history                  | status                  | USER-DEFINED                |
+| submission_history                  | attempt_number          | integer                     |
+| submission_history                  | previous_attempts       | ARRAY                       |
+| submission_history                  | error_message           | text                        |
+| submission_history                  | submitted_at            | timestamp without time zone |
+| submission_history                  | created_at              | timestamp without time zone |
+| submission_history                  | updated_at              | timestamp without time zone |
+| submission_history                  | job_name                | text                        |
+| submission_history                  | user_id                 | uuid                        |
+| submission_history                  | has_previous_attempts   | boolean                     |
+| submission_history                  | total_attempts          | integer                     |
+
+## YOU CAN UPDATE A CHANGES/LOG AFTER THIS ##
+
+## Latest Update - Submission History Preservation Fix (July 22, 2025)
+✓ **CRITICAL FIX: Submission History Preservation** - Fixed the main issue where job pause/resume and rerun operations were deleting URL submission history
+✓ **Enhanced database schema** - Added `attempt_number` and `previous_attempts` columns to track multiple submission attempts for same URLs
+✓ **Implemented history-preserving upsert logic** - New `upsertUrlSubmission` method preserves previous attempt results while allowing retries
+✓ **Smart job resumption** - Resumed jobs now skip URLs that were already successfully processed, continuing from where they left off
+✓ **Created comprehensive migration script** - `SUBMISSION_HISTORY_MIGRATION.sql` adds all necessary database changes with proper indexing
+✓ **Updated frontend display** - Job detail page now shows attempt numbers and collapsible history of previous attempts for each URL
+✓ **Simplified URL status updates** - Created `SubmissionHelper` service to centralize submission updates while preserving history
+✓ **Fixed rerun functionality** - Rerun now archives current attempts as history and creates new attempts instead of deleting everything
+
+**Key Technical Changes:**
+- URL submissions now preserve complete attempt history with status, error messages, and timestamps
+- Jobs that are paused (manually or due to quota) maintain all submission data when resumed
+- Rerun operation creates new attempts while archiving previous results as history
+- Frontend displays attempt numbers and expandable history for each URL
+- Database migration adds proper indexing for efficient job+URL queries
+
+## Previous Update - Quota Management System Implementation (July 20, 2025)
 ✓ **Implemented comprehensive quota management** - Jobs now pause automatically when Google API quota exceeded
 ✓ **Created quota pause manager service** - Handles quota exhaustion detection and job pausing logic
 ✓ **Enhanced job scheduler with quota handling** - Prevents continued URL processing when quotas exhausted
@@ -27,6 +217,7 @@ The application is now 100% portable with no hardcoded values. All configuration
 - `RATE_LIMIT_CLEANUP_INTERVAL_MINUTES` - Memory cleanup interval (previously hardcoded 5 minutes)
 - `RATE_LIMIT_MAX_REQUESTS` - Maximum requests per window (previously hardcoded 100)
 - `RATE_LIMIT_WINDOW_MINUTES` - Rate limit window duration (previously hardcoded 15 minutes)
+
 
 **Fixed Production Build Command:**
 ```bash
