@@ -1,0 +1,373 @@
+ Broadcasting rerun status to 3 WebSocket clients
+✅ RERUN SUCCESS - Job e97061d8-9600-4e54-b7fd-f178e36870eb reset to pending status
+⚡ Triggering immediate RERUN execution for e97061d8-9600-4e54-b7fd-f178e36870eb
+7:34:16 AM [express] POST /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/rerun 200 in 535ms…
+🔄 RERUN STARTED - About to execute job e97061d8-9600-4e54-b7fd-f178e36870eb
+🚀 ===== EXECUTING JOB e97061d8-9600-4e54-b7fd-f178e36870eb =====
+📋 Job details: Name="#Job-1753165897007-500", Status="pending", Total URLs=10
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+7:34:16 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 304 in …
+7:34:17 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb 200 in 573ms :: {"i…
+
+=== SERVICE ACCOUNTS DEBUG ===
+Retrieved 3 service accounts for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5
+Account 1: indexnow@cetta-n8n.iam.gserviceaccount.com
+  - Has accessTokenEncrypted: true
+  - Has encryptionIv: true
+  - Has encryptionTag: false
+  - Has plain accessToken: false
+  - tokenExpiresAt: Tue Jul 22 2025 08:32:31 GMT+0000 (Coordinated Universal Time)
+Account 2: indexnow-cetta
+  - Has accessTokenEncrypted: true
+  - Has encryptionIv: true
+  - Has encryptionTag: false
+  - Has plain accessToken: false
+  - tokenExpiresAt: Tue Jul 22 2025 08:18:02 GMT+0000 (Coordinated Universal Time)
+Account 3: indexnow
+  - Has accessTokenEncrypted: true
+  - Has encryptionIv: true
+  - Has encryptionTag: false
+  - Has plain accessToken: false
+  - tokenExpiresAt: Tue Jul 22 2025 08:18:03 GMT+0000 (Coordinated Universal Time)
+🔄 Load balancing: Using 3 service accounts sorted by usage
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+7:34:17 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 304 in …
+7:34:17 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb 200 in 594ms :: {"i…
+
+=== Service Account Debug ===
+Service Account ID: 964fdc33-a2d6-4f4f-a777-073ea5e3263f
+Has accessTokenEncrypted: true
+Has encryptionIv: true
+Has encryptionTag: false
+Has plain accessToken: false
+Token expires at: 2025-07-22T08:32:31.000Z
+Decryption failed: Error: error:1C800064:Provider routines::bad decrypt
+    at Decipheriv.final (node:internal/crypto/cipher:193:29)
+    at Function.decrypt (/home/runner/workspace/server/services/encryption.ts:47:29)
+    at GoogleIndexingService.createAuthClient (/home/runner/workspace/server/services/google-indexing.ts:87:41)
+    at GoogleIndexingService.submitUrlForIndexing (/home/runner/workspace/server/services/google-indexing.ts:155:37)
+    at JobScheduler.processUrlsWithQuota (/home/runner/workspace/server/services/job-scheduler.ts:474:52)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async JobScheduler.executeJob (/home/runner/workspace/server/services/job-scheduler.ts:338:7)
+    at async Immediate.<anonymous> (/home/runner/workspace/server/routes.ts:405:9) {
+  library: 'Provider routines',
+  reason: 'bad decrypt',
+  code: 'ERR_OSSL_BAD_DECRYPT'
+}
+❌ Failed to decrypt token: Failed to decrypt token
+❌ This means encryptionTag is missing or corrupted - will generate new token
+
+=== Generating New Token ===
+Reason: No cached token
+
+=== JWT Details ===
+Client Email: indexnow@cetta-n8n.iam.gserviceaccount.com
+Private Key ID: a16480d1c0dba67d4a58c5c120b93c15186f7670
+Scope: https://www.googleapis.com/auth/indexing
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+7:34:17 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 304 in …
+
+=== Raw Token Response ===
+{
+  access_token: 'ya29.c.c0ASRK0GZWuShhsSuZTsEPSdSw4L7vg8dqegy4sCrWHtUeYckC0OxIO15JBJwkVy2LNO6ODZjbjJ_lX-zl4MBU21AuSoOzC13NJ4SVamcwI3IWVz4UwYcunNwTrszdbeMcAz86j-TKOxabvH017TEat90sQAF2dlowHZwJZBHpoX2tX396Q6mJZqYPt2PDSIqsGM-eVPqiNNsMs6JRXBjAyKAN-qTSaxFulBbW8QE-66lYLkAR1EgqPaGbS9aEVgg5aUnXPbsklVN6HopRsqqVWx1R_1lSQCBMliQwM-aq7uBskqMjRJ1fS7LHkJeHNCXw2agki9qshW3qTKc4UAPOKDx3AdQJx9-Cr4LxyfAJx9Lm4HHMaDssrPgH384Cuea1xV44ezZeOpB9mqZiBF741OnuSkrl37J81Bi7qtRFo2ma4t4uIvet1d3nMnt3VFd6ru97dlpW8QUmjwO2rxF4Op-M8xs6-_kWnZQ_o40p2wX-3eVYdW1Frww_sY0UmjZIF6hFb7znq0j478imdVIgfQjI_OX-OwFW1axFsOl4WjMQw4rvtg6va5ydfoWZSmac3dM4Og7I-liVpuvJwzSReRMhlr3m2QROwZtJ9hdjx4s3J_hIZtcp-7iaJ30vbFObsBvXQ8uzItJt5O9zeOq9fI8sFcuddSBYjJFOaUaU-vove4v7FV6mVZpx34u6ZXFRmuqbhBdhRZh4eBocjhxOyex3XwZ6-IYz3MZk1QWVO0aoRZ261Qhfz0msWv-Ir3rYyivu7xm24goBbF342cvpZrlz0d2ugzaV6wukrabbWec9hSzx8oOtOreO69dQVFS3h9YvaaeRSRymgxXyVO-jbSOY50yXQVSWuW85kbXoigdyO278F-dk59skYI2VYhS860s_RcUYkz0QU2V757R8QMOScrubV8rM0a7V4-Bl26Y01Qyfdc1IIXVtZqYxyQ6wjSBerjyprOqcyj1meWmZr2em-k_e21uF88O9F5vUaigswgYxk3S4WrS',
+  token_type: 'Bearer',
+  expiry_date: 1753173256000,
+  id_token: undefined,
+  refresh_token: 'jwt-placeholder'
+}
+
+=== Auth Result Debug ===
+tokenUpdated: true
+hasNewToken: true
+hasNewExpiry: true
+hasCallback: true
+
+=== Calling Token Update Callback ===
+
+=== Saving Token to Database ===
+Service Account ID: 964fdc33-a2d6-4f4f-a777-073ea5e3263f
+Token length: 1024
+Expiry: 2025-07-22T08:34:16.000Z
+🔐 Token encrypted successfully
+Database update result: SUCCESS
+Token update callback completed
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+7:34:18 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb 304 in 548ms :: {"i…
+7:34:18 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 304 in …
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+7:34:19 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 304 in …
+7:34:19 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb 304 in 517ms :: {"i…
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+
+=== Complete API Response ===
+Status Code: 200
+Headers: {}
+Raw Body: {
+  "urlNotificationMetadata": {
+    "url": "https://nexjob.tech/"
+  }
+}
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+7:34:19 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 304 in …
+7:34:19 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb 304 in 494ms :: {"i…
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+7:34:20 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 200 in …
+7:34:20 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb 200 in 637ms :: {"i…
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+
+=== Service Account Debug ===
+Service Account ID: 964fdc33-a2d6-4f4f-a777-073ea5e3263f
+Has accessTokenEncrypted: true
+Has encryptionIv: true
+Has encryptionTag: true
+Has plain accessToken: false
+Token expires at: 2025-07-22T08:34:16.000Z
+✅ Successfully decrypted cached token
+
+=== Using Cached Token ===
+Token expires at: 2025-07-22T08:34:16.000Z
+Time remaining: 60 minutes
+
+=== Auth Result Debug ===
+tokenUpdated: false
+hasNewToken: false
+hasNewExpiry: false
+hasCallback: true
+
+=== Token Update Skipped ===
+Conditions not met for token update
+7:34:20 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 304 in …
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+
+=== Complete API Response ===
+Status Code: 200
+Headers: {}
+Raw Body: {
+  "urlNotificationMetadata": {
+    "url": "https://nexjob.tech/"
+  }
+}
+7:34:21 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb 304 in 479ms :: {"i…
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+7:34:21 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 200 in …
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+7:34:21 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 304 in …
+7:34:21 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb 200 in 585ms :: {"i…
+
+=== Service Account Debug ===
+Service Account ID: 964fdc33-a2d6-4f4f-a777-073ea5e3263f
+Has accessTokenEncrypted: true
+Has encryptionIv: true
+Has encryptionTag: true
+Has plain accessToken: false
+Token expires at: 2025-07-22T08:34:16.000Z
+✅ Successfully decrypted cached token
+
+=== Using Cached Token ===
+Token expires at: 2025-07-22T08:34:16.000Z
+Time remaining: 60 minutes
+
+=== Auth Result Debug ===
+tokenUpdated: false
+hasNewToken: false
+hasNewExpiry: false
+hasCallback: true
+
+=== Token Update Skipped ===
+Conditions not met for token update
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+7:34:22 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 304 in …
+
+=== Complete API Response ===
+Status Code: 200
+Headers: {}
+Raw Body: {
+  "urlNotificationMetadata": {
+    "url": "https://nexjob.tech/"
+  }
+}
+7:34:22 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb 304 in 534ms :: {"i…
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+7:34:22 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 200 in …
+7:34:23 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb 200 in 471ms :: {"i…
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+7:34:23 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 304 in …
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+
+=== Service Account Debug ===
+Service Account ID: 964fdc33-a2d6-4f4f-a777-073ea5e3263f
+Has accessTokenEncrypted: true
+Has encryptionIv: true
+Has encryptionTag: true
+Has plain accessToken: false
+Token expires at: 2025-07-22T08:34:16.000Z
+✅ Successfully decrypted cached token
+
+=== Using Cached Token ===
+Token expires at: 2025-07-22T08:34:16.000Z
+Time remaining: 60 minutes
+
+=== Auth Result Debug ===
+tokenUpdated: false
+hasNewToken: false
+hasNewExpiry: false
+hasCallback: true
+
+=== Token Update Skipped ===
+Conditions not met for token update
+7:34:23 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb 304 in 466ms :: {"i…
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+
+=== Complete API Response ===
+Status Code: 200
+Headers: {}
+Raw Body: {
+  "urlNotificationMetadata": {
+    "url": "https://nexjob.tech/"
+  }
+}
+7:34:23 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 304 in …
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+7:34:24 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb 304 in 457ms :: {"i…
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+7:34:24 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 200 in …
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+7:34:24 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb 200 in 531ms :: {"i…
+
+=== Service Account Debug ===
+Service Account ID: 964fdc33-a2d6-4f4f-a777-073ea5e3263f
+Has accessTokenEncrypted: true
+Has encryptionIv: true
+Has encryptionTag: true
+Has plain accessToken: false
+Token expires at: 2025-07-22T08:34:16.000Z
+✅ Successfully decrypted cached token
+
+=== Using Cached Token ===
+Token expires at: 2025-07-22T08:34:16.000Z
+Time remaining: 60 minutes
+
+=== Auth Result Debug ===
+tokenUpdated: false
+hasNewToken: false
+hasNewExpiry: false
+hasCallback: true
+
+=== Token Update Skipped ===
+Conditions not met for token update
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+7:34:25 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 304 in …
+
+=== Complete API Response ===
+Status Code: 200
+Headers: {}
+Raw Body: {
+  "urlNotificationMetadata": {
+    "url": "https://nexjob.tech/"
+  }
+}
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+7:34:25 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb 304 in 459ms :: {"i…
+7:34:25 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 200 in …
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+7:34:26 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 304 in …
+7:34:26 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb 200 in 475ms :: {"i…
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+
+=== Service Account Debug ===
+Service Account ID: 964fdc33-a2d6-4f4f-a777-073ea5e3263f
+Has accessTokenEncrypted: true
+Has encryptionIv: true
+Has encryptionTag: true
+Has plain accessToken: false
+Token expires at: 2025-07-22T08:34:16.000Z
+✅ Successfully decrypted cached token
+
+=== Using Cached Token ===
+Token expires at: 2025-07-22T08:34:16.000Z
+Time remaining: 60 minutes
+
+=== Auth Result Debug ===
+tokenUpdated: false
+hasNewToken: false
+hasNewExpiry: false
+hasCallback: true
+
+=== Token Update Skipped ===
+Conditions not met for token update
+7:34:26 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 304 in …
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+
+=== Complete API Response ===
+Status Code: 200
+Headers: {}
+Raw Body: {
+  "urlNotificationMetadata": {
+    "url": "https://nexjob.tech/"
+  }
+}
+7:34:26 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb 304 in 661ms :: {"i…
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+7:34:27 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 200 in …
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+7:34:27 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb 200 in 466ms :: {"i…
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+7:34:27 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 304 in …
+
+=== Service Account Debug ===
+Service Account ID: 964fdc33-a2d6-4f4f-a777-073ea5e3263f
+Has accessTokenEncrypted: true
+Has encryptionIv: true
+Has encryptionTag: true
+Has plain accessToken: false
+Token expires at: 2025-07-22T08:34:16.000Z
+✅ Successfully decrypted cached token
+
+=== Using Cached Token ===
+Token expires at: 2025-07-22T08:34:16.000Z
+Time remaining: 60 minutes
+
+=== Auth Result Debug ===
+tokenUpdated: false
+hasNewToken: false
+hasNewExpiry: false
+hasCallback: true
+
+=== Token Update Skipped ===
+Conditions not met for token update
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+
+=== Complete API Response ===
+Status Code: 200
+Headers: {}
+Raw Body: {
+  "urlNotificationMetadata": {
+    "url": "https://nexjob.tech/"
+  }
+}
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+7:34:28 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb 304 in 587ms :: {"i…
+7:34:28 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 200 in …
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+7:34:28 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 304 in …
+7:34:28 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb 200 in 579ms :: {"i…
+
+=== Service Account Debug ===
+Service Account ID: 964fdc33-a2d6-4f4f-a777-073ea5e3263f
+Has accessTokenEncrypted: true
+Has encryptionIv: true
+Has encryptionTag: true
+Has plain accessToken: false
+Token expires at: 2025-07-22T08:34:16.000Z
+✅ Successfully decrypted cached token
