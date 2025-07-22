@@ -164,11 +164,11 @@
 ✅ **SECURITY ENHANCED** - Access tokens are now properly encrypted and decrypted using .env encryption key
 
 **Key Technical Changes:**
-- Removed URL skipping logic from `processUrlsWithQuota()` method in job scheduler (lines 421-463)
-- Added immediate WebSocket broadcasting in `/api/indexing-jobs/:id/rerun` endpoint for real-time status updates
-- Modified frontend rerun mutation to use `setQueryData` for immediate cache updates
-- Limited WebSocket invalidations to specific job queries and only invalidate submissions when job is running/completed
-- Preserved submission history - rerun does NOT delete existing submissions but processes URLs again
+- Fixed encryption service to use proper `createCipheriv`/`createDecipheriv` with base64 key from ENCRYPTION_KEY env var
+- Removed encryptionTag requirement for token decryption since CBC mode doesn't use authentication tags
+- Updated token retrieval logic to check for encrypted tokens without requiring encryptionTag field
+- Old tokens trigger one-time regeneration with proper encryption, then system uses cached encrypted tokens
+- System now properly decrypts and reuses access tokens for full 60-minute validity period
 
 **What RERUN now does correctly:**
 1. Preserves ALL existing URL submission history
