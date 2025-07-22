@@ -428,13 +428,14 @@ export class JobScheduler {
           })
           .where(eq(indexingJobs.id, jobId));
 
-        // Broadcast real-time progress
+        // Broadcast real-time progress for skipped URLs
         this.broadcastJobUpdate(jobId, 'running', { 
           progress: { 
             current: urlIndex, 
             total: urls.length,
             currentUrl: url,
-            skipped: true
+            skipped: true,
+            message: 'Skipped - already processed'
           }
         });
         
@@ -574,6 +575,17 @@ export class JobScheduler {
             })
             .where(eq(indexingJobs.id, jobId));
 
+          // Broadcast real-time success update
+          this.broadcastJobUpdate(jobId, 'running', { 
+            progress: { 
+              current: urlIndex, 
+              total: urls.length,
+              currentUrl: url,
+              success: true,
+              message: 'Successfully indexed'
+            }
+          });
+
         } else if (result.isQuotaExceeded) {
           // Quota exceeded case - handle with pause manager
           console.log(`🚫 QUOTA EXCEEDED - Pausing job ${jobId} immediately`);
@@ -593,6 +605,17 @@ export class JobScheduler {
             serviceAccountId: account.id,
             errorMessage: result.error,
             submittedAt: new Date()
+          });
+
+          // Broadcast quota exceeded update
+          this.broadcastJobUpdate(jobId, 'paused', { 
+            progress: { 
+              current: urlIndex, 
+              total: urls.length,
+              currentUrl: url,
+              quotaExceeded: true,
+              message: 'Quota exceeded - job paused'
+            }
           });
           
           // Continue with next account
@@ -617,6 +640,17 @@ export class JobScheduler {
               updatedAt: new Date()
             })
             .where(eq(indexingJobs.id, jobId));
+
+          // Broadcast real-time error update
+          this.broadcastJobUpdate(jobId, 'running', { 
+            progress: { 
+              current: urlIndex, 
+              total: urls.length,
+              currentUrl: url,
+              error: true,
+              message: result.error || 'Indexing failed'
+            }
+          });
         }
 
         processed = true;

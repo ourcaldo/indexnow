@@ -32,10 +32,16 @@ export function useWebSocket() {
           if (message.type === 'jobUpdate') {
             console.log('Job update received:', message);
             
-            // Invalidate relevant queries to trigger refetch
+            // Invalidate all relevant queries to trigger real-time updates
             queryClient.invalidateQueries({ queryKey: ["/api/indexing-jobs"] });
             queryClient.invalidateQueries({ queryKey: ["/api/indexing-jobs", message.jobId] });
             queryClient.invalidateQueries({ queryKey: ["/api/indexing-jobs", message.jobId, "submissions"] });
+            queryClient.invalidateQueries({ queryKey: ["/api/dashboard-stats"] });
+            queryClient.invalidateQueries({ queryKey: ["/api/service-accounts"] });
+            
+            // Force immediate refetch for active job details
+            queryClient.refetchQueries({ queryKey: ["/api/indexing-jobs", message.jobId] });
+            queryClient.refetchQueries({ queryKey: ["/api/indexing-jobs", message.jobId, "submissions"] });
           }
         } catch (error) {
           console.error('Failed to parse WebSocket message:', error);

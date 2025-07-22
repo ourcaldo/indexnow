@@ -116,7 +116,7 @@ export class GoogleIndexingService {
 
     if (process.env.NODE_ENV === 'development') {
       console.log('\n=== Generating New Token ===');
-      console.log('Reason:', !serviceAccount.accessToken ? 'No cached token' : 'Token expired or expiring soon');
+      console.log('Reason:', !cachedToken ? 'No cached token' : 'Token expired or expiring soon');
     }
     
     // Generate new token

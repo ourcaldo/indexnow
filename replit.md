@@ -174,6 +174,24 @@
 - Simple, clean approach: each URL has ONE submission record with original date and status
 - No more confusing attempt numbers or previous attempts arrays
 
+## Latest Update - Critical Token Caching & Real-time Updates Fix (July 22, 2025)
+✅ **CRITICAL FIX: Token Caching System** - Fixed token caching logic that was causing unnecessary JWT generation
+✅ **Enhanced Real-time Updates** - Added comprehensive WebSocket broadcasting for immediate dashboard updates  
+✅ **Fixed submission history ordering** - URL submissions now display from newest to oldest dates
+✅ **Improved progress tracking** - Added real-time broadcasts for success, error, and quota exceeded states
+✅ **Optimized cache invalidation** - Enhanced React Query invalidation for immediate UI updates
+
+**Token Caching Fix:**
+- Fixed `cachedToken` variable check in Google Indexing Service instead of checking `serviceAccount.accessToken`
+- System now properly retrieves encrypted tokens from database before generating new ones
+- Reduced unnecessary API calls to Google OAuth2 service
+
+**Real-time Updates Enhancement:**
+- Added immediate WebSocket broadcasts after each URL submission result
+- Enhanced React Query cache invalidation with `refetchQueries` for active job details
+- Added comprehensive invalidation for dashboard stats, job lists, and submission history
+- Progress bars, counters, and submission tables now update without page refresh
+
 ## Latest Update - ACTUAL Submission History Preservation Fix (July 22, 2025)
 ✅ **CRITICAL FIX COMPLETED: Submission History Preservation** - Fixed the root cause where job rerun operations were destroying URL submission history
 ✅ **Removed unwanted database columns** - Created migration script to remove `attempt_number` and `previous_attempts` columns that were causing confusion
