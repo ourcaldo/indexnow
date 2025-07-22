@@ -348,10 +348,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/indexing-jobs/:id/rerun', requireAuth, async (req: any, res) => {
     try {
+      console.log(`🔄 RERUN REQUEST RECEIVED for job ${req.params.id} by user ${req.user.id}`);
+      
       const job = await storage.getIndexingJob(req.params.id);
       if (!job) {
+        console.log(`❌ Job ${req.params.id} not found`);
         return res.status(404).json({ error: 'Job not found' });
       }
+      
+      console.log(`📋 Current job status: ${job.status}`);
+      console.log(`📋 Job name: ${job.name}`);
 
       // DO NOT delete URL submissions - preserve submission history
       // The job scheduler will handle duplicate URLs appropriately during processing
@@ -373,9 +379,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       // IMMEDIATE real-time update via WebSocket
+      const wss = (global as any).wss;
       if (wss) {
-        wss.clients.forEach((client) => {
-          if (client.readyState === WebSocket.OPEN) {
+        console.log(`🔄 Broadcasting rerun status to ${wss.clients.size} WebSocket clients`);
+        wss.clients.forEach((client: any) => {
+          if (client.readyState === 1) { // WebSocket.OPEN
             client.send(JSON.stringify({
               type: 'job_updated',
               jobId: req.params.id,
@@ -384,13 +392,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
             }));
           }
         });
+      } else {
+        console.warn('⚠️ WebSocket server not available for broadcasting');
       }
 
       // Execute the job immediately
+      console.log(`⚡ Triggering immediate job execution for ${req.params.id}`);
       setImmediate(() => {
         jobScheduler.executeJob(req.params.id);
       });
 
+      console.log(`✅ RERUN SUCCESS - Job ${req.params.id} reset to pending status`);
       res.json(updatedJob);
     } catch (error) {
       console.error('Error re-running indexing job:', error);
