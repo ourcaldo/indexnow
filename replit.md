@@ -190,6 +190,23 @@
 - Simple, clean approach: each URL has ONE submission record with original date and status
 - No more confusing attempt numbers or previous attempts arrays
 
+## Latest Update - ACTUAL Submission History Preservation Fix (July 22, 2025)
+✅ **CRITICAL FIX COMPLETED: Submission History Preservation** - Fixed the root cause where job rerun operations were destroying URL submission history
+✅ **Removed unwanted database columns** - Created migration script to remove `attempt_number` and `previous_attempts` columns that were causing confusion
+✅ **Fixed job rerun functionality** - Modified `/api/indexing-jobs/:id/rerun` route to NOT delete existing URL submissions
+✅ **Fixed job scheduler logic** - Modified `executeJob()` method to preserve existing submissions instead of clearing them
+✅ **Smart rerun processing** - Rerun jobs now skip URLs that were already successfully processed, maintaining their submission history
+✅ **Created removal migration** - `REMOVE_ATTEMPT_COLUMNS_MIGRATION.sql` cleans up the unwanted database columns
+✅ **Preserves all submission dates** - Each URL keeps its original submission timestamp and status without any attempt numbering confusion
+
+**Key Technical Changes:**
+- Removed destructive `deleteUrlSubmissionsForJob()` call from rerun endpoint
+- Removed destructive submission clearing from job scheduler's `executeJob()` method  
+- Added logic to skip successfully processed URLs during rerun to avoid duplicates
+- Jobs now maintain complete submission history across pause/resume/rerun operations
+- Simple, clean approach: each URL has ONE submission record with original date and status
+- No more confusing attempt numbers or previous attempts arrays
+
 ## Previous Update - Quota Management System Implementation (July 20, 2025)
 ✓ **Implemented comprehensive quota management** - Jobs now pause automatically when Google API quota exceeded
 ✓ **Created quota pause manager service** - Handles quota exhaustion detection and job pausing logic

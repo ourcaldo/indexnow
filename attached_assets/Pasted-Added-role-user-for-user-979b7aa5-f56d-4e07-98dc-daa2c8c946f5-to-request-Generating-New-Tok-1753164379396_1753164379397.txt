@@ -1,0 +1,53 @@
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+
+=== Generating New Token ===
+Reason: No cached token
+
+=== JWT Details ===
+Client Email: indexnow@nexpocket.iam.gserviceaccount.com
+Private Key ID: d2b804dc5e8c5e9aa49a8b3e1f5fdd5dde97956b
+Scope: https://www.googleapis.com/auth/indexing
+
+=== Raw Token Response ===
+{
+  access_token: 'ya29.c.c0ASRK0GazdfsLRkrS3frZQBcXO3qA5K5mYhmFSpJuD1K3kZRZfVbtRTcz1-zHb2KW5-4jBtaCpzt79lIMyFHJ9wNjhvOsrBIU8Ze3HIbm4iONvv7O8-WTf_vJrSwIo1qQ8ggYgkQCx1-KTFIORIb3h2DqUTa5PVcUkavYUMLmXaKy3OcBfqNGBz9Rs_SzXi8OuRXyOFhPAUf7WUG0ceAU5Oq29VqXNRw9cVrX2ShxwZZdQ0jznj3H_9ZDiQtX7Q9lCZq2p0eJQXCoNgHoM-hGCasl51D2MTMC22UC3aZFal0oIlES8jmKfC7Ci-Ds6RWd2iYoJ3_W9dfhf7O8WMzs3s9uaD-GEUXOBGGCwKaChKIMSxw__OQkBErARAT387AQjygf9gda7dFiUFekVl3Qix3sldFF65yZo7O861JeIWjtvWadUyhmjax8xmk6I84FgoQW9shmbWe6g3qjzz41RF5cOb01sUoVpOqRSsaFfWduJutn_vwVFBO8J-j87V5oruX_446JeJWhgQ8td_s8FMmSihXgxueh1v3dYi26ulj8IZR-2roMq_lSvQ3JxfxhtXkSxahofrs11ivbl5Brj9vgMdie4yXMb7tQYhlxVisY0auZ57BwQx3daF_nqhZYSBVjRnpaBQrSvUktQdfmR1RjqnU7V5bZyg6SjdVhyRo31luU22aWRtbsySRfx9_irii_M61wgt4u23MwZtQUfdY-7mjFFpWaJhFzz30I4VrlZB5wxUt_2JMsklkQ_3J1cWcnznr3OpMxt4yVw3Vm-Udk3FtS9Jdii9u86iV9vtbSOy08qRkqMo8uf6g_r0wfxhq7huFZf0Vbih62n5O92wMaRamU069ObnV0jxnSxVpSFQ4Jptr9Qa46-JytrB_sJuccRSXJ5aebzQBe7g1BMaX0Voy73MtF3ncXookddjrIQ5lfYoay4YWJ18QxYxhczjop7BfJ7vx_YMseZbyUec4u_11ySks1hskxyyhc46UZQotlu2F0oqi',
+  token_type: 'Bearer',
+  expiry_date: 1753167891000,
+  id_token: undefined,
+  refresh_token: 'jwt-placeholder'
+}
+
+=== Auth Result Debug ===
+tokenUpdated: true
+hasNewToken: true
+hasNewExpiry: true
+hasCallback: true
+
+=== Calling Token Update Callback ===
+
+=== Saving Token to Database ===
+Service Account ID: 8b427bdb-db8f-42e2-843b-79c823c50dd0
+Token length: 1024
+Expiry: 2025-07-22T07:04:51.000Z
+🔐 Token encrypted successfully
+(node:773) [DEP0106] DeprecationWarning: crypto.createCipher is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+6:04:53 AM [express] GET /api/indexing-jobs/4df2abe8-2e39-4a29-8377-88992f937a8a/submissions 304 in …
+Database update result: SUCCESS
+Token update callback completed
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+
+=== Complete API Response ===
+Status Code: 200
+Headers: {}
+Raw Body: {
+  "urlNotificationMetadata": {
+    "url": "https://nexjob.tech/lowongan-kerja/okupasi-terapi-rumah-sakit-hosana-medica-lippo-cikarang-cikarang/"
+  }
+}
+6:04:54 AM [express] GET /api/indexing-jobs/4df2abe8-2e39-4a29-8377-88992f937a8a 304 in 1561ms :: {"…
+Error executing job 4df2abe8-2e39-4a29-8377-88992f937a8a: ReferenceError: sql is not defined
+    at JobScheduler.processUrlsWithQuota (/home/runner/workspace/server/services/job-scheduler.ts:533:31)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async JobScheduler.executeJob (/home/runner/workspace/server/services/job-scheduler.ts:325:7)
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request

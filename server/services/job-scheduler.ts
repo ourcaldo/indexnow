@@ -1,7 +1,7 @@
 import cron from 'node-cron';
 import { db } from './supabase';
 import { indexingJobs, urlSubmissions, serviceAccounts, quotaUsage, userProfiles } from '@shared/schema';
-import { eq, and, gte, lte, isNull, lt, or } from 'drizzle-orm';
+import { eq, and, gte, lte, isNull, lt, or, sql } from 'drizzle-orm';
 import { googleIndexingService } from './google-indexing';
 import { sitemapParser } from './sitemap-parser';
 import { emailService } from './email-service';
