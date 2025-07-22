@@ -67,9 +67,22 @@ export class QuotaPauseManager {
       resumeAfter.setUTCHours(0, 0, 0, 0);
     }
 
+    // CRITICAL FIX: Fetch fresh service account data with encryption fields
+    const freshAvailableAccounts = [];
+    for (const row of availableAccounts) {
+      const freshAccount = await db
+        .select()
+        .from(serviceAccounts)
+        .where(eq(serviceAccounts.id, row.account.id))
+        .limit(1);
+      if (freshAccount.length > 0) {
+        freshAvailableAccounts.push(freshAccount[0]);
+      }
+    }
+
     return {
       hasAvailableQuota,
-      availableAccounts: availableAccounts.map(row => row.account),
+      availableAccounts: freshAvailableAccounts,
       exhaustedAccounts: exhaustedAccounts.map(row => row.account),
       shouldPauseJob,
       pauseReason,
