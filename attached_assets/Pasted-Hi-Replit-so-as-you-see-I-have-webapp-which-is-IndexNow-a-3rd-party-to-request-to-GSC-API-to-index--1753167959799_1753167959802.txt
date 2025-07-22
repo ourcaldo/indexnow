@@ -1,0 +1,75 @@
+Hi Replit, so as you see I have webapp which is IndexNow a 3rd party to request to GSC API to index a link. This webapp is same and inspirated by Instant Indexing wordpress plugin by RankMath.
+
+So, as this webapp is on development stage and for personal use only. I need you to focus to enhance and fix some problem in dashboard and panel.
+
+Before you do make the changes, I need you to do a deep dive into the codebase, so you do have better understanding about this webapp, the current stage and feature and the obstacles.
+
+Before we more in-deepth about this project. Please take time to read all information in replit.md because there's a lot important things that you should know.
+
+I fucking ask you to fix the re-run jobs, why fucking the current rerun isn't work?
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+🔄 RERUN REQUEST RECEIVED for job e97061d8-9600-4e54-b7fd-f178e36870eb by user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5
+📋 Current job status: completed
+📋 Job name: #Job-1753165897007-500
+🔄 Broadcasting rerun status to 3 WebSocket clients
+⚡ Triggering immediate job execution for e97061d8-9600-4e54-b7fd-f178e36870eb
+✅ RERUN SUCCESS - Job e97061d8-9600-4e54-b7fd-f178e36870eb reset to pending status
+6:59:26 AM [express] POST /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/rerun 200 in 1576m…
+Executing job e97061d8-9600-4e54-b7fd-f178e36870eb
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+🔄 Load balancing: Using 2 service accounts sorted by usage
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+⏭️ Skipping https://nexjob.tech/ - already successfully processed
+6:59:28 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 304 in …
+6:59:28 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb 200 in 2158ms :: {"…
+⏭️ Skipping https://nexjob.tech/ - already successfully processed
+⏭️ Skipping https://nexjob.tech/ - already successfully processed
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+⏭️ Skipping https://nexjob.tech/ - already successfully processed
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+6:59:29 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 304 in …
+⏭️ Skipping https://nexjob.tech/ - already successfully processed
+⏭️ Skipping https://nexjob.tech/ - already successfully processed
+6:59:30 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb 200 in 1545ms :: {"…
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+⏭️ Skipping https://nexjob.tech/ - already successfully processed
+6:59:31 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 304 in …
+⏭️ Skipping https://nexjob.tech/ - already successfully processed
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+⏭️ Skipping https://nexjob.tech/ - already successfully processed
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+⏭️ Skipping https://nexjob.tech/ - already successfully processed
+6:59:32 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb 200 in 1530ms :: {"…
+6:59:32 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 304 in …
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+Job e97061d8-9600-4e54-b7fd-f178e36870eb completed: 10 successful, 0 failed, 0 quota exceeded
+6:59:33 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 304 in …
+6:59:34 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb 200 in 1532ms :: {"…
+Email sent successfully to aldodkris@gmail.com: <2a5caa35-f038-a52e-01c4-91e89c6a54b4@indexnow.studio>
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+6:59:35 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 304 in …
+6:59:35 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb 304 in 1524ms :: {"…
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+6:59:37 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 304 in …
+6:59:37 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb 304 in 1533ms :: {"…
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+6:59:39 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 304 in …
+6:59:39 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb 304 in 1554ms :: {"…
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+6:59:40 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 304 in …
+6:59:41 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb 304 in 1745ms :: {"…
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+Added role 'user' for user 979b7aa5-f56d-4e07-98dc-daa2c8c946f5 to request
+6:59:42 AM [express] GET /api/indexing-jobs/e97061d8-9600-4e54-b7fd-f178e36870eb/submissions 304 in …
+
+Do you fucking doesn't know what is re-run mean? It's litterely run the jobs that fucking already run before. So, it's doesn't care what the fucking status and the link is been submitted or not. It's do it again from the start.
+
+The fucking current problem that I fucking you to fix is:
+1. Fix thats thing, the fucking re-run not work and skipp the fucking url. Status in jobs is not fucking change, still "Completed" when I fucking rerun completed jobs, and other original status.
+2. When I fucking click re-run there's fucking a lot request to endpoint /submission, which fucking annoying, I need you to fix it. Just fucking send which job is re-run and backend that fucking handle that, not fucking frontend
+3. I do fucking ask you to just fix that I ask, not fucking add here and there that fucking just broken thing on my code

@@ -157,6 +157,26 @@
 
 ## YOU CAN UPDATE A CHANGES/LOG AFTER THIS ##
 
+## Latest Update - CRITICAL RERUN FUNCTIONALITY FIX (July 22, 2025)
+✅ **FIXED RERUN SKIPPING URLS** - Removed the URL skipping logic in job scheduler that was preventing rerun from reprocessing URLs
+✅ **FIXED RERUN STATUS NOT CHANGING** - Modified rerun endpoint to properly delete existing submissions and reset all counters
+✅ **FIXED EXCESSIVE FRONTEND REQUESTS** - Removed unnecessary query invalidations on rerun to prevent spam requests to /submissions endpoint
+✅ **PROPER RERUN BEHAVIOR** - Rerun now deletes all previous submissions and processes ALL URLs again from scratch
+
+**Key Technical Changes:**
+- Modified `/api/indexing-jobs/:id/rerun` endpoint to call `deleteUrlSubmissionsForJob()` before rerun
+- Removed URL skipping logic from `processUrlsWithQuota()` method in job scheduler
+- Reset `quotaExceededUrls` counter along with other counters during rerun
+- Removed query invalidations from frontend rerun mutation to prevent excessive API calls
+- WebSocket real-time updates now handle status changes instead of query refetching
+
+**What RERUN now does correctly:**
+1. Deletes ALL existing URL submissions for the job
+2. Resets ALL job counters (processed, successful, failed, quota exceeded)
+3. Sets job status to 'pending' and triggers immediate execution
+4. Processes ALL URLs again regardless of previous status
+5. No more skipping of "already processed" URLs
+
 ## Latest Update - ACTUAL Submission History Preservation Fix (July 22, 2025)
 ✅ **CRITICAL FIX COMPLETED: Submission History Preservation** - Fixed the root cause where job rerun operations were destroying URL submission history
 ✅ **Removed unwanted database columns** - Created migration script to remove `attempt_number` and `previous_attempts` columns that were causing confusion

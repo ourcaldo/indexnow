@@ -82,10 +82,10 @@ export default function JobDetail() {
       return await response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/indexing-jobs", jobId] });
-      queryClient.invalidateQueries({ queryKey: ["/api/indexing-jobs"] });
+      // Don't invalidate queries on rerun - WebSocket will handle real-time updates
+      // This prevents excessive requests to /submissions endpoint
       toast({
-        title: "Success",
+        title: "Success", 
         description: "Job re-run started successfully",
       });
     },

@@ -418,49 +418,9 @@ export class JobScheduler {
     const today = new Date().toISOString().split('T')[0];
     let urlIndex = 0;
     
-    // Get existing submissions to check for already successfully processed URLs
-    const existingSubmissions = await db
-      .select()
-      .from(urlSubmissions)
-      .where(eq(urlSubmissions.jobId, jobId));
-    
-    const successfulUrls = new Set(
-      existingSubmissions
-        .filter(sub => sub.status === 'success')
-        .map(sub => sub.url)
-    );
-    
     for (const url of urls) {
       urlIndex++;
       let processed = false;
-
-      // Skip URLs that have already been successfully processed to preserve history
-      if (successfulUrls.has(url)) {
-        console.log(`⏭️ Skipping ${url} - already successfully processed`);
-        processed = true; // Mark as processed to continue with progress tracking
-        
-        // Update real-time progress without reprocessing
-        await db
-          .update(indexingJobs)
-          .set({
-            processedUrls: urlIndex,
-            updatedAt: new Date()
-          })
-          .where(eq(indexingJobs.id, jobId));
-
-        // Broadcast real-time progress for skipped URLs
-        this.broadcastJobUpdate(jobId, 'running', { 
-          progress: { 
-            current: urlIndex, 
-            total: urls.length,
-            currentUrl: url,
-            skipped: true,
-            message: 'Skipped - already processed'
-          }
-        });
-        
-        continue; // Skip to next URL
-      }
 
       // Update real-time progress
       await db

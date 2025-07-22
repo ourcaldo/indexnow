@@ -359,8 +359,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log(`📋 Current job status: ${job.status}`);
       console.log(`📋 Job name: ${job.name}`);
 
-      // DO NOT delete URL submissions - preserve submission history
-      // The job scheduler will handle duplicate URLs appropriately during processing
+      // RERUN OPERATION: Delete existing URL submissions to start fresh
+      // This is what rerun means - process everything again from scratch
+      await storage.deleteUrlSubmissionsForJob(req.params.id);
+      console.log(`🗑️ Deleted existing URL submissions for rerun of job ${req.params.id}`);
 
       // Reset job status and counters for re-run
       const updatedJob = await storage.updateIndexingJob(req.params.id, {
@@ -368,6 +370,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         processedUrls: 0,
         successfulUrls: 0,
         failedUrls: 0,
+        quotaExceededUrls: 0,
         lastRun: null,
         nextRun: new Date(),
         pausedDueToQuota: false,  // Reset quota pause status
@@ -396,8 +399,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.warn('⚠️ WebSocket server not available for broadcasting');
       }
 
-      // Execute the job immediately
-      console.log(`⚡ Triggering immediate job execution for ${req.params.id}`);
+      // Execute the job immediately as a rerun (process all URLs)
+      console.log(`⚡ Triggering immediate RERUN execution for ${req.params.id}`);
       setImmediate(() => {
         jobScheduler.executeJob(req.params.id);
       });
